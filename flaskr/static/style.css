@@ -76,8 +76,8 @@ header h1 {
 .block-event,
 .block-variable,
 .block-debug {
-    position: left;
-    display: inline-flex;
+    position: relative;
+    display: inline-block;
     user-select: none;
     font-weight: 600;
     border-radius: 16px;
@@ -87,6 +87,7 @@ header h1 {
     cursor: grab;
     max-width: max-content;
     text-align: center;
+    margin: 1px;
 }
 
 .block-move {
@@ -94,7 +95,7 @@ header h1 {
 }
 
 .block-controll {
-    background-color: goldenrod;
+    background-color: rgb(180, 138, 30);
 }
 
 .block-event {
