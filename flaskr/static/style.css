@@ -1,0 +1,191 @@
+body {
+    height: 100%;
+    margin: 0;
+    background: linear-gradient(180deg, #0b1023, #0f172a);
+    color: #e5e7eb;
+    font: 14px/1.3 system-ui, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+}
+
+.app {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    grid-template-rows: auto 1fr;
+    gap: 12px;
+    height: 100%;
+    padding: 14px
+}
+
+.app {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    grid-template-rows: auto 1fr;
+    gap: 12px;
+    height: 100%;
+    padding: 14px
+}
+
+header {
+    grid-column: 1/-1;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: rgba(255, 255, 255, .03);
+    border: 1px solid rgba(255, 255, 255, .06);
+    padding: 10px 14px;
+    border-radius: 14px;
+    backdrop-filter: blur(6px)
+}
+
+header h1 {
+    font-size: 16px;
+    margin: 0;
+    letter-spacing: .2px
+}
+
+/* Palette */
+.palette {
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px
+}
+
+.palette .group-title {
+    font-weight: 600;
+    opacity: .8;
+    margin: 6px 0;
+    overflow: auto;
+}
+
+.palette .block {
+    cursor: grab
+}
+
+.group-title {
+    font-size: larger;
+    font-style: italic;
+}
+
+/*Blocks*/
+.block-move .block-controll .block-event .label {
+    color: #071021
+}
+
+.block-move,
+.block-controll,
+.block-event,
+.block-variable,
+.block-debug {
+    position: relative;
+    display: inline-block;
+    user-select: none;
+    font-weight: 600;
+    border-radius: 16px;
+    padding: 10px 12px 14px 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, .25);
+    transition: transform .06s ease;
+    cursor: grab;
+}
+
+.block-move {
+    background-color: rgb(25, 146, 226);
+}
+
+.block-controll {
+    background-color: goldenrod;
+}
+
+.block-event {
+    background-color: rgb(209, 87, 87);
+}
+
+.block-variable {
+    background-color: rgb(126, 209, 87);
+    max-width: max-content;
+    text-align: center;
+}
+
+.block-debug {
+    background-color: rgb(87, 115, 209);
+}
+
+.param {
+    display: inline-block;
+    min-width: 26px;
+    padding: 2px 6px;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, .85);
+    margin: 0 4px;
+    font-weight: 700;
+    color: rgb(70, 70, 70);
+}
+
+
+/* Workspace */
+.workspace {
+    position: relative;
+    overflow: auto;
+    background:
+        radial-gradient(circle at 25px 25px, rgba(255, 255, 255, .06) 2px, transparent 2px) 0 0/50px 50px,
+        linear-gradient(rgb(33, 49, 100), #26396b);
+}
+
+.workspace-inner {
+    position: relative;
+    min-height: 100%;
+    padding: 20px
+}
+
+.trash {
+    position: absolute;
+    right: 16px;
+    bottom: 16px;
+    background: #ef4444;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    padding: 8px 12px;
+    box-shadow: v0 8px 24px rgba(0, 0, 0, .35);
+    cursor: pointer
+}
+
+.run {
+    position: absolute;
+    left: 16px;
+    bottom: 16px;
+    background: #44ef8b;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    padding: 8px 12px;
+    box-shadow: v0 8px 24px rgba(0, 0, 0, .35);
+    cursor: pointer
+}
+
+.console {
+    background: #111;
+    border: 1px solid #444;
+    border-radius: 8px;
+    height: 100%;
+    padding: 10px 12px 14px 12px;
+    margin-left: 100px;
+    margin-right: 100px;
+    overflow-y: auto;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, .5);
+}
+
+.console-line {
+    margin: 2px 0;
+}
+
+.console-line.info {
+    color: #4fc3f7;
+}
+
+.console-line.warn {
+    color: #ffb74d;
+}
+
+.console-line.error {
+    color: #ef5350;
+}

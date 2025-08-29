@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Laborobot</title>
+    <link rel="stylesheet" href="static/style.css">
+</head>
+
+<body>
+    <div class="app">
+        <header>
+            <h1>
+                Laborobot – <span style="opacity:.7">configure your robot</span>
+            </h1>
+            <div class="hint">
+                Drag blocks from the palette on the right into slots or under each other.
+            </div>
+        </header>
+
+        <section class="group palette" id="palette">
+            <div class="group-title">
+                Movement
+            </div>
+            <div class="block-move" id="block-steps-x">
+                <span class="label"> Go <span class="param" contenteditable>10</span> steps on the X axis</span>
+            </div>
+
+            <div class="block-move" id="block-steps-y">
+                <span class="label"> Go <span class="param" contenteditable>10</span> steps on the Y axis</span>
+            </div>
+
+            <div class="block-move" id="block-steps-z">
+                <span class="label"> Go <span class="param" contenteditable>10</span> steps on the Z axis</span>
+            </div>
+
+            <div class="group-title">
+                Control
+            </div>
+            <div class="block-controll" id="block-repeat">
+                <span class="label"> repeat <span class="param" contenteditable>10</span> times</span>
+            </div>
+
+
+            <div class="group-title">
+                Events
+            </div>
+            <div class="block-event">
+                <span class="label"> Start</span>
+            </div>
+
+            <div class="group-title">
+                Variables
+            </div>
+            <div class="block-variable">
+                <span class="label">Position X axis</span>
+            </div>
+            <div class="block-variable">
+                <span class="label">Position Y axis</span>
+            </div>
+            <div class="block-variable">
+                <span class="label">Position Z axis</span>
+            </div>
+            <div class="group-title">
+                Debug
+            </div>
+            <div class="block-debug">
+                <span class="label">print in console</span>
+            </div>
+        </section>
+
+        <section class="panel workspace" id="workspace">
+            <div class="workspace-inner" id="workspaceInner"></div>
+            <button class="trash" id="trash">🗑️ Löschen</button>
+            <button class="run" id="run">▶︎ Run</button>
+        </section>
+
+    </div>
+
+
+        <section>
+            <div class="console" id="console"></div>
+        </section>
+
+
+
+    <script src="static/console.js">
+        
+    </script>
+
+</body>
+
+</html>
