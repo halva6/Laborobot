@@ -24,70 +24,82 @@
                 Movement
             </div>
             <div class="block-move" id="block-steps-x" draggable="true" data-palette="true">
-                <span class="label"> Go <span class="param" contenteditable>10</span> steps on the X axis</span>
+                <span class="label"> Go <div class="slot" data-accept="variable number"></div> steps on the X
+                    axis</span>
             </div>
 
             <div class="block-move" id="block-steps-y" draggable="true" data-palette="true">
-                <span class="label"> Go <span class="param" contenteditable>10</span> steps on the Y axis</span>
+                <span class="label"> Go <div class="slot" data-accept="variable number"></div> steps on the Y
+                    axis</span>
             </div>
 
             <div class="block-move" id="block-steps-z" draggable="true" data-palette="true">
-                <span class="label"> Go <span class="param" contenteditable>10</span> steps on the Z axis</span>
+                <span class="label"> Go <div class="slot" data-accept="variable number"></div> steps on the Z
+                    axis</span>
             </div>
 
             <div class="group-title">
                 Control
             </div>
-            <div class="block-controll" id="block-repeat">
-                <span class="label"> repeat <span class="param" contenteditable>10</span> times</span>
+            <div class="block-controll" id="block-repeat" draggable="true" data-palette="true">
+                <span class="label"> repeat <div class="slot" data-accept="variable number"></div> times</span>
+                <div class="children"></div>
+            </div>
+            <div class="block-controll" id="block-condition" draggable="true" data-palette="true">
+                <span class="label"> if <div class="slot" data-accept="variable number"></div> <span class="param"
+                        contenteditable>==</span>
+                    <div class="slot" data-accept="variable number"></div>
+                </span>
+                <div class="children"></div>
             </div>
 
 
             <div class="group-title">
                 Events
             </div>
-            <div class="block-event">
+            <div class="block-event" id="block-start" draggable="true" data-palette="true">
                 <span class="label"> Start</span>
             </div>
 
             <div class="group-title">
                 Variables
             </div>
-            <div class="block-variable">
-                <span class="label">Position X axis</span>
+            <div class="block-variable" id="block-get-x-pos" draggable="true" data-palette="true">
+                <span class="label">X</span>
             </div>
-            <div class="block-variable">
-                <span class="label">Position Y axis</span>
+            <div class="block-variable" id="block-get-y-pos" draggable="true" data-palette="true">
+                <span class="label">Y</span>
             </div>
-            <div class="block-variable">
-                <span class="label">Position Z axis</span>
+            <div class="block-variable" id="block-get-z-pos" draggable="true" data-palette="true">
+                <span class="label">Z</span>
             </div>
             <div class="group-title">
                 Debug
             </div>
-            <div class="block-debug">
-                <span class="label">print in console</span>
+            <div class="block-debug" id="block-debug-print" draggable="true" data-palette="true">
+                <span class="label">print in console <div class="slot" data-accept="variable number"></div></span>
             </div>
         </section>
 
         <section class="panel workspace" id="workspace">
             <div class="workspace-inner" id="workspaceInner"></div>
             <button id="delete">🗑️ Delete everything</button>
-            <button id="run">▶︎ Run</button>
+            <button id="run" onclick="run()">▶︎ Run</button>
             <div id="garbage">🗑️ Garbage (Place block here to delete)</div>
         </section>
 
     </div>
 
 
-        <section>
-            <div class="console" id="console"></div>
-        </section>
+    <section>
+        <div class="console" id="console"></div>
+    </section>
 
 
 
     <script src="static/console.js"></script>
     <script src="static/drag_and_drop.js"></script>
+    <script src="static/run.js"></script>
 
 </body>
 

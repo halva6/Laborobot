@@ -85,6 +85,8 @@ header h1 {
     box-shadow: 0 4px 10px rgba(0, 0, 0, .25);
     transition: transform .06s ease;
     cursor: grab;
+    max-width: max-content;
+    text-align: center;
 }
 
 .block-move {
@@ -101,8 +103,6 @@ header h1 {
 
 .block-variable {
     background-color: rgb(126, 209, 87);
-    max-width: max-content;
-    text-align: center;
 }
 
 .block-debug {
@@ -118,6 +118,38 @@ header h1 {
     margin: 0 4px;
     font-weight: 700;
     color: rgb(70, 70, 70);
+}
+
+.slot {
+    display: inline-block;
+    min-width: 40px;
+    min-height: 20px;
+    border: 2px dashed #aaa;
+    border-radius: 4px;
+    vertical-align: middle;
+}
+
+.slot.filled {
+    border-style: solid;
+    background: #eef;
+}
+
+.slot:empty {
+    border: 2px dashed #aaa;
+    background: transparent;
+}
+
+/* Wenn befüllt → keine Linie, nur Inhalt */
+.slot:not(:empty) {
+    border: none;
+    background: transparent;
+}
+
+
+.children {
+    margin-left: 20px;
+    display: flex;
+    flex-direction: column;
 }
 
 
@@ -136,7 +168,7 @@ header h1 {
     min-height: 100%;
     display: flex;
     flex-direction: column;
-    gap: 8px; 
+    gap: 8px;
     padding: 10px;
     border: 1px dashed #888;
 }
@@ -167,13 +199,13 @@ header h1 {
     cursor: pointer
 }
 
-#garbage{
-  border: 2px dashed red;
-  padding: 20px;
-  text-align: center;
-  color: red;
-  font-weight: bold;
-  border-radius: 8px;
+#garbage {
+    border: 2px dashed red;
+    padding: 20px;
+    text-align: center;
+    color: red;
+    font-weight: bold;
+    border-radius: 8px;
 }
 
 
