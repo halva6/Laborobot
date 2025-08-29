@@ -64,15 +64,29 @@
             <div class="group-title">
                 Variables
             </div>
-            <div class="block-variable" id="block-get-x-pos" draggable="true" data-palette="true">
-                <span class="label">X</span>
+            <div id="variable-container">
+                <div class="inline-container">
+                    <div class="block-variable" id="block-get-x-pos" draggable="true" data-palette="true">
+                        <span class="label">X</span>
+                    </div>
+                    <p>= position on x-axis</p>
+                </div>
+                <div class="inline-container">
+                    <div class="block-variable" id="block-get-y-pos" draggable="true" data-palette="true">
+                        <span class="label">Y</span>
+                    </div>
+                    <p>= position on y-axis</p>
+                </div>
+                <div class="inline-container">
+                    <div class="block-variable" id="block-get-z-pos" draggable="true" data-palette="true">
+                        <span class="label">Z</span>
+                    </div>
+                    <p>= position on z-axis</p>
+                </div>
             </div>
-            <div class="block-variable" id="block-get-y-pos" draggable="true" data-palette="true">
-                <span class="label">Y</span>
-            </div>
-            <div class="block-variable" id="block-get-z-pos" draggable="true" data-palette="true">
-                <span class="label">Z</span>
-            </div>
+            <button id="add-variable" onclick="addVariable()">+</button>
+
+
             <div class="group-title">
                 Debug
             </div>
@@ -96,7 +110,7 @@
     </section>
 
 
-
+    <script src="static/add_variables.js"></script>
     <script src="static/console.js"></script>
     <script src="static/drag_and_drop.js"></script>
     <script src="static/run.js"></script>
