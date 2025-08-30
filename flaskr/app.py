@@ -4,7 +4,7 @@ from flask import request
 
 app = Flask(__name__)
 
-@app.route("/laborobot", methods = ["GET", "POST"])
+@app.route("/", methods = ["GET", "POST"])
 def start():
     if request.method == "POST":
         command = request.get_json()
