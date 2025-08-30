@@ -1,3 +1,10 @@
+window.addEventListener('beforeunload', function (event) {
+  // The following line is necessary to display the confirmation message
+  event.preventDefault();
+  // The default message is no longer displayed in modern browsers
+  event.returnValue = 'Do you really want to leave the page?';
+});
+
 function getWorkspaceContents() {
   const workspace = document.getElementById("workspaceInner");
 
@@ -71,22 +78,18 @@ function getWorkspaceContents() {
   return topLevelBlocks;
 }
 
-
-
-
-
 //send it to the server
 function run() {
-    const contents = getWorkspaceContents();
-    console.log(JSON.stringify(contents, null, 2));
+  const contents = getWorkspaceContents();
+  console.log(JSON.stringify(contents, null, 2));
 
-    fetch('/',
-        {
-            method: 'POST',
-            headers:
-            {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(contents)
-        });
+  fetch('/',
+    {
+      method: 'POST',
+      headers:
+      {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(contents)
+    });
 }

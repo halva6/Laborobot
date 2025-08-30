@@ -45,11 +45,11 @@ function addVariable() {
 }
 
 function removeVariable(id) {
-   const el = document.getElementById(id);
+    const el = document.getElementById(id);
     if (el) el.remove();
 
     // determine the base ID --> e.g. from "inline-container-asd"
-    const varName = id.replace("inline-container-", ""); 
+    const varName = id.replace("inline-container-", "");
     const baseId = "block-get-" + varName + "-pos";
 
     // find all elements whose id starts with baseId

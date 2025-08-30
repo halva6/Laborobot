@@ -16,7 +16,7 @@ class Robot():
 
     def move_x(self, value):
         if not value == None:
-            if self.MIN_X < value < self.MAX_X:
+            if self.MIN_X <= self.__x + value <= self.MAX_X:
                 self.__x += value
                 print(f"Move {value} on X axis, position on x: {self.__x}")
             else:
@@ -26,7 +26,7 @@ class Robot():
 
     def move_y(self, value):
         if not value == None:
-            if self.MIN_Y < value < self.MAX_Y:
+            if self.MIN_Y <= self.__y + value <= self.MAX_Y:
                 self.__y += value
                 print(f"Move {value} on Y axis, position on y: {self.__y}")
             else:
@@ -36,7 +36,7 @@ class Robot():
 
     def move_z(self, value):
         if not value == None:
-            if self.MIN_Z < value < self.MAX_Z:
+            if self.MIN_Z <= self.__z + value <= self.MAX_Z:
                 self.__z += value
                 print(f"Move {value} on Z axis, position on z: {self.__z}")
             else:

@@ -122,7 +122,13 @@ garbage.addEventListener("drop", (e) => {
 
 // workspace blank button
 clearBtn.addEventListener("click", () => {
-    droppable.innerHTML = "";
-    logMessage("Everything cleared", "info");
+    const confirmDelete = confirm("Do you really want to delete everything?");
+    if (confirmDelete) {
+        droppable.innerHTML = "";
+        logMessage("Everything cleared", "info");
+    } else {
+        logMessage("Löschen abgebrochen", "warn");
+    }
 });
+
 

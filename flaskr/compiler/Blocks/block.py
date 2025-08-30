@@ -23,6 +23,9 @@ class Block:
     
     def get_children(self) -> list:
         return self._children
+
+    def get_id(self) -> str:
+        return self._id
     
     def __str__(self):
         return self._id
@@ -43,6 +46,24 @@ class MoveBlock(Block):
         if self._id.startswith("block-steps-z"):
             z = context.get_variable(self._commands[1])
             robot.move_z(z)
+
+class ResetPositionBlock(Block):
+    def __init__(self, id:str, type:str, text:str, variables:list[Variable], children:list):
+        super().__init__(id, type, text, variables, children)
+    
+    def _execute(self, context:Context, robot) -> None: #only for test purpose
+        x_pos = robot.get_x()
+        for _ in range(x_pos):
+            robot.move_x(-1)
+        
+        y_pos = robot.get_y()
+        for _ in range(y_pos):
+            robot.move_x(-1)
+
+        z_pos = robot.get_z()
+        for _ in range(z_pos):
+            robot.move_z(-1)
+
 
 class IfBlock(Block):
     def __init__(self, id:str, type:str, text:str, variables:list[Variable], children:list):
@@ -88,17 +109,42 @@ class IfElseBlock(IfBlock):
 class RepeatBlock(Block):
     def __init__(self, id:str, type:str, text:str, variables:list[Variable], children:list) -> None:
         super().__init__(id, type, text, variables, children)
+        self.__break_child = self.__find_break_child(children=children)
+        self.__break: bool = False
     
     def _execute(self, context: Context, robot: Robot) -> None:
         for _ in range(context.get_variable(self._commands[1])):
             self._execute_children(context, robot)
+            if self.__break:
+                break
+
+    def _execute_children(self, context, robot) -> None:
+        for child in self._children:
+            child._execute(context, robot)
+            if not self.__break_child == None:
+                if self.__break_child.is_active():
+                    self.__break = True
+                    break
+
+    def __find_break_child(self, children:list):
+        for child in children:
+            if not child.get_children() == []:
+                return self.__find_break_child(child.get_children())
+            
+            if "break" in child.get_id():
+                return child
+        return None
     
-class EventBlock(Block):
+class BreakBlock(Block):
     def __init__(self, id:str, type:str, text:str, variables:list[Variable], children:list) -> None:
         super().__init__(id, type, text, variables, children)
-    
+        self.__active: bool = False
+
     def _execute(self, context:Context, robot: Robot) -> None:
-        pass
+        self.__active = True
+
+    def is_active(self) -> bool:
+        return self.__active
 
 class DebugPrintBlock(Block):
     def __init__(self, id:str, type:str, text:str, variables:list[Variable], children:list, socketio = None) -> None:

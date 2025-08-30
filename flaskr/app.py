@@ -28,7 +28,7 @@ def start():
         for block in loader.get_blocks():
             block._execute(context, robot)
 
-        print(f"command: {command} + type of command {type(command)}")
+        #print(f"command: {command} + type of command {type(command)}")
 
     return render_template("index.html")
 

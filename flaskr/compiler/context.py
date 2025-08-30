@@ -9,8 +9,10 @@ class Context():
 
         self.__robot = robot
 
+        var_names = []
         for var in self.__variables:
-            print(var.get_name())
+            var_names.append(var.get_name())
+        print(f"[DEBUG] variables: {var_names}")
 
     def __get_all_variables(self, blocks:list, variables:list[Variable]) -> list[Variable]:
         for block in blocks:

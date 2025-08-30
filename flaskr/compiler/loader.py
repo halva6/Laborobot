@@ -30,14 +30,16 @@ class Loader():
                 variables.append(Variable(variable["text"],variable["value"]))        
 
 
-        if block_type == "block-event":
-            return EventBlock(id=raw_block["id"], type=block_type, text=raw_block["text"], variables=variables, children=children)
+        if block_type == "block-event" and "break" in raw_block["id"]:
+            return BreakBlock(id=raw_block["id"], type=block_type, text=raw_block["text"], variables=variables, children=children)
         elif block_type == "block-controll" and "repeat" in raw_block["text"]:
             return RepeatBlock(id=raw_block["id"], type=block_type, text=raw_block["text"], variables=variables, children=children)
         elif block_type == "block-controll" and "if" in raw_block["text"]:
             return IfBlock(id=raw_block["id"], type=block_type, text=raw_block["text"], variables=variables, children=children)
-        elif block_type.startswith("block-move"):
+        elif block_type.startswith("block-move") and "steps" in raw_block["id"]:
             return MoveBlock(id=raw_block["id"], type=block_type, text=raw_block["text"], variables=variables, children=children)
+        elif block_type.startswith("block-move") and "reset" in raw_block["id"]:
+            return ResetPositionBlock(id=raw_block["id"], type=block_type, text=raw_block["text"], variables=variables, children=children)
         elif block_type == "block-debug" and "print" in raw_block["id"]:
             return DebugPrintBlock(id=raw_block["id"], type=block_type, text=raw_block["text"], variables=variables, children=children, socketio=self.__socketio)
         else:

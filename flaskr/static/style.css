@@ -170,7 +170,7 @@ header h1 {
 
 
 .children {
-    margin-left: 20px;
+    margin-left: 40px;
     display: flex;
     flex-direction: column;
 }

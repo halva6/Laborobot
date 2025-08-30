@@ -39,6 +39,9 @@
                 <span class="label"> Go <div class="slot" data-accept="variable number"></div> steps on the Z
                     axis</span>
             </div>
+            <div class="block-move" id="block-reset-pos" draggable="true" data-palette="true">
+                <span class="label"> Reset position</span>
+            </div>
 
             <div class="group-title">
                 Control
@@ -59,8 +62,8 @@
             <div class="group-title">
                 Events
             </div>
-            <div class="block-event" id="block-start" draggable="true" data-palette="true">
-                <span class="label"> Start</span>
+            <div class="block-event" id="block-break" draggable="true" data-palette="true">
+                <span class="label"> Break</span>
             </div>
 
             <div class="group-title">
@@ -84,8 +87,8 @@
                         <span class="label">Z</span>
                     </div>
                     <p>= position on z-axis</p>
-                </div> 
-                             
+                </div>
+
                 <!-- this is what a created variable would look like
                 <div class="inline-container" id="inline-container-v1">
                     <div class="block-variable" id="block-get-v1-pos" draggable="true" data-palette="true">
@@ -96,7 +99,7 @@
                     <button class = "remove-variable" onclick="removeVariable('inline-container-v1')">Remove</button>
                 </div>-->
             </div>
-            <button id="add-variable" onclick="addVariable()">+</button>  
+            <button id="add-variable" onclick="addVariable()">+</button>
 
 
             <div class="group-title">
