@@ -43,7 +43,7 @@ Laborobot is a program that aims to repurpose old, broken 3D printers as laborat
 
 5. **Run the application**
    ```bash
-   python app.py
+   python flaskr/app.py
    ```
 
 6. **Open your browser**

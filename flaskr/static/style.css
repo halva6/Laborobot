@@ -12,16 +12,7 @@ body {
     grid-template-rows: auto 1fr;
     gap: 12px;
     height: 100%;
-    padding: 14px
-}
-
-.app {
-    display: grid;
-    grid-template-columns: 280px 1fr;
-    grid-template-rows: auto 1fr;
-    gap: 12px;
-    height: 100%;
-    padding: 14px
+    zoom: 0.85;
 }
 
 header {
@@ -189,9 +180,11 @@ header h1 {
 .workspace {
     position: relative;
     overflow: auto;
-    background:
-        radial-gradient(circle at 25px 25px, rgba(255, 255, 255, .06) 2px, transparent 2px) 0 0/50px 50px,
-        linear-gradient(rgb(33, 49, 100), #26396b);
+    background-color: #283558;
+    background-image: radial-gradient(#929292 1px, transparent 1px);
+    background-size: 20px 20px;
+    margin-right: 20px;
+    margin-bottom: 20px;
 }
 
 .workspace-inner {
