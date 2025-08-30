@@ -122,14 +122,14 @@ header h1 {
 }
 
 .inline-container {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
 }
 
 
-#add-variable
-{
+#add-variable,
+.remove-variable {
     font-weight: 800;
     text-align: center;
     font-size: larger;
@@ -142,13 +142,13 @@ header h1 {
     cursor: pointer;
 }
 
-#add-variable:hover
-{
+#add-variable:hover,
+.remove-variable:hover {
     background: #979797;
 }
 
-#add-variable:active
-{
+#add-variable:active,
+.remove-variable:active {
     background-color: #a8a8a8;
 }
 
@@ -217,13 +217,12 @@ header h1 {
     box-shadow: v0 8px 24px rgba(0, 0, 0, .35);
     cursor: pointer
 }
-#delete:hover
-{
+
+#delete:hover {
     background-color: #fa6363;
 }
 
-#delete:active
-{
+#delete:active {
     background-color: #fc7878;
 }
 
@@ -240,13 +239,11 @@ header h1 {
     cursor: pointer
 }
 
-#run:hover
-{
+#run:hover {
     background-color: #61faa1;
 }
 
-#run:active
-{
+#run:active {
     background-color: #7afdb0;
 }
 
