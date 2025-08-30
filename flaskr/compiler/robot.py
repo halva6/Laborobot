@@ -15,25 +15,34 @@ class Robot():
 
 
     def move_x(self, value):
-        if self.MIN_X < value < self.MAX_X:
-            self.__x += value
-            print(f"Move {value} on X axis, position on x: {self.__x}")
+        if not value == None:
+            if self.MIN_X < value < self.MAX_X:
+                self.__x += value
+                print(f"Move {value} on X axis, position on x: {self.__x}")
+            else:
+                print(f"[ERROR] move to far! X would be {value}")
         else:
-            print(f"[ERROR] move to far! X would be {value}")
+                print(f"[ERROR] value is an 'NoneType'")
 
     def move_y(self, value):
-        if self.MIN_Y < value < self.MAX_Y:
-            self.__y += value
-            print(f"Move {value} on Y axis, position on y: {self.__y}")
+        if not value == None:
+            if self.MIN_Y < value < self.MAX_Y:
+                self.__y += value
+                print(f"Move {value} on Y axis, position on y: {self.__y}")
+            else:
+                print(f"[ERROR] move to far! Y would be {value}")
         else:
-            print(f"[ERROR] move to far! Y would be {value}")
+                print(f"[ERROR] value is an 'NoneType'")        
 
     def move_z(self, value):
-        if self.MIN_Z < value < self.MAX_Z:
-            self.__z += value
-            print(f"Move {value} on Z axis, position on z: {self.__z}")
+        if not value == None:
+            if self.MIN_Z < value < self.MAX_Z:
+                self.__z += value
+                print(f"Move {value} on Z axis, position on z: {self.__z}")
+            else:
+                print(f"[ERROR] move to far! Z would be {value}")
         else:
-            print(f"[ERROR] move to far! Z would be {value}")
+                print(f"[ERROR] value is an 'NoneType'")
 
     def get_x(self):
         return self.__x

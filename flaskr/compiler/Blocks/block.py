@@ -23,6 +23,9 @@ class Block:
     
     def get_children(self) -> list:
         return self._children
+    
+    def __str__(self):
+        return self._id
 
 class MoveBlock(Block):
     def __init__(self, id:str, type:str, text:str, variables:list[Variable], children:list) -> None:
@@ -96,3 +99,11 @@ class EventBlock(Block):
     
     def _execute(self, context:Context, robot: Robot) -> None:
         pass
+
+class DebugPrintBlock(Block):
+    def __init__(self, id:str, type:str, text:str, variables:list[Variable], children:list, socketio = None) -> None:
+        super().__init__(id, type, text, variables, children)
+        self.__soketio = socketio
+    
+    def _execute(self, context, robot) -> None:
+        self.__soketio.emit('update', {'data': f'[DEBUG]  {self._commands[3]} = {context.get_variable(self._commands[3])}'})
