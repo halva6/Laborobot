@@ -270,6 +270,10 @@ header h1 {
     color: #4fc3f7;
 }
 
+.console-line.debug {
+    color: #bcf74f;
+}
+
 .console-line.warn {
     color: #ffb74d;
 }

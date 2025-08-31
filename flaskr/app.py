@@ -7,11 +7,16 @@ from compiler.robot import Robot
 from compiler.loader import Loader
 from compiler.context import Context
 
+from compiler.Blocks.block import *
+from compiler.server_error import *
+
 import json
 
-app = Flask(__name__)
+app: Flask = Flask(__name__)
 app.config['SECRET_KEY'] = 'sec,msdfgnß04835,mnvkmliouzh32409ß854309##.ret!'
-socketio = SocketIO(app)
+socket_io:SocketIO = SocketIO(app)
+
+ErrorManager.init(socket_io)
 
 @app.route("/", methods = ["GET", "POST"])
 def start():
@@ -21,20 +26,17 @@ def start():
         with open("flaskr/compiler/from_server.json","w") as file:
             file.write(json.dumps(command))
 
-        robot = Robot()
-        loader = Loader("flaskr/compiler/from_server.json", socketio=socketio)
-        context = Context(loader.get_blocks(), robot)
+        try:
+            robot: Robot = Robot()
+            loader: Loader = Loader("flaskr/compiler/from_server.json", socket_io)
+            context: Context = Context(loader.get_blocks(), robot)
 
-        for block in loader.get_blocks():
-            try:
-                block._execute(context, robot)
-            except NotImplementedError:
-                socketio.emit('update', {'data': f'[ERROR] a block is not yet implemented', 'error_code':1})
-            
-
-        #print(f"command: {command} + type of command {type(command)}")
+            for block in loader.get_blocks():
+                block.execute(context, robot)
+        except Exception as e:
+            ErrorManager.report(e)
 
     return render_template("index.html")
 
 if __name__ == "__main__":
-    socketio.run(app, host='0.0.0.0',)
+    socket_io.run(app, host='0.0.0.0',)

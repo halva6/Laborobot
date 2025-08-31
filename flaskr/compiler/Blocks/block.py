@@ -1,6 +1,11 @@
+from flask_socketio import SocketIO
+
 from compiler.Blocks.variables import Variable
 from compiler.context import Context
 from compiler.robot import Robot
+
+from compiler.server_error import ExpectVariableError
+
 
 class Block:
     """ Functions and variables that start 
@@ -8,7 +13,7 @@ class Block:
     with __ are private, 
     the rest is public """
 
-    def __init__(self, id:str, type:str, text:str, variables:list[Variable], children:list, socketio):
+    def __init__(self, id:str, type:str, text:str, variables:list[Variable], children:list):
         """ Block class is the parent class of each block 
         and provides the corresponding functionalities """
         self._id: str = id
@@ -16,20 +21,17 @@ class Block:
         self._commands:list[str] = text.split(" ")
         self._variables: list[Variable] = variables
         self._children: list = children
-        self._socketio = socketio
-
-        self._expected_variables = 0
+        self._expected_variables: int = 0
 
         if len(variables) == self._expected_variables:
-            self.__log_error("mv")
+            raise ExpectVariableError("Expected variables but got none", block_id=self._id)
 
+    def execute(self, context: Context, robot: Robot) -> None:
+        raise NotImplementedError
 
-    def _execute(self, context: Context, robot: Robot) -> None:
-        raise NotImplementedError()
-    
     def _execute_children(self, context:Context, robot: Robot) -> None:
         for child in self._children:
-            child._execute(context, robot)
+            child.execute(context, robot)
         
     def get_variables(self) -> list[Variable]:
         return self._variables
@@ -39,21 +41,16 @@ class Block:
 
     def get_id(self) -> str:
         return self._id
-    
-    def __log_error(self, error_type) -> None:
-        match error_type:
-            case "mv":
-                self._socketio.emit('update', {'data': f'[ERROR] missing variable' , 'error_code':1})
 
-    def __str__(self):
-        return self._id
+    def __str__(self) -> str:
+        return str(self._id)
 
 class MoveBlock(Block):
-    def __init__(self, id:str, type:str, text:str, variables:list[Variable], children:list, socketio) -> None:
+    def __init__(self, id:str, type:str, text:str, variables:list[Variable], children:list) -> None:
         self._expected_variables = 1
-        super().__init__(id, type, text, variables, children, socketio)
+        super().__init__(id, type, text, variables, children)
     
-    def _execute(self, context:Context, robot: Robot) -> None:
+    def execute(self, context:Context, robot: Robot) -> None:
         if self._id.startswith("block-steps-x"):
             x = context.get_variable(self._commands[1])
             robot.move_x(x)
@@ -67,11 +64,11 @@ class MoveBlock(Block):
             robot.move_z(z)
 
 class ResetPositionBlock(Block):
-    def __init__(self, id:str, type:str, text:str, variables:list[Variable], children:list, socketio):
+    def __init__(self, id:str, type:str, text:str, variables:list[Variable], children:list):
         self._expected_variables = 1
-        super().__init__(id, type, text, variables, children, socketio)
+        super().__init__(id, type, text, variables, children)
     
-    def _execute(self, context:Context, robot) -> None: #only for test purpose
+    def execute(self, context:Context, robot) -> None: #only for test purpose
         x_pos = robot.get_x()
         for _ in range(x_pos):
             robot.move_x(-1)
@@ -86,12 +83,11 @@ class ResetPositionBlock(Block):
 
 
 class IfBlock(Block):
-    def __init__(self, id:str, type:str, text:str, variables:list[Variable], children:list, socketio):
+    def __init__(self, id:str, type:str, text:str, variables:list[Variable], children:list):
         self._expected_variables = 2
-        super().__init__(id, type, text, variables, children, socketio)
+        super().__init__(id, type, text, variables, children)
 
-    def _execute(self, context:Context, robot: Robot):
-
+    def execute(self, context:Context, robot: Robot):
         execute_bool:bool = self._get_execute_bool(commands=self._commands, context=context)
         
         if execute_bool:
@@ -114,12 +110,12 @@ class IfBlock(Block):
     
 
 class IfElseBlock(IfBlock):
-    def __init__(self, id: str, type:str, text:str, variables:list[Variable], children:list, socketio, children_else:list) -> None:
+    def __init__(self, id: str, type:str, text:str, variables:list[Variable], children:list, children_else:list) -> None:
         self._expected_variables = 4
-        super().__init__(id, type, text, variables, children, socketio)
+        super().__init__(id, type, text, variables, children)
         self.__children_else = children_else
     
-    def _execute(self, context:Context, robot: Robot) -> None:
+    def execute(self, context:Context, robot: Robot) -> None:
         execute_bool:bool = self._get_execute_bool(commands=self._commands, context=context)
         
         if execute_bool:
@@ -129,13 +125,13 @@ class IfElseBlock(IfBlock):
             self._execute_children(context, robot);   
 
 class RepeatBlock(Block):
-    def __init__(self, id:str, type:str, text:str, variables:list[Variable], children:list, socketio) -> None:
+    def __init__(self, id:str, type:str, text:str, variables:list[Variable], children:list) -> None:
         self._expected_variables = 1
-        super().__init__(id, type, text, variables, children, socketio)
+        super().__init__(id, type, text, variables, children)
         self.__break_child = self.__find_break_child(children=children)
         self.__break: bool = False
     
-    def _execute(self, context: Context, robot: Robot) -> None:
+    def execute(self, context: Context, robot: Robot) -> None:
         for _ in range(context.get_variable(self._commands[1])):
             self._execute_children(context, robot)
             if self.__break:
@@ -160,27 +156,27 @@ class RepeatBlock(Block):
         return None
     
 class BreakBlock(Block):
-    def __init__(self, id:str, type:str, text:str, variables:list[Variable], children:list, socketio) -> None:
+    def __init__(self, id:str, type:str, text:str, variables:list[Variable], children:list) -> None:
         """breaks the loop immediately
         If you encounter it during execution, it becomes active, so to speak. 
         The loop checks at each step whether it has been interrupted, 
         i.e. whether the BreakBlock is active, if so, then the loop is interrupted"""
-        super().__init__(id, type, text, variables, children, socketio)
+        super().__init__(id, type, text, variables, children)
         self.__active: bool = False
 
-    def _execute(self, context:Context, robot: Robot) -> None:
-        """"""
+    def execute(self, context:Context, robot: Robot) -> None:
         self.__active = True
 
     def is_active(self) -> bool:
         return self.__active
 
 class DebugPrintBlock(Block):
-    def __init__(self, id:str, type:str, text:str, variables:list[Variable], children:list, socketio) -> None:
+    def __init__(self, id:str, type:str, text:str, variables:list[Variable], children:list, socket_io:SocketIO) -> None:
         self._expected_variables = 0
-        super().__init__(id, type, text, variables, children, socketio)
+        super().__init__(id, type, text, variables, children)
+        self._socket_io:SocketIO = socket_io
     
-    def _execute(self, context, robot) -> None:
+    def execute(self, context, robot) -> None:
         """sends data to the frontend, which is to be output in the console there, with the corresponding variable values"""
         if not self._variables == []:
-            self._socketio.emit('update', {'data': f'[DEBUG]  {self._commands[3]} = {context.get_variable(self._commands[3])}' , 'error_code':0})
+            self._socket_io.emit('update', {'data': f'[DEBUG]  {self._commands[3]} = {context.get_variable(self._commands[3])}'})

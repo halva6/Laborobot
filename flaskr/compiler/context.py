@@ -1,3 +1,5 @@
+from flask_socketio import SocketIO
+
 from compiler.Blocks.block import *
 from compiler.Blocks.variables import Variable
 from compiler.robot import Robot
@@ -7,9 +9,9 @@ class Context():
         self.__variables:list[Variable] = []
         self.__variables:list[Variable] = self.__get_all_variables(blocks, self.__variables)
 
-        self.__robot = robot
+        self.__robot: Robot = robot
 
-        var_names = []
+        var_names:list = []
         for var in self.__variables:
             var_names.append(var.get_name())
         print(f"[DEBUG] variables: {var_names}")
@@ -29,7 +31,7 @@ class Context():
                     variables.append(var)
         return variables
     
-    def get_variable(self, name:str):
+    def get_variable(self, name:str) -> int:
         """Return of the corresponding variable values based on their names. 
         However, the variables 'X', 'Y', or 'Z' correspond to the current positions on the axes"""
         for var in self.__variables:
@@ -41,5 +43,4 @@ class Context():
                         return self.__robot.get_y()
                     case "Z":
                         return self.__robot.get_z()
-                return var.get_value()
-            
+                return var.get_value()    

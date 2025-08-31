@@ -1,21 +1,19 @@
-class Variable():
-    def __init__(self, name:str, value:str):
-        self.__name = name
-        self.__value = self.__check_validation(value=value)
+from compiler.server_error import FalseTypeError
 
-    def get_value(self):
+class Variable():
+    def __init__(self, name:str, value:str) -> None:
+        self.__name:str = name
+        self.__value:int = self.__check_validation(value=value)
+
+    def get_value(self) -> int:
         return self.__value
     
     def get_name(self) -> str:
         return self.__name
     
-    def __check_validation(self, value:str):
+    def __check_validation(self, value:str) -> int:
         if not value == None:
             if value.isnumeric():
                 return int(value)
-            elif value.isdigit():
-                return float(value)
             else:
-                return str(value)
-        else:
-            return "None"
+                raise FalseTypeError("Variable has the false data type, needed 'int'", self.__name)

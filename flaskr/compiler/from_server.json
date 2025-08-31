@@ -1,1 +1,1 @@
-[{"id": "block-debug-print-1756637949881", "type": "block-debug", "text": "print in console X", "variables": [{"id": "block-get-x-pos-1756638060066", "text": "X", "type": "block-variable", "value": null}], "children": []}, {"id": "block-steps-y-1756638061142", "type": "block-move", "text": "Go  steps on the Y axis", "variables": [], "children": []}]
+[{"id": "block-steps-z-1756668402603", "type": "block-move", "text": "Go  steps on the Z axis", "variables": [], "children": []}]
