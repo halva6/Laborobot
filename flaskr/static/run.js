@@ -8,7 +8,7 @@ window.addEventListener('beforeunload', function (event) {
 function getWorkspaceContents() {
   const workspace = document.getElementById("workspaceInner");
 
-  // 1) Variable-Map aus der Palette
+  // variable map from the palette
   const variableMap = {};
   document.querySelectorAll("#variable-container .inline-container").forEach(container => {
     const varBlock = container.querySelector(".block-variable");
@@ -22,14 +22,14 @@ function getWorkspaceContents() {
     };
   });
 
-  // 2) Rekursiv einen Block lesen
+  // recursively read a block
   function parseBlock(block) {
-    // eigener children-Container (direktes Kind)
+    // own children container (direct child)
     const childrenContainer = block.querySelector(":scope > .children");
 
-    // --- Variablen dieses Blocks (ohne eigene Children) ---
+    // variables of this block (without your own children)
     const variables = Array.from(block.querySelectorAll(".block-variable"))
-      // nur die Variablen behalten, die NICHT im *eigenen* children-Container liegen
+      // keep only the variables that are NOT in the own children container
       .filter(v => !(childrenContainer && childrenContainer.contains(v)))
       .map(v => {
         const label = v.querySelector(".label")
@@ -45,12 +45,12 @@ function getWorkspaceContents() {
         };
       });
 
-    // --- Block-Text (Label), ebenfalls ohne Inhalte aus dem eigenen children-Container ---
+    // Block text (label), also without content from your own children container
     const labelEl = Array.from(block.querySelectorAll(".label"))
       .find(el => !(childrenContainer && childrenContainer.contains(el)));
     const text = labelEl ? labelEl.innerText.trim() : "";
 
-    // --- Kinder parsen ---
+    // parse children
     const children = childrenContainer
       ? Array.from(childrenContainer.children).map(parseBlock)
       : [];
@@ -64,7 +64,7 @@ function getWorkspaceContents() {
     };
   }
 
-  // 3) Top-Level Blöcke einsammeln
+  // top-Level Blöcke einsammeln 
   const topLevelBlocks = Array.from(workspace.children)
     .filter(block =>
       block.classList.contains("block-move") ||

@@ -3,13 +3,15 @@ from compiler.Blocks.block import *
 from compiler.Blocks.variables import Variable
 
 class Loader():
-    def __init__(self, file_path:str, soketio) -> None:
+    def __init__(self, file_path:str, socketio) -> None:
+        """Loader class reads JSON, validates schema, creates concrete block objects"""
         raw_blocks = self.__get_dict_from_json(file_path)
         self.__blocks:list = []
-        self.__socketio = soketio
+        self.__socketio = socketio
 
+        #rekusive approach, since a certain block can have any number of sub-blocks or also called children
         for raw_block in raw_blocks:
-            self.__blocks.append(self.__factory(raw_block))
+            self.__blocks.append(self.__factory(raw_block)) 
 
     
     def __get_dict_from_json(self, file_path:str) -> dict:
@@ -29,21 +31,21 @@ class Loader():
             for variable in raw_block["variables"]:
                 variables.append(Variable(variable["text"],variable["value"]))        
 
-
+        # gets the blocktype based on typical properties from the JSON dict
         if block_type == "block-event" and "break" in raw_block["id"]:
-            return BreakBlock(id=raw_block["id"], type=block_type, text=raw_block["text"], variables=variables, children=children)
+            return BreakBlock(id=raw_block["id"], type=block_type, text=raw_block["text"], variables=variables, children=children, socketio=self.__socketio)
         elif block_type == "block-controll" and "repeat" in raw_block["text"]:
-            return RepeatBlock(id=raw_block["id"], type=block_type, text=raw_block["text"], variables=variables, children=children)
+            return RepeatBlock(id=raw_block["id"], type=block_type, text=raw_block["text"], variables=variables, children=children, socketio=self.__socketio)
         elif block_type == "block-controll" and "if" in raw_block["text"]:
-            return IfBlock(id=raw_block["id"], type=block_type, text=raw_block["text"], variables=variables, children=children)
+            return IfBlock(id=raw_block["id"], type=block_type, text=raw_block["text"], variables=variables, children=children, socketio=self.__socketio)
         elif block_type.startswith("block-move") and "steps" in raw_block["id"]:
-            return MoveBlock(id=raw_block["id"], type=block_type, text=raw_block["text"], variables=variables, children=children)
+            return MoveBlock(id=raw_block["id"], type=block_type, text=raw_block["text"], variables=variables, children=children, socketio=self.__socketio)
         elif block_type.startswith("block-move") and "reset" in raw_block["id"]:
-            return ResetPositionBlock(id=raw_block["id"], type=block_type, text=raw_block["text"], variables=variables, children=children)
+            return ResetPositionBlock(id=raw_block["id"], type=block_type, text=raw_block["text"], variables=variables, children=children, socketio=self.__socketio)
         elif block_type == "block-debug" and "print" in raw_block["id"]:
             return DebugPrintBlock(id=raw_block["id"], type=block_type, text=raw_block["text"], variables=variables, children=children, socketio=self.__socketio)
         else:
-            return Block(id=raw_block["id"], type=block_type, text=raw_block["text"], variables=variables, children=children)
+            return Block(id=raw_block["id"], type=block_type, text=raw_block["text"], variables=variables, children=children, socketio=self.__socketio)
         
     def get_blocks(self)-> list:
         return self.__blocks

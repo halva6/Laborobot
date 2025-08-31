@@ -3,6 +3,7 @@ from context import Context
 from robot import Robot
 
 if __name__ == "__main__":
+    """this file is only available for testing purposes in the backend"""
     robot = Robot()
     loader = Loader("flaskr/compiler/from_server.json")
     context = Context(loader.get_blocks(), robot)

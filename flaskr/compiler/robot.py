@@ -1,5 +1,7 @@
 class Robot():
     def __init__(self):
+        """is intended to simulate the robot with its 3 different axes for test purposes. 
+        This class will be changed later and the actual physical robot will be added"""
         self.MAX_X = 10000
         self.MIN_X = 0
 

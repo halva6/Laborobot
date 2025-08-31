@@ -3,7 +3,7 @@ from compiler.Blocks.variables import Variable
 from compiler.robot import Robot
 
 class Context():
-    def __init__(self, blocks, robot):
+    def __init__(self, blocks, robot: Robot):
         self.__variables:list[Variable] = []
         self.__variables:list[Variable] = self.__get_all_variables(blocks, self.__variables)
 
@@ -19,6 +19,7 @@ class Context():
             if not block.get_children() == []:
                 self.__get_all_variables(block.get_children(), variables)
 
+            # Append unique variables from block to the variables list 
             for var in block.get_variables():
                 found: bool = True
                 for var2 in variables:
@@ -28,7 +29,9 @@ class Context():
                     variables.append(var)
         return variables
     
-    def get_variable(self, name):
+    def get_variable(self, name:str):
+        """Return of the corresponding variable values based on their names. 
+        However, the variables 'X', 'Y', or 'Z' correspond to the current positions on the axes"""
         for var in self.__variables:
             if var.get_name() == name:
                 match name:

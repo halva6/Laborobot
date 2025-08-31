@@ -22,11 +22,15 @@ def start():
             file.write(json.dumps(command))
 
         robot = Robot()
-        loader = Loader("flaskr/compiler/from_server.json", soketio=socketio)
+        loader = Loader("flaskr/compiler/from_server.json", socketio=socketio)
         context = Context(loader.get_blocks(), robot)
 
         for block in loader.get_blocks():
-            block._execute(context, robot)
+            try:
+                block._execute(context, robot)
+            except NotImplementedError:
+                socketio.emit('update', {'data': f'[ERROR] a block is not yet implemented', 'error_code':1})
+            
 
         #print(f"command: {command} + type of command {type(command)}")
 
