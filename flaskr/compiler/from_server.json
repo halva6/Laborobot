@@ -1,1 +1,31 @@
-[{"id": "block-steps-z-1756668402603", "type": "block-move", "text": "Go  steps on the Z axis", "variables": [], "children": []}]
+[
+    {
+        "id": "block-repeat-1757870713424",
+        "type": "block-controll",
+        "text": "repeat X times",
+        "variables": [
+            {
+                "id": "block-get-x-pos-1757870715297",
+                "text": "X",
+                "type": "block-variable",
+                "value": null
+            }
+        ],
+        "children": [
+            {
+                "id": "block-steps-x-1757870679763",
+                "type": "block-move",
+                "text": "Go g steps on the X axis",
+                "variables": [
+                    {
+                        "id": "block-get-g-pos-1757870720929",
+                        "text": "g",
+                        "type": "block-variable",
+                        "value": "-800"
+                    }
+                ],
+                "children": []
+            }
+        ]
+    }
+]

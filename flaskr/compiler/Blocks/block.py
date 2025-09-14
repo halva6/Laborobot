@@ -21,9 +21,8 @@ class Block:
         self._commands:list[str] = text.split(" ")
         self._variables: list[Variable] = variables
         self._children: list = children
-        self._expected_variables: int = 0
 
-        if len(variables) == self._expected_variables:
+        if not len(variables) == self._expected_variables:
             raise ExpectVariableError("Expected variables but got none", block_id=self._id)
 
     def execute(self, context: Context, robot: Robot) -> None:
@@ -65,21 +64,11 @@ class MoveBlock(Block):
 
 class ResetPositionBlock(Block):
     def __init__(self, id:str, type:str, text:str, variables:list[Variable], children:list):
-        self._expected_variables = 1
+        self._expected_variables = 0
         super().__init__(id, type, text, variables, children)
     
     def execute(self, context:Context, robot) -> None: #only for test purpose
-        x_pos = robot.get_x()
-        for _ in range(x_pos):
-            robot.move_x(-1)
-        
-        y_pos = robot.get_y()
-        for _ in range(y_pos):
-            robot.move_x(-1)
-
-        z_pos = robot.get_z()
-        for _ in range(z_pos):
-            robot.move_z(-1)
+        robot.reset_pos()
 
 
 class IfBlock(Block):

@@ -13,6 +13,8 @@ class Variable():
     
     def __check_validation(self, value:str) -> int:
         if not value == None:
+            if value.startswith("-"):
+                return int(value[1:]) *-1
             if value.isnumeric():
                 return int(value)
             else:
