@@ -1,8 +1,8 @@
 from flask_socketio import SocketIO
 
 import json
-from compiler.Blocks.block import *
-from compiler.Blocks.variables import Variable
+from compiler.blocks.block import *
+from compiler.blocks.variables import Variable
 
 class Loader():
     def __init__(self, file_path:str, socket_io: SocketIO) -> None:

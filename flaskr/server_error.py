@@ -1,5 +1,7 @@
 from flask_socketio import SocketIO
 
+import traceback
+
 class ServerError(Exception):
     """Basis für alle Fehler, die durch User-Code entstehen."""
     def __init__(self, message:str, block_id:str=None, error_code=None):
@@ -35,6 +37,7 @@ class ErrorManager:
     @classmethod
     def report(cls, error: Exception) -> None:
         """Report an error to the frontend via SocketIO."""
+        print(traceback.print_exception(error))
         if cls._instance is None:
             raise RuntimeError("ErrorManager has not been initialized. Call ErrorManager.init(socketio).")
 

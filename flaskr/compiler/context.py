@@ -1,8 +1,8 @@
 from flask_socketio import SocketIO
 
-from compiler.Blocks.block import *
-from compiler.Blocks.variables import Variable
-from compiler.robot import Robot
+from compiler.blocks.block import *
+from compiler.blocks.variables import Variable
+from robot_movement.robot import Robot
 
 class Context():
     def __init__(self, blocks, robot: Robot):
@@ -43,4 +43,7 @@ class Context():
                         return self.__robot.get_y()
                     case "Z":
                         return self.__robot.get_z()
-                return var.get_value()    
+                return var.get_value()
+            
+    def get_robot(self) -> Robot:
+        return self.__robot

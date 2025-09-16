@@ -5,12 +5,14 @@ import time
 import threading
 
 
-
 class MotorController:
     def __init__(self):
         
-        self.STEP_DELAY = 0.0001875
+        #TODO Encapsulate and type all variable types
 
+        self.STEP_DELAY:float = 0.0001875
+
+        #TODO See how it is with these variables, because they are defined twice
         self.DIR_TO_ENDSTOP = GPIO.HIGH
         self.DIR_BACK = GPIO.LOW
         self.ENA_LOCKED = GPIO.LOW
@@ -20,7 +22,7 @@ class MotorController:
         GPIO.setmode(GPIO.BOARD)
         GPIO.setwarnings(False)
 
-        self.positions = {"X": 0, "Y": 0, "Z": 0}
+        self.positions:dict = {"X": 0, "Y": 0, "Z": 0}
 
         self.motors = {
             "X": {"ENA": 22, "PUL": 16, "DIR": 18, "STOP": 11, "INVERT_DIR": False},
@@ -34,13 +36,13 @@ class MotorController:
             GPIO.setup(pins["ENA"], GPIO.OUT)
             GPIO.setup(pins["STOP"], GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
-    def get_positions(self):
+    def get_positions(self) -> dict:
         return self.positions.copy()
     
     def set_positions(self, positions):
         self.positions = positions
 
-    def step_motor(self, axis:str, steps, direction):
+    def step_motor(self, steps:int, axis:str, direction:bool):
         pins = self.motors[axis]
         GPIO.output(pins["ENA"], self.ENA_LOCKED)
         GPIO.output(pins["DIR"], direction)
@@ -65,7 +67,7 @@ class MotorController:
 
         GPIO.output(pins["ENA"], self.ENA_RELEASED)
 
-    def _drive_single_axis(self, axis):
+    def _drive_single_axis(self, axis:str):
             pins = self.motors[axis]
             GPIO.output(pins["ENA"], self.ENA_LOCKED)
             GPIO.output(pins["DIR"], self.DIR_TO_ENDSTOP if not pins["INVERT_DIR"] else self.DIR_BACK)
@@ -105,6 +107,7 @@ class MotorController:
             t.join()
 
     def move_all_axes_simultaneously(self, target_pos:dict):
+        #TODO real parallel movement of the motors, but it could also be that this is a hardware problem
         threads = []
         current_pos = self.positions.copy()
         

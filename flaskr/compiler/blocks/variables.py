@@ -1,4 +1,4 @@
-from compiler.server_error import FalseTypeError
+from server_error import FalseTypeError
 
 class Variable():
     def __init__(self, name:str, value:str) -> None:

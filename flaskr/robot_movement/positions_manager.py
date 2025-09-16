@@ -16,11 +16,9 @@ class PositionManager:
         if self.__filepath.exists():
             with open(self.__filepath, "r", encoding="utf-8") as f:
                 data = json.load(f)
-                #print(data)
                 self.__x = data.get("X", 0)
                 self.__y = data.get("Y", 0)
                 self.__z = data.get("Z", 0)
-                #print(f"X: {self.__x}, Y: {self.__y}, Z: {self.__z}")
         else:
             print("[ERROR] fail to load positions from file")
             self.__x, self.__y, self.__z = 0, 0, 0

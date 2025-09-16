@@ -3,12 +3,21 @@ from flask import render_template
 from flask import request
 from flask_socketio import SocketIO, emit
 
-from compiler.robot import Robot
+from robot_movement.test_robot import TestRobot
 from compiler.loader import Loader
 from compiler.context import Context
 
-from compiler.Blocks.block import *
-from compiler.server_error import *
+from compiler.blocks.block import *
+from server_error import *
+
+#TODO Testing if it works with the management of imports on the Raspberry Pi
+try: 
+    import RPi.GPIO as GPIO
+    from robot_movement.robot import Robot
+    gpio_avialable:bool = True
+except Exception:
+    gpio_avialable:bool = False
+
 
 import json
 
@@ -27,12 +36,17 @@ def start():
             file.write(json.dumps(command))
 
         try:
-            robot: Robot = Robot()
             loader: Loader = Loader("flaskr/compiler/from_server.json", socket_io)
-            context: Context = Context(loader.get_blocks(), robot)
+            if gpio_avialable:
+                context: Context = Context(loader.get_blocks(), Robot(gpio_avialable))
+
+            else:
+                context: Context = Context(loader.get_blocks(), TestRobot(gpio_avialable))
+
+
 
             for block in loader.get_blocks():
-                block.execute(context, robot)
+                block.execute(context)
         except Exception as e:
             ErrorManager.report(e)
 
