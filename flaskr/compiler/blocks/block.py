@@ -12,13 +12,13 @@ class Block:
     with __ are private, 
     the rest is public """
 
-    def __init__(self, id:str, type:str, text:str, variables:list[Variable], children:list):
+    def __init__(self, id:str, type:str, text:str, variables:list[str], children:list):
         """ Block class is the parent class of each block 
         and provides the corresponding functionalities """
         self._id: str = id
         self._type: str  = type
-        self._commands:list[str] = text.split(" ")
-        self._variables: list[Variable] = variables
+        self._text: str = text
+        self._variables: list[str] = variables
         self._children: list = children
 
         if not len(variables) == self._expected_variables:
@@ -31,7 +31,7 @@ class Block:
         for child in self._children:
             child.execute(context)
         
-    def get_variables(self) -> list[Variable]:
+    def get_variables_names(self) -> list[str]:
         return self._variables
     
     def get_children(self) -> list:
@@ -44,25 +44,27 @@ class Block:
         return str(self._id)
 
 class MoveBlock(Block):
-    def __init__(self, id:str, type:str, text:str, variables:list[Variable], children:list) -> None:
-        self._expected_variables = 1
+    def __init__(self, id:str, type:str, text:str, variables:list[str], children:list) -> None:
+        self._expected_variables = 1 # define the exact number of expected variables
         super().__init__(id, type, text, variables, children)
     
     def execute(self, context:Context) -> None:
         if self._id.startswith("block-steps-x"):
-            x = context.get_variable(self._commands[1])
+            # since it is specified in advance that each block has an exact number of expected variables, 
+            # one can therefore directly access the respective variable from the list
+            x = context.get_variable(self._variables[0]).to_int() 
             context.get_robot().move_x(x)
         
         if self._id.startswith("block-steps-y"):
-            y = context.get_variable(self._commands[1])
+            y = context.get_variable(self._variables[0]).to_int()
             context.get_robot().move_y(y)
 
         if self._id.startswith("block-steps-z"):
-            z = context.get_variable(self._commands[1])
+            z = context.get_variable(self._variables[0]).to_int()
             context.get_robot().move_z(z)
 
 class ResetPositionBlock(Block):
-    def __init__(self, id:str, type:str, text:str, variables:list[Variable], children:list):
+    def __init__(self, id:str, type:str, text:str, variables:list[str], children:list):
         self._expected_variables = 0
         super().__init__(id, type, text, variables, children)
     
@@ -71,40 +73,40 @@ class ResetPositionBlock(Block):
 
 
 class IfBlock(Block):
-    def __init__(self, id:str, type:str, text:str, variables:list[Variable], children:list):
+    def __init__(self, id:str, type:str, text:str, variables:list[str], children:list):
         self._expected_variables = 2
         super().__init__(id, type, text, variables, children)
 
     def execute(self, context:Context):
-        execute_bool:bool = self._get_execute_bool(commands=self._commands, context=context)
+        execute_bool:bool = self._get_execute_bool(context=context)
         
         if execute_bool:
             self._execute_children(context)          
 
-    def _get_execute_bool(self, commands:list, context:Context) -> bool:
+    def _get_execute_bool(self, context:Context) -> bool:
         execute_bool:bool = False
-        match commands[2]:
+        match self._text.split()[1]: # the operator is always in the same place from the text, so you can read it statically
             case "==":
-                execute_bool = context.get_variable(commands[1]) == context.get_variable(commands[3])
+                execute_bool = context.get_variable(self._variables[0]).to_int() == context.get_variable(self._variables[1]).to_int()
             case "<=":
-                execute_bool = context.get_variable(commands[1]) <= context.get_variable(commands[3])
+                execute_bool = context.get_variable(self._variables[0]).to_int() <= context.get_variable(self._variables[1]).to_int()
             case ">=":
-                execute_bool = context.get_variable(commands[1]) >= context.get_variable(commands[3])
+                execute_bool = context.get_variable(self._variables[0]).to_int() >= context.get_variable(self._variables[1]).to_int()
             case "<":
-                execute_bool = context.get_variable(commands[1]) < context.get_variable(commands[3])
+                execute_bool = context.get_variable(self._variables[0]).to_int() < context.get_variable(self._variables[1]).to_int()
             case ">":
-                execute_bool = context.get_variable(commands[1]) > context.get_variable(commands[3])
+                execute_bool = context.get_variable(self._variables[0]).to_int() > context.get_variable(self._variables[1]).to_int()
         return execute_bool
     
 
 class IfElseBlock(IfBlock):
-    def __init__(self, id: str, type:str, text:str, variables:list[Variable], children:list, children_else:list) -> None:
+    def __init__(self, id: str, type:str, text:str, variables:list[str], children:list, children_else:list) -> None:
         self._expected_variables = 4
         super().__init__(id, type, text, variables, children)
         self.__children_else = children_else
     
     def execute(self, context:Context) -> None:
-        execute_bool:bool = self._get_execute_bool(commands=self._commands, context=context)
+        execute_bool:bool = self._get_execute_bool(context=context)
         
         if execute_bool:
             self._execute_children(context)
@@ -113,24 +115,24 @@ class IfElseBlock(IfBlock):
             self._execute_children(context);   
 
 class RepeatBlock(Block):
-    def __init__(self, id:str, type:str, text:str, variables:list[Variable], children:list) -> None:
+    def __init__(self, id:str, type:str, text:str, variables:list[str], children:list) -> None:
         self._expected_variables = 1
         super().__init__(id, type, text, variables, children)
         self.__break_child = self.__find_break_child(children=children)
         self.__break: bool = False
     
     def execute(self, context: Context) -> None:
-        for _ in range(context.get_variable(self._commands[1])):
+        for _ in range(context.get_variable(self._variables[0]).to_int()):
             self._execute_children(context)
             if self.__break:
                 break
 
     def _execute_children(self, context) -> None:
         for child in self._children:
-            child._execute(context)
+            child.execute(context)
             if not self.__break_child == None: # checks if the BreakBlock has been executed
                 if self.__break_child.is_active():
-                    self.__break = True # if so, this informs the actual loop, in _execute() that it should be interrupted immediately
+                    self.__break = True # if so, this informs the actual loop, in execute() that it should be interrupted immediately
                     break
 
     def __find_break_child(self, children:list):
@@ -144,11 +146,12 @@ class RepeatBlock(Block):
         return None
     
 class BreakBlock(Block):
-    def __init__(self, id:str, type:str, text:str, variables:list[Variable], children:list) -> None:
+    def __init__(self, id:str, type:str, text:str, variables:list[str], children:list) -> None:
         """breaks the loop immediately
         If you encounter it during execution, it becomes active, so to speak. 
         The loop checks at each step whether it has been interrupted, 
         i.e. whether the BreakBlock is active, if so, then the loop is interrupted"""
+        self._expected_variables = 0
         super().__init__(id, type, text, variables, children)
         self.__active: bool = False
 
@@ -159,12 +162,13 @@ class BreakBlock(Block):
         return self.__active
 
 class DebugPrintBlock(Block):
-    def __init__(self, id:str, type:str, text:str, variables:list[Variable], children:list, socket_io:SocketIO) -> None:
-        self._expected_variables = 0
+    def __init__(self, id:str, type:str, text:str, variables:list[str], children:list, socket_io:SocketIO) -> None:
+        self._expected_variables = 1
         super().__init__(id, type, text, variables, children)
         self._socket_io:SocketIO = socket_io
     
     def execute(self, context) -> None:
         """sends data to the frontend, which is to be output in the console there, with the corresponding variable values"""
         if not self._variables == []:
-            self._socket_io.emit('update', {'data': f'[DEBUG]  {self._commands[3]} = {context.get_variable(self._commands[3])}'})
+            self._socket_io.emit('update', {'data': f'[DEBUG] {context.get_variable(self._variables[0]).get_value()}'})
+            print(f'[DEBUG] {context.get_variable(self._variables[0]).get_value()}')

@@ -8,6 +8,9 @@ window.addEventListener('beforeunload', function (event) {
 function getWorkspaceContents() {
   const workspace = document.getElementById("workspaceInner");
 
+  // Liste der erlaubten Variablennamen
+  const usedVariables = new Set(); // hier merken wir, was schon vergeben ist
+
   // variable map from the palette
   const variableMap = {};
   document.querySelectorAll("#variable-container .inline-container").forEach(container => {
@@ -20,32 +23,60 @@ function getWorkspaceContents() {
       type: varBlock.className,
       value: value
     };
+    usedVariables.add(label); // schon bekannte Variablen markieren
   });
+
+  // Hilfsfunktion: neuen Variablennamen finden
+  function getNewVariableName() {
+    var variable_name = "var" + Date.now();
+    while (!is_name_valid(variable_names, variable_name)) {
+      variable_name = "var" + Date.now() + Math.floor(Math.random()*Date.now());
+    }
+
+    variable_names.push(variable_name)
+    return variable_name; // fallback falls alle Namen belegt
+  }
 
   // recursively read a block
   function parseBlock(block) {
     // own children container (direct child)
     const childrenContainer = block.querySelector(":scope > .children");
 
-    // variables of this block (without your own children)
-    const variables = Array.from(block.querySelectorAll(".block-variable"))
-      // keep only the variables that are NOT in the own children container
+    // Variablen in diesem Block (ohne die eigenen Children)
+    const variables = Array.from(block.querySelectorAll(".block-variable, input"))
+      // keep only those that are NOT in the own children container
       .filter(v => !(childrenContainer && childrenContainer.contains(v)))
       .map(v => {
-        const label = v.querySelector(".label")
-          ? v.querySelector(".label").innerText.trim()
-          : v.innerText.trim();
+        // Fall 1: normale Variable (wie bisher)
+        if (v.classList.contains("block-variable")) {
+          const label = v.querySelector(".label")
+            ? v.querySelector(".label").innerText.trim()
+            : v.innerText.trim();
 
-        const varData = variableMap[label] || {};
-        return {
-          id: v.id || varData.id || null,
-          text: label,
-          type: v.className,
-          value: varData.value ?? null
-        };
+          const varData = variableMap[label] || {};
+          usedVariables.add(label);
+
+          return {
+            id: v.id || varData.id || null,
+            text: label,
+            type: v.className,
+            value: varData.value ?? null
+          };
+        }
+
+        // Fall 2: Input-Feld -> neue Variable anlegen
+        if (v.tagName.toLowerCase() === "input") {
+          const newName = getNewVariableName();
+          return {
+            id: "block-get-" + newName + "-pos-" + Date.now(),
+            text: newName,
+            type: "block-variable",
+            value: v.value || null
+          };
+        }
       });
 
-    // Block text (label), also without content from your own children container
+    // Block text (label), auch ohne eigenen Children-Inhalt
     const labelEl = Array.from(block.querySelectorAll(".label"))
       .find(el => !(childrenContainer && childrenContainer.contains(el)));
     const text = labelEl ? labelEl.innerText.trim() : "";
@@ -64,7 +95,7 @@ function getWorkspaceContents() {
     };
   }
 
-  // top-Level Blöcke einsammeln 
+  // top-Level Blöcke einsammeln
   const topLevelBlocks = Array.from(workspace.children)
     .filter(block =>
       block.classList.contains("block-move") ||
@@ -77,6 +108,7 @@ function getWorkspaceContents() {
 
   return topLevelBlocks;
 }
+
 
 //send it to the server
 function run() {

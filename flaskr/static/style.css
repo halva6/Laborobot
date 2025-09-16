@@ -150,6 +150,7 @@ header h1 {
     border: 2px dashed #aaa;
     border-radius: 4px;
     vertical-align: middle;
+    cursor: pointer;
 }
 
 .slot.filled {
@@ -166,6 +167,17 @@ header h1 {
 .slot:not(:empty) {
     border: none;
     background: transparent;
+}
+
+
+.slot-input {
+    width: 80px;
+    height: 30px;
+    border-radius: 16px;
+    border: 2px solid #aaa;
+    background: rgba(255, 255, 255, .85);
+    text-align: center;
+    outline: none;
 }
 
 

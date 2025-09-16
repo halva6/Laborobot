@@ -3,19 +3,25 @@ from server_error import FalseTypeError
 class Variable():
     def __init__(self, name:str, value:str) -> None:
         self.__name:str = name
-        self.__value:int = self.__check_validation(value=value)
+        self.__value:str = value
 
-    def get_value(self) -> int:
+    def get_value(self):
         return self.__value
     
     def get_name(self) -> str:
         return self.__name
     
+    def to_int(self):
+        return self.__check_validation(self.__value)
+    
     def __check_validation(self, value:str) -> int:
         if not value == None:
-            if value.startswith("-"):
+            if value.startswith("-") and value[1:].isnumeric():
                 return int(value[1:]) *-1
-            if value.isnumeric():
+            elif value.isnumeric():
                 return int(value)
             else:
-                raise FalseTypeError("Variable has the false data type, needed 'int'", self.__name)
+                raise FalseTypeError
+
+
+                

@@ -14,7 +14,7 @@ class Robot():
         if gpio_avialable:
             self.__controller = MotorController()
         
-        self._position_manager = PositionManager("flaskr/compiler/position.json")
+        self._position_manager = PositionManager("flaskr/robot_movement/position.json")
         self._position_manager.load()
 
         self.MAX_X:int = 0

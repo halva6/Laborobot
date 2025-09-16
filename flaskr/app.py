@@ -38,10 +38,10 @@ def start():
         try:
             loader: Loader = Loader("flaskr/compiler/from_server.json", socket_io)
             if gpio_avialable:
-                context: Context = Context(loader.get_blocks(), Robot(gpio_avialable))
+                context: Context = Context(loader.get_blocks(), loader.get_variables(), Robot(gpio_avialable))
 
             else:
-                context: Context = Context(loader.get_blocks(), TestRobot(gpio_avialable))
+                context: Context = Context(loader.get_blocks(), loader.get_variables(), TestRobot(gpio_avialable))
 
 
 
@@ -53,4 +53,4 @@ def start():
     return render_template("index.html")
 
 if __name__ == "__main__":
-    socket_io.run(app, host='0.0.0.0',)
+    socket_io.run(app, host='0.0.0.0',debug=True)

@@ -127,7 +127,7 @@ clearBtn.addEventListener("click", () => {
         droppable.innerHTML = "";
         logMessage("Everything cleared", "info");
     } else {
-        logMessage("Löschen abgebrochen", "warn");
+        logMessage("Deletion aborted", "warn");
     }
 });
 
