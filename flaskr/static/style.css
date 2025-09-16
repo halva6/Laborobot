@@ -58,7 +58,7 @@ header h1 {
 }
 
 /*Blocks*/
-.block-move .block-controll .block-event .label {
+.block-move .block-controll .block-event .label .block-time {
     color: #071021
 }
 
@@ -66,7 +66,8 @@ header h1 {
 .block-controll,
 .block-event,
 .block-variable,
-.block-debug {
+.block-debug,
+.block-time {
     position: relative;
     display: inline-block;
     user-select: none;
@@ -95,6 +96,11 @@ header h1 {
 
 .block-variable {
     background-color: rgb(126, 209, 87);
+}
+
+.block-time
+{
+    background-color: rgb(209, 87, 209);
 }
 
 .block-debug {

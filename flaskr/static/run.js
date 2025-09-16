@@ -8,9 +8,6 @@ window.addEventListener('beforeunload', function (event) {
 function getWorkspaceContents() {
   const workspace = document.getElementById("workspaceInner");
 
-  // Liste der erlaubten Variablennamen
-  const usedVariables = new Set(); // hier merken wir, was schon vergeben ist
-
   // variable map from the palette
   const variableMap = {};
   document.querySelectorAll("#variable-container .inline-container").forEach(container => {
@@ -23,7 +20,6 @@ function getWorkspaceContents() {
       type: varBlock.className,
       value: value
     };
-    usedVariables.add(label); // schon bekannte Variablen markieren
   });
 
   // Hilfsfunktion: neuen Variablennamen finden
@@ -54,7 +50,6 @@ function getWorkspaceContents() {
             : v.innerText.trim();
 
           const varData = variableMap[label] || {};
-          usedVariables.add(label);
 
           return {
             id: v.id || varData.id || null,
@@ -102,6 +97,7 @@ function getWorkspaceContents() {
       block.classList.contains("block-controll") ||
       block.classList.contains("block-event") ||
       block.classList.contains("block-variable") ||
+      block.classList.contains("block-time") ||
       block.classList.contains("block-debug")
     )
     .map(parseBlock);

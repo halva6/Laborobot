@@ -2,6 +2,9 @@ from flask_socketio import SocketIO
 
 import json
 from compiler.blocks.block import *
+from compiler.blocks.condition_blocks import *
+from compiler.blocks.loop_blocks import *
+from compiler.blocks.move_blocks import *
 from compiler.blocks.variables import Variable
 
 
@@ -43,7 +46,6 @@ class Loader:
         if block_type == "block-event" and "break" in raw_block["id"]:
             return BreakBlock(
                 id=raw_block["id"],
-                type=block_type,
                 text=raw_block["text"],
                 variables=variable_name_list,
                 children=children,
@@ -51,7 +53,6 @@ class Loader:
         elif block_type == "block-controll" and "repeat" in raw_block["text"]:
             return RepeatBlock(
                 id=raw_block["id"],
-                type=block_type,
                 text=raw_block["text"],
                 variables=variable_name_list,
                 children=children,
@@ -59,7 +60,6 @@ class Loader:
         elif block_type == "block-controll" and "if" in raw_block["text"]:
             return IfBlock(
                 id=raw_block["id"],
-                type=block_type,
                 text=raw_block["text"],
                 variables=variable_name_list,
                 children=children,
@@ -67,7 +67,6 @@ class Loader:
         elif block_type.startswith("block-move") and "steps" in raw_block["id"]:
             return MoveBlock(
                 id=raw_block["id"],
-                type=block_type,
                 text=raw_block["text"],
                 variables=variable_name_list,
                 children=children,
@@ -75,7 +74,6 @@ class Loader:
         elif block_type.startswith("block-move") and "reset" in raw_block["id"]:
             return ResetPositionBlock(
                 id=raw_block["id"],
-                type=block_type,
                 text=raw_block["text"],
                 variables=variable_name_list,
                 children=children,
@@ -83,19 +81,34 @@ class Loader:
         elif block_type == "block-debug" and "print" in raw_block["id"]:
             return DebugPrintBlock(
                 id=raw_block["id"],
-                type=block_type,
                 text=raw_block["text"],
                 variables=variable_name_list,
                 children=children,
                 socket_io=self.__socket_io,
+            )      
+        elif block_type == "block-time" and "seconds" in raw_block["id"]:
+            return TimerBlock(
+                id=raw_block["id"],
+                text=raw_block["text"],
+                variables=variable_name_list,
+                children=children,
+                time_multiplier=1,
+            )
+        elif block_type == "block-time" and "minutes" in raw_block["id"]:
+            return TimerBlock(
+                id=raw_block["id"],
+                text=raw_block["text"],
+                variables=variable_name_list,
+                children=children,
+                time_multiplier=60,
             )
         else:
             return Block(
                 id=raw_block["id"],
-                type=block_type,
                 text=raw_block["text"],
                 variables=variable_name_list,
                 children=children,
+                expected_vars=0,
             )
 
     def get_blocks(self) -> list:
