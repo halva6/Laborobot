@@ -43,8 +43,6 @@ def start():
             else:
                 context: Context = Context(loader.get_blocks(), loader.get_variables(), TestRobot(gpio_avialable))
 
-
-
             for block in loader.get_blocks():
                 block.execute(context)
         except Exception as e:
@@ -54,3 +52,11 @@ def start():
 
 if __name__ == "__main__":
     socket_io.run(app, host='0.0.0.0',debug=True)
+
+
+
+#TODO Joystick (Achsen mit knopfdruck)
+#TODO Positionsanzeige rechts oben
+#TODO Punktspeicherung mit Geschwindigkeitsfaktor
+#TODO Exportieren und importieren von JSON im frontend um Programme zu speichern
+#TODO Anleitung in die README.md schreiben
