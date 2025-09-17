@@ -3,11 +3,13 @@ from compiler.blocks.variables import Variable
 from robot_movement.robot import Robot
 
 class Context():
-    def __init__(self, blocks:list, variables:list[Variable], robot: Robot):
+    def __init__(self, blocks:list, variables:list[Variable], robot: Robot, socket_io: SocketIO):
         self.__variables:list[Variable] = variables
         self.__variables = self.__organize_all_variables(blocks, self.__variables)
 
         self.__robot: Robot = robot
+
+        self.__socket_io = socket_io
 
         var_names:list = []
         for var in self.__variables:
@@ -47,3 +49,6 @@ class Context():
             
     def get_robot(self) -> Robot:
         return self.__robot
+    
+    def get_socket_io(self) -> SocketIO:
+        return self.__socket_io

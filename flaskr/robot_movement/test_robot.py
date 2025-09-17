@@ -1,11 +1,11 @@
 from robot_movement.robot import Robot
-
+from flask_socketio import SocketIO, emit
 
 class TestRobot(Robot):
-    def __init__(self, gpio_avialable:bool):
+    def __init__(self, gpio_avialable:bool, socket_io: SocketIO):
         """This class is only for test ticks, because you don't always have the Raspberry Pi available when developing. 
         The movement will simply output"""
-        super().__init__(gpio_avialable)
+        super().__init__(gpio_avialable, socket_io)
 
 
     def _move(self, value:int, axis:str, direction:bool) -> None:
@@ -13,6 +13,8 @@ class TestRobot(Robot):
             print(f"[DEBUG Move {value} on the {axis}-axis")
         else:
             print(f"[DEBUG] Move {value*-1} on the {axis}-axis")
+        
+        self.inform_about_move()
 
         
     def reset_pos(self) -> None:
@@ -25,5 +27,6 @@ class TestRobot(Robot):
         self._position_manager.set_z(self._z)
 
         self._position_manager.save()
+        self.inform_about_move()
 
         print("[DEBUG] Reseting positions...") 

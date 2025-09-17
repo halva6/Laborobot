@@ -9,12 +9,10 @@ from compiler.blocks.variables import Variable
 
 
 class Loader:
-    def __init__(self, file_path: str, socket_io: SocketIO) -> None:
+    def __init__(self, file_path: str) -> None:
         """Loader class reads JSON, validates schema, creates concrete block objects"""
         raw_blocks: dict = self.__get_dict_from_json(file_path)
         self.__blocks: list = []
-
-        self.__socket_io: SocketIO = socket_io
 
         self.__variable_list: list[Variable] = []
 
@@ -84,8 +82,7 @@ class Loader:
                 text=raw_block["text"],
                 variables=variable_name_list,
                 children=children,
-                socket_io=self.__socket_io,
-            )      
+                                        )      
         elif block_type == "block-time" and "seconds" in raw_block["id"]:
             return TimerBlock(
                 id=raw_block["id"],

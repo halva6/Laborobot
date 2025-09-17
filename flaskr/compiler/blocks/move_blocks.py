@@ -2,8 +2,8 @@ from compiler.blocks.block import Block
 from compiler.context import Context
 
 class MoveBlock(Block):
-    def __init__(self, id:str, type:str, text:str, variables:list[str], children:list) -> None:
-        super().__init__(id, type, text, variables, children, 1) # the last number defines the exact number of expected variables
+    def __init__(self, id:str, text:str, variables:list[str], children:list) -> None:
+        super().__init__(id, text, variables, children, 1) # the last number defines the exact number of expected variables
     
     def execute(self, context:Context) -> None:
         if self._id.startswith("block-steps-x"):

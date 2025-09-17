@@ -44,14 +44,13 @@ class Block:
         return str(self._id)
 
 class DebugPrintBlock(Block):
-    def __init__(self, id:str, text:str, variables:list[str], children:list, socket_io:SocketIO) -> None:
+    def __init__(self, id:str, text:str, variables:list[str], children:list) -> None:
         super().__init__(id, text, variables, children, 1)
-        self._socket_io:SocketIO = socket_io
     
     def execute(self, context: Context) -> None:
         """sends data to the frontend, which is to be output in the console there, with the corresponding variable values"""
         if not self._variables == []:
-            self._socket_io.emit('update', {'data': f'[DEBUG] {context.get_variable(self._variables[0]).get_value()}'})
+            context.get_socket_io().emit('update', {'data': f'[DEBUG] {context.get_variable(self._variables[0]).get_value()}'})
             print(f'[DEBUG] {context.get_variable(self._variables[0]).get_value()}')
 
 class TimerBlock(Block):

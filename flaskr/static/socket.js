@@ -11,3 +11,8 @@ socket.on("execution_error", (data) => {
 socket.on('update', function (msg) {
     logMessage(msg.data, "debug")
 });
+
+socket.on('coords', function (msg) {
+    var div = document.getElementById("coords");
+    div.innerHTML = msg.data;
+});
