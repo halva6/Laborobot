@@ -3,7 +3,7 @@ from server_error import FalseTypeError
 class Variable():
     def __init__(self, name:str, value:str) -> None:
         self.__name:str = name
-        self.__value:str = value
+        self.__value:str = str(value)
 
     def get_value(self):
         return self.__value

@@ -8,7 +8,7 @@ window.addEventListener('beforeunload', function (event) {
 function getWorkspaceContents() {
   const workspace = document.getElementById("workspaceInner");
 
-  // variable map from the palette
+  // Variable map from the palette
   const variableMap = {};
   document.querySelectorAll("#variable-container .inline-container").forEach(container => {
     const varBlock = container.querySelector(".block-variable");
@@ -22,28 +22,51 @@ function getWorkspaceContents() {
     };
   });
 
-  // Hilfsfunktion: neuen Variablennamen finden
-  function getNewVariableName() {
-    var variable_name = "var" + Date.now();
-    while (!is_name_valid(variable_names, variable_name)) {
-      variable_name = "var" + Date.now() + Math.floor(Math.random()*Date.now());
-    }
+  const variable_names = [];
 
-    variable_names.push(variable_name)
-    return variable_name; // fallback falls alle Namen belegt
+  // Helper: generate a new unique variable name
+  function getNewVariableName() {
+    let variable_name = "var" + Date.now();
+    while (variable_names.includes(variable_name)) {
+      variable_name = "var" + Date.now() + Math.floor(Math.random() * Date.now());
+    }
+    variable_names.push(variable_name);
+    return variable_name;
   }
 
-  // recursively read a block
+  // Recursive parser for a block
   function parseBlock(block) {
-    // own children container (direct child)
     const childrenContainer = block.querySelector(":scope > .children");
 
-    // Variablen in diesem Block (ohne die eigenen Children)
+    // Special case: position block (.block-pos)
+    if (block.classList.contains("block-pos")) {
+      const label = block.querySelector(".label")?.innerText.trim() || "";
+
+      const inputs = Array.from(block.querySelectorAll("input")).map(input => {
+        const name = input.previousSibling?.textContent?.replace(":", "").trim() || "";
+        const newName = getNewVariableName();
+        return {
+          id: "block-get-" + newName + "-pos-" + Date.now(),
+          axis: name, // X, Y, Z
+          text: newName,
+          type: "block-variable",
+          value: input.value || ""
+        };
+      });
+
+      return {
+        id: block.id,
+        type: block.className,
+        text: label,
+        variables: inputs,
+        children: []
+      };
+    }
+
+    // Collect variables inside the block (excluding its own children)
     const variables = Array.from(block.querySelectorAll(".block-variable, input"))
-      // keep only those that are NOT in the own children container
       .filter(v => !(childrenContainer && childrenContainer.contains(v)))
       .map(v => {
-        // Fall 1: normale Variable (wie bisher)
         if (v.classList.contains("block-variable")) {
           const label = v.querySelector(".label")
             ? v.querySelector(".label").innerText.trim()
@@ -58,8 +81,6 @@ function getWorkspaceContents() {
             value: varData.value ?? null
           };
         }
-
-        // Fall 2: Input-Feld -> neue Variable anlegen
         if (v.tagName.toLowerCase() === "input") {
           const newName = getNewVariableName();
           return {
@@ -71,15 +92,24 @@ function getWorkspaceContents() {
         }
       });
 
-    // Block text (label), auch ohne eigenen Children-Inhalt
+    // Block text (excluding children content)
     const labelEl = Array.from(block.querySelectorAll(".label"))
       .find(el => !(childrenContainer && childrenContainer.contains(el)));
     const text = labelEl ? labelEl.innerText.trim() : "";
 
-    // parse children
-    const children = childrenContainer
+    // Parse children inside a .children container
+    let children = childrenContainer
       ? Array.from(childrenContainer.children).map(parseBlock)
       : [];
+
+    // Special case: slot with a position block inside
+    const posSlot = block.querySelector(":scope .slot[data-accept='pos']");
+    if (posSlot) {
+      const posBlock = posSlot.querySelector(".block-pos");
+      if (posBlock) {
+        children.push(parseBlock(posBlock));
+      }
+    }
 
     return {
       id: block.id,
@@ -90,7 +120,7 @@ function getWorkspaceContents() {
     };
   }
 
-  // top-Level Blöcke einsammeln
+  // Collect top-level blocks, including .block-pos
   const topLevelBlocks = Array.from(workspace.children)
     .filter(block =>
       block.classList.contains("block-move") ||
@@ -98,12 +128,15 @@ function getWorkspaceContents() {
       block.classList.contains("block-event") ||
       block.classList.contains("block-variable") ||
       block.classList.contains("block-time") ||
-      block.classList.contains("block-debug")
+      block.classList.contains("block-debug") ||
+      block.classList.contains("block-pos")
     )
     .map(parseBlock);
 
   return topLevelBlocks;
 }
+
+
 
 
 //send it to the server

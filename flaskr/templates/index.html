@@ -39,6 +39,9 @@
                 <span class="label"> Go <span class="slot" data-accept="variable number"></span> steps on the Z
                     axis</span>
             </div>
+            <div class="block-move" id="block-go-to-pos" draggable="true" data-palette="true">
+                <span class="label"> Goto position: <span class="slot" data-accept="pos"></span></span>
+            </div>
             <div class="block-move" id="block-reset-pos" draggable="true" data-palette="true">
                 <span class="label"> Reset position</span>
             </div>
@@ -105,6 +108,15 @@
             <button id="add-variable" onclick="addVariable()">+</button>
 
             <div class="group-title">
+                Positions
+            </div>
+
+            <div id="position-container">
+            </div>
+
+            <button id="add-pos" onclick="addPos()">+</button>
+
+            <div class="group-title">
                 Time
             </div>
             <div class="block-time" id="block-time-seconds" draggable="true" data-palette="true">
@@ -119,7 +131,7 @@
                 Debug
             </div>
             <div class="block-debug" id="block-debug-print" draggable="true" data-palette="true">
-                <span class="label">print in console <span class="slot" data-accept="variable number"></span></span>
+                <span class="label">print in console <span class="slot" data-accept="variable number pos"></span></span>
             </div>
         </section>
 

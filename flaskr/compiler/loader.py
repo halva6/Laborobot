@@ -82,7 +82,7 @@ class Loader:
                 text=raw_block["text"],
                 variables=variable_name_list,
                 children=children,
-                                        )      
+            )
         elif block_type == "block-time" and "seconds" in raw_block["id"]:
             return TimerBlock(
                 id=raw_block["id"],
@@ -98,6 +98,20 @@ class Loader:
                 variables=variable_name_list,
                 children=children,
                 time_multiplier=60,
+            )
+        elif block_type.startswith("block-move") and "to-pos" in raw_block["id"]:
+            return MoveToPositionBlock(
+                id=raw_block["id"],
+                text=raw_block["text"],
+                variables=variable_name_list,
+                children=children,
+            )
+        elif block_type == "block-pos":
+            return PositionBlock(
+                id=raw_block["id"],
+                text=raw_block["text"],
+                variables=variable_name_list,
+                children=children,
             )
         else:
             return Block(

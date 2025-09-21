@@ -60,9 +60,15 @@ def start():
 # Called when a new client connects
 @socket_io.on("connect")
 def handle_connect():
-    print("New client connected")
+    print("[DEBUG] New client connected")
     robot.inform_about_move()
 
 
 if __name__ == "__main__":
     socket_io.run(app, host="0.0.0.0", debug=True)
+
+
+#TODO Joystick (Achsen mit knopfdruck)
+#TODO Punktspeicherung mit Geschwindigkeitsfaktor
+#TODO Exportieren und importieren von JSON im frontend um Programme zu speichern
+#TODO Anleitung in die README.md schreiben

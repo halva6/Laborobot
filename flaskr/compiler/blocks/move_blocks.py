@@ -24,5 +24,48 @@ class ResetPositionBlock(Block):
     def __init__(self, id:str, text:str, variables:list[str], children:list) -> None:
         super().__init__(id, text, variables, children, 0)
     
-    def execute(self, context:Context) -> None: #only for test purpose
+    def execute(self, context:Context) -> None:
         context.get_robot().reset_pos()
+
+class MoveToPositionBlock(Block):
+    def __init__(self, id:str, text:str, variables:list[str], children:list):
+        super().__init__(id, text, variables, children, 3)
+        # 3 variables are expected here, but there are actually 0, because the variables of the positions come from the position block. 
+        # This is because the block in the HTML code belongs to the class 'block-move'. With this class, however, when translating to JSON, all variables (and also all those below) are added. 
+        # That's why there are expected variables in block 3, although theoretically it shouldn't be like that. 
+        # It is only due to simplicity. But since the expected variables are constant anyway and are firmly defined in the code, this is not a problem, but only a formality
+        self.__p_x:int = None 
+        self.__p_x:int = None
+        self.__p_x:int = None
+
+    def execute(self, context:Context):
+        self._execute_children(context)
+        context.get_robot().move_to_position(self.__p_x, self.__p_y, self.__p_z)
+    
+    def _execute_children(self, context:Context):
+        child:PositionBlock = self._children[0] #this block only have one children
+        child.execute(context)
+
+        self.__p_x = child.get_p_x()
+        self.__p_y = child.get_p_y()
+        self.__p_z = child.get_p_z()
+
+        
+
+class PositionBlock(Block):
+    def __init__(self, id:str, text:str, variables:list[str], children:list) -> None:
+        super().__init__(id, text, variables, children, 3)
+
+    def execute(self, context: Context) -> None:
+        self.__p_x:int = context.get_variable(self._variables[0]).to_int() 
+        self.__p_y:int = context.get_variable(self._variables[1]).to_int() 
+        self.__p_z:int = context.get_variable(self._variables[2]).to_int() 
+
+    def get_p_x(self)-> int:
+        return self.__p_x
+    
+    def get_p_y(self)-> int:
+        return self.__p_y
+    
+    def get_p_z(self)-> int:
+        return self.__p_z

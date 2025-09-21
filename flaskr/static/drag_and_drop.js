@@ -4,7 +4,7 @@ const droppable = document.getElementById("workspaceInner");
 
 // dragstart: ID + info whether from pallet
 document.addEventListener("dragstart", (e) => {
-    if (e.target.matches(".block-move, .block-controll, .block-event, .block-variable, .block-time, .block-debug")) {
+    if (e.target.matches(".block-move, .block-controll, .block-event, .block-variable, .block-pos, .block-time, .block-debug")) {
         e.dataTransfer.setData("text/plain", e.target.id);
         e.dataTransfer.setData("from-palette", e.target.dataset.palette === "true");
     }
@@ -84,7 +84,7 @@ droppable.addEventListener("drop", (e) => {
 
 // sorting helper function
 function getDragAfterElement(container, y) {
-    const elements = [...container.querySelectorAll(".block-move, .block-controll, .block-event, .block-variable, .block-time, .block-debug:not([data-palette='true'])")];
+    const elements = [...container.querySelectorAll(".block-move, .block-controll, .block-event, .block-variable, .block-pos, .block-time, .block-debug:not([data-palette='true'])")];
     return elements.reduce((closest, child) => {
         const box = child.getBoundingClientRect();
         const offset = y - box.top - box.height / 2;

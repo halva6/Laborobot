@@ -95,7 +95,12 @@ class Robot():
                 raise RobotPositionError(f"the value exceeds the limits of the possible movement of the robot")
         else:
             raise VariableNoneTyeError("Variable is no defined, its None")
-        
+    
+    def move_to_position(self, p_x:int, p_y:int, p_z:int):
+        self.move_x(p_x-(self._x))
+        self.move_y(p_y-(self._y))
+        self.move_z(p_z-(self._z))
+
     def _move(self, value:int, axis:str, direction:bool) -> None:
         direction = self.__controller.DIR_TO_ENDSTOP if direction else self.__controller.DIR_BACK
         self.__controller.step_motor(steps=value, axis=axis, direction=direction)
