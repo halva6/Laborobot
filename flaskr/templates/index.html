@@ -144,9 +144,30 @@
 
     </div>
 
-    <section>
-        <div class="coords" id="coords">nice</div>
+    <section class="manual-controls">
+        <div class="axis-control">
+            <span class="axis-label" id="x-axis-label">X-axis:</span>
+            <button class="axis-btn" id="x-forward">▲ front</button>
+            <button class="axis-btn" id="x-backward">▼ back</button>
+        </div>
+
+        <div class="axis-control">
+            <span class="axis-label" id="y-axis-label">Y-axis:</span>
+            <button class="axis-btn" id="y-forward">▲ front</button>
+            <button class="axis-btn" id="y-backward">▼ back</button>
+        </div>
+
+        <div class="axis-control">
+            <span class="axis-label" id="z-axis-label">Z-axis:</span>
+            <button class="axis-btn" id="z-up">▲ up</button>
+            <button class="axis-btn" id="z-down">▼ down</button>
+        </div>
+
+        <div class="axis-control">
+            <button class="axis-btn" id="reset-manuel">reset</button>
+        </div>
     </section>
+
 
     <section>
         <div class="console" id="console"></div>
@@ -159,6 +180,7 @@
     <script src="static/run.js"></script>
     <script src="static/socket.js"></script>
     <script src="static/slot.js"></script>
+    <script src="static/manual_control.js"></script>
 
 </body>
 

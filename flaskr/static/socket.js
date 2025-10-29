@@ -13,6 +13,13 @@ socket.on('update', function (msg) {
 });
 
 socket.on('coords', function (msg) {
-    var div = document.getElementById("coords");
-    div.innerHTML = msg.data;
+    var data = msg.data.split(",");
+
+    var spanX = document.getElementById("x-axis-label");
+    var spanY = document.getElementById("y-axis-label");
+    var spanZ = document.getElementById("z-axis-label");
+
+    spanX.innerHTML = data[0];
+    spanY.innerHTML = data[1];
+    spanZ.innerHTML = data[2];
 });
