@@ -4,7 +4,7 @@ const droppable = document.getElementById("workspaceInner");
 
 // dragstart: ID + info whether from pallet
 document.addEventListener("dragstart", (e) => {
-    if (e.target.matches(".block-move, .block-controll, .block-event, .block-variable, .block-pos, .block-time, .block-debug")) {
+    if (e.target.matches(".block-move, .block-controll, .block-event, .block-variable, .block-pos, .block-calc, .block-time, .block-debug")) {
         e.dataTransfer.setData("text/plain", e.target.id);
         e.dataTransfer.setData("from-palette", e.target.dataset.palette === "true");
     }

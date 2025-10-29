@@ -93,9 +93,28 @@ function getWorkspaceContents() {
       });
 
     // Block text (excluding children content)
-    const labelEl = Array.from(block.querySelectorAll(".label"))
-      .find(el => !(childrenContainer && childrenContainer.contains(el)));
-    const text = labelEl ? labelEl.innerText.trim() : "";
+    const labelElements = Array.from(block.querySelectorAll(".label"));
+
+    var labelEls = Array.from(block.querySelectorAll(".label"));
+    var labelEl = undefined;
+
+    for (var i = 0; i < labelEls.length; i++) {
+      if (!childrenContainer || !childrenContainer.contains(labelEls[i])) {
+        labelEl = labelEls[i];
+        break;
+      }
+    }
+
+    var text = "";
+    if (labelEl) {
+      text = labelEl.innerText.trim();
+
+      var specialChild = labelEl.querySelector(".operation-selection");
+      if (specialChild) {
+        text += " " + specialChild.innerText.trim();
+      }
+    }
+    //const text = labelEl ? labelEl.innerText.trim() : "";
 
     // Parse children inside a .children container
     let children = childrenContainer
@@ -127,6 +146,7 @@ function getWorkspaceContents() {
       block.classList.contains("block-controll") ||
       block.classList.contains("block-event") ||
       block.classList.contains("block-variable") ||
+      block.classList.contains("block-calc") ||
       block.classList.contains("block-time") ||
       block.classList.contains("block-debug") ||
       block.classList.contains("block-pos")

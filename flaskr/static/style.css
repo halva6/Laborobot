@@ -76,6 +76,7 @@ header h1 {
 .block-event,
 .block-variable,
 .block-pos,
+.block-calc,
 .block-debug,
 .block-time {
     position: relative;
@@ -110,7 +111,10 @@ header h1 {
 
 .block-pos {
     background-color: rgb(199, 211, 95);
+}
 
+.block-calc {
+    background-color: rgb(7, 126, 57);
 }
 
 .block-time {

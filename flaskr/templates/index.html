@@ -91,6 +91,7 @@
                     </div>
                     <p>= position on z-axis</p>
                 </div>
+
                 <div class="group-title">
                     Variables
                 </div>
@@ -115,6 +116,26 @@
             </div>
 
             <button id="add-pos" onclick="addPos()">+</button>
+
+            <div class="group-title">
+                Calculations
+            </div>
+            <div class="block-calc" id="block-calculations" draggable="true" data-palette="true">
+                <span class="label">
+                    <span class="slot" data-accept="variable"></span> =
+                    <span class="slot" data-accept="variable number"></span>
+                    <select class="param">
+                        <option class="operation-selection" value="+">+</option>
+                        <option class="operation-selection" value="-">−</option>
+                        <option class="operation-selection" value="*">×</option>
+                        <option class="operation-selection" value="/">÷</option>
+                        <option class="operation-selection" value="%">mod</option>
+                        <option class="operation-selection" value="&">&</option>
+                        <option class="operation-selection" value="|">|</option>
+                    </select>
+                    <span class="slot" data-accept="variable number"></span>
+                </span>
+            </div>
 
             <div class="group-title">
                 Time

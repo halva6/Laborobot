@@ -68,7 +68,6 @@ if __name__ == "__main__":
     socket_io.run(app, host="0.0.0.0", debug=True)
 
 
-#TODO Joystick (Achsen mit knopfdruck)
 #TODO Punktspeicherung mit Geschwindigkeitsfaktor
 #TODO Exportieren und importieren von JSON im frontend um Programme zu speichern
 #TODO Anleitung in die README.md schreiben
