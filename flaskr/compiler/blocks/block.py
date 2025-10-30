@@ -2,6 +2,7 @@ from flask_socketio import SocketIO
 import time
 
 from compiler.context import Context
+from compiler.blocks.variables import Variable
 from server_error import *
 
 
@@ -60,3 +61,48 @@ class TimerBlock(Block):
     
     def execute(self, context: Context):
         time.sleep(context.get_variable(self._variables[0]).to_int() * self.__time_multiplier)
+
+class CalculationBlock(Block):
+    def __init__(self, id:str, text:str, variables:list[str], children:list):
+        super().__init__(id, text, variables, children, 3)
+    
+    def execute(self, context):
+
+        calc_var: Variable = context.get_variable(self._variables[0])
+        value:int = calc_var.to_int()
+
+        arg1:int = context.get_variable(self._variables[1]).to_int()
+        arg2:int = context.get_variable(self._variables[2]).to_int()
+
+        # other characters, besides those shown, that can still be used in variable naming
+        # + --> {
+        # - --> }
+        # * --> [
+
+        if "{" in self._text:
+            value = arg1 + arg2
+        elif "}" in self._text:
+            value = arg1 - arg2
+        elif "[" in self._text:
+            value = arg1 * arg2
+        elif "/" in self._text:
+            value = int(arg1 / arg2)
+        elif "%" in self._text:
+            value = arg1 % arg2
+        elif "&" in self._text:
+            value = arg1 & arg2
+        elif "|" in self._text:
+            value = arg1 | arg2
+        elif "^" in self._text:
+            value = arg1 ^ arg2
+        elif "~" in self._text:
+            # Yes, this is a special case, because theoretically you have to specify two variable values ​​here, but you only need one 
+            # --> which makes it a little cumbersome, because you can simply give it a random value, since arg1 doesn't matter
+            value = ~arg2 
+        elif "<<" in self._text:
+            value = arg1 << arg2
+        elif "<<" in self._text:
+            value = arg1 >> arg2
+        
+
+        calc_var.set_value(str(value))

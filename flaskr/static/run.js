@@ -95,23 +95,23 @@ function getWorkspaceContents() {
     // Block text (excluding children content)
     const labelElements = Array.from(block.querySelectorAll(".label"));
 
-    var labelEls = Array.from(block.querySelectorAll(".label"));
-    var labelEl = undefined;
+    let labelEls = Array.from(block.querySelectorAll(".label"));
+    let labelEl = undefined;
 
-    for (var i = 0; i < labelEls.length; i++) {
+    for (let i = 0; i < labelEls.length; i++) {
       if (!childrenContainer || !childrenContainer.contains(labelEls[i])) {
         labelEl = labelEls[i];
         break;
       }
     }
 
-    var text = "";
+    let text = "";
     if (labelEl) {
       text = labelEl.innerText.trim();
 
-      var specialChild = labelEl.querySelector(".operation-selection");
+      let specialChild = labelEl.querySelector("#calc-box");
       if (specialChild) {
-        text += " " + specialChild.innerText.trim();
+        text += " " + specialChild.value.trim();
       }
     }
     //const text = labelEl ? labelEl.innerText.trim() : "";

@@ -1,9 +1,19 @@
-var variable_names = ["X", "Y", "Z", "x", "y", "z"];
-var pos_names = ["p1", "p2", "p3"];
+let variable_names = ["X", "Y", "Z", "x", "y", "z"];
+let pos_names = ["p1", "p2", "p3"];
+const forbidden_chars = ["{", "}", "[", "/", "%", "&", "|", " ", "  ", "^", "~", "<<", ">>"]
+
+function checkForbiddenChars(name) {
+    for (let i = 0; i < forbidden_chars.length; i++) {
+        if(name.includes(forbidden_chars[i])){
+            return false;
+        }
+    }
+    return true;
+}
 
 function addVariable() {
-    var v_name = prompt("Name the variable");
-    if (v_name.length <= 20 && !v_name.includes(" ")) {
+    let v_name = prompt("Name the variable");
+    if (v_name.length <= 20 && checkForbiddenChars(v_name)) {
         if (is_name_valid(variable_names, v_name)) {
             if (!v_name == "") {
                 const container = document.getElementById("variable-container");
@@ -39,7 +49,7 @@ function addVariable() {
             logMessage("failed to create a variable - variable exists already", "error");
         }
     } else {
-        logMessage("failed to create a variable - too long or not allowed chars", "error");
+        logMessage("failed to create a variable - too long or not allowed chars ({, }, [, /, %, &, |, spaces, tabulators)", "error");
     }
 }
 
@@ -62,8 +72,8 @@ function removeVariable(id) {
 // --------------------- POSITIONS ---------------------
 
 function addPos() {
-    var p_name = prompt("Name the position");
-    if (p_name.length <= 20 && !p_name.includes(" ")) {
+    let p_name = prompt("Name the position");
+    if (p_name.length <= 20 && checkForbiddenChars(p_name)) {
         if (is_name_valid(pos_names, p_name)) {
             if (p_name !== "") {
                 const container = document.getElementById("position-container");

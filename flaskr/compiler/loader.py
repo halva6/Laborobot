@@ -113,6 +113,13 @@ class Loader:
                 variables=variable_name_list,
                 children=children,
             )
+        elif block_type == "block-calc":
+            return CalculationBlock(
+                id=raw_block["id"],
+                text=raw_block["text"],
+                variables=variable_name_list,
+                children=children,
+            )
         else:
             return Block(
                 id=raw_block["id"],

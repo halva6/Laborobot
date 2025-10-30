@@ -1,4 +1,4 @@
-var socket = io();
+let socket = io();
 
 socket.on("execution_error", (data) => {
     logMessage("Execution Error:", "error");
@@ -13,11 +13,11 @@ socket.on('update', function (msg) {
 });
 
 socket.on('coords', function (msg) {
-    var data = msg.data.split(",");
+    let data = msg.data.split(",");
 
-    var spanX = document.getElementById("x-axis-label");
-    var spanY = document.getElementById("y-axis-label");
-    var spanZ = document.getElementById("z-axis-label");
+    let spanX = document.getElementById("x-axis-label");
+    let spanY = document.getElementById("y-axis-label");
+    let spanZ = document.getElementById("z-axis-label");
 
     spanX.innerHTML = data[0];
     spanY.innerHTML = data[1];

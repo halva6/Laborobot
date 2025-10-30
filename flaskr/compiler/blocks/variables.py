@@ -7,11 +7,14 @@ class Variable():
 
     def get_value(self):
         return self.__value
+
+    def set_value(self, value: str) -> None:
+        self.__value = value
     
     def get_name(self) -> str:
         return self.__name
     
-    def to_int(self):
+    def to_int(self) -> int:
         return self.__check_validation(self.__value)
     
     def __check_validation(self, value:str) -> int:
