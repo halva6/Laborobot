@@ -1,11 +1,13 @@
 from flask_socketio import SocketIO
 import time
+import threading
+import asyncio
 
 from compiler.context import Context
 from compiler.blocks.variables import Variable
 from server_error import *
 
-
+from measurement import GoDirectDataCollector
 class Block:
     """ Functions and variables that start 
     with _ are protected and functions and variables 
@@ -106,3 +108,26 @@ class CalculationBlock(Block):
         
 
         calc_var.set_value(str(value))
+    
+class MeasurementBlock(Block):
+    def __init__(self, id:str, text:str, variables:list[str], children:list):
+        super().__init__(id, text, variables, children, 0)
+        self.__is_measurement_running:bool = False
+    
+    def execute(self, context):
+        if(not self.__is_measurement_running):
+            measurement_thread = threading.Thread(target=self.__run_measurement)
+            measurement_thread.start()
+
+    
+    def __run_measurement(self):
+        self.__is_measurement_running = True
+
+        loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(loop)  # Set the event loop for this thread
+
+        collector = GoDirectDataCollector()
+        collector.run()
+        self.__is_measurement_running = False
+        loop.close()  # Close the loop when done
+

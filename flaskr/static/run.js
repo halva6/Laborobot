@@ -143,6 +143,7 @@ function getWorkspaceContents() {
   const topLevelBlocks = Array.from(workspace.children)
     .filter(block =>
       block.classList.contains("block-move") ||
+      block.classList.contains("block-measure") ||
       block.classList.contains("block-controll") ||
       block.classList.contains("block-event") ||
       block.classList.contains("block-variable") ||

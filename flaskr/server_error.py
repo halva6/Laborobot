@@ -23,6 +23,15 @@ class VariableNoneTyeError(ServerError):
 class RobotPositionError(ServerError):
     pass
 
+class DisabledSavingError(ServerError):
+    pass
+
+class DiviceNotFoundError(ServerError):
+    pass
+
+class NoDeviceConnected(ServerError):
+    pass
+
 class ErrorManager:
     _instance = None
 
