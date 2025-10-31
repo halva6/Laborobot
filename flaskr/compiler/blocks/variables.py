@@ -1,30 +1,61 @@
-from server_error import FalseTypeError
+"""Module that provides the internal variables"""
+from flaskr.server_error import FalseTypeError
 
 class Variable():
+    """
+    This represents the variables
+    The variables can be either a string or an integer; 
+    other data types are not possible
+    """
+
     def __init__(self, name:str, value:str) -> None:
         self.__name:str = name
         self.__value:str = str(value)
 
-    def get_value(self):
+    def get_value(self) -> str:
+        """
+        returns:
+            str: value of the variable
+        """
         return self.__value
 
     def set_value(self, value: str) -> None:
+        """
+        args:
+            value (str): new value of the variable 
+        """
         self.__value = value
-    
+
     def get_name(self) -> str:
+        """
+        returns:
+            str: name of the variable
+        """
         return self.__name
-    
+
     def to_int(self) -> int:
+        """
+        returns:
+            int: int-value of the variable 
+                 (because the variable value is actually stored as a string)
+        """
         return self.__check_validation(self.__value)
-    
+
     def __check_validation(self, value:str) -> int:
-        if not value == None:
+        """
+        checks whether a variable can be converted to an int at all, 
+        and whether it is negative or positive
+        args:
+            value (str): the sting value of the variable
+        raises:
+            FalseTypeError: if the variable cant convert to a int
+        returns:
+            int: the final int value        
+        """
+        if not value is None:
             if value.startswith("-") and value[1:].isnumeric():
                 return int(value[1:]) *-1
             elif value.isnumeric():
                 return int(value)
             else:
                 raise FalseTypeError
-
-
-                

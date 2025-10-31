@@ -1,14 +1,16 @@
-from flask_socketio import SocketIO
-
+"""Module that offers block assignment"""
 import json
-from compiler.blocks.block import *
-from compiler.blocks.condition_blocks import *
-from compiler.blocks.loop_blocks import *
-from compiler.blocks.move_blocks import *
-from compiler.blocks.variables import Variable
+from flaskr.compiler.blocks.block import Block, DebugPrintBlock, TimerBlock, CalculationBlock, MeasurementBlock
+from flaskr.compiler.blocks.condition_blocks import IfBlock
+from flaskr.compiler.blocks.loop_blocks import RepeatBlock, BreakBlock
+from flaskr.compiler.blocks.move_blocks import MoveBlock, ResetPositionBlock, MoveToPositionBlock, PositionBlock
+from flaskr.compiler.blocks.variables import Variable
 
 
 class Loader:
+    """
+    it reads the JSON file coming from the server and assigns a block and the corresponding information to each relevant element
+    """
     def __init__(self, file_path: str) -> None:
         """Loader class reads JSON, validates schema, creates concrete block objects"""
         raw_blocks: dict = self.__get_dict_from_json(file_path)
@@ -21,11 +23,25 @@ class Loader:
             self.__blocks.append(self.__factory(raw_block))
 
     def __get_dict_from_json(self, file_path: str) -> dict:
+        """
+        loads and returns a dictionary from a json file
+        args:
+            file_path (str): path to the json file
+        returns:
+            dict: dictionary loaded from the json file
+        """
         with open(file_path, "r", encoding="utf-8") as json_file:
             return json.load(json_file)
         return {}
 
     def __factory(self, raw_block: dict) -> Block:
+        """
+        creates a block object from a raw json dictionary, including its children and variables
+        args:
+            raw_block (dict): dictionary representing the block data from json
+        returns:
+            Block: an instance of the appropriate block type based on the block data
+        """
         block_type: str = raw_block["type"]
 
         children: list = []
@@ -43,49 +59,49 @@ class Loader:
         # gets the blocktype based on typical properties from the JSON dict
         if block_type == "block-event" and "break" in raw_block["id"]:
             return BreakBlock(
-                id=raw_block["id"],
+                block_id=raw_block["id"],
                 text=raw_block["text"],
                 variables=variable_name_list,
                 children=children,
             )
         elif block_type == "block-controll" and "repeat" in raw_block["text"]:
             return RepeatBlock(
-                id=raw_block["id"],
+                block_id=raw_block["id"],
                 text=raw_block["text"],
                 variables=variable_name_list,
                 children=children,
             )
         elif block_type == "block-controll" and "if" in raw_block["text"]:
             return IfBlock(
-                id=raw_block["id"],
+                block_id=raw_block["id"],
                 text=raw_block["text"],
                 variables=variable_name_list,
                 children=children,
             )
         elif block_type.startswith("block-move") and "steps" in raw_block["id"]:
             return MoveBlock(
-                id=raw_block["id"],
+                block_id=raw_block["id"],
                 text=raw_block["text"],
                 variables=variable_name_list,
                 children=children,
             )
         elif block_type.startswith("block-move") and "reset" in raw_block["id"]:
             return ResetPositionBlock(
-                id=raw_block["id"],
+                block_id=raw_block["id"],
                 text=raw_block["text"],
                 variables=variable_name_list,
                 children=children,
             )
         elif block_type == "block-debug" and "print" in raw_block["id"]:
             return DebugPrintBlock(
-                id=raw_block["id"],
+                block_id=raw_block["id"],
                 text=raw_block["text"],
                 variables=variable_name_list,
                 children=children,
             )
         elif block_type == "block-time" and "seconds" in raw_block["id"]:
             return TimerBlock(
-                id=raw_block["id"],
+                block_id=raw_block["id"],
                 text=raw_block["text"],
                 variables=variable_name_list,
                 children=children,
@@ -93,7 +109,7 @@ class Loader:
             )
         elif block_type == "block-time" and "minutes" in raw_block["id"]:
             return TimerBlock(
-                id=raw_block["id"],
+                block_id=raw_block["id"],
                 text=raw_block["text"],
                 variables=variable_name_list,
                 children=children,
@@ -101,43 +117,51 @@ class Loader:
             )
         elif block_type.startswith("block-move") and "to-pos" in raw_block["id"]:
             return MoveToPositionBlock(
-                id=raw_block["id"],
+                block_id=raw_block["id"],
                 text=raw_block["text"],
                 variables=variable_name_list,
                 children=children,
             )
         elif block_type == "block-pos":
             return PositionBlock(
-                id=raw_block["id"],
+                block_id=raw_block["id"],
                 text=raw_block["text"],
                 variables=variable_name_list,
                 children=children,
             )
         elif block_type == "block-calc":
             return CalculationBlock(
-                id=raw_block["id"],
+                block_id=raw_block["id"],
                 text=raw_block["text"],
                 variables=variable_name_list,
                 children=children,
             )
         elif block_type == "block-measure":
             return MeasurementBlock(
-                id=raw_block["id"],
+                block_id=raw_block["id"],
                 text=raw_block["text"],
                 variables=variable_name_list,
                 children=children,
             )
         else:
             return Block(
-                id=raw_block["id"],
+                block_id=raw_block["id"],
                 text=raw_block["text"],
                 variables=variable_name_list,
                 children=children,
                 expected_vars=0,
             )
 
-    def get_blocks(self) -> list:
+    def get_blocks(self) -> list[Block]:
+        """
+        returns:
+            list: list of block objects
+        """
         return self.__blocks
 
     def get_variables(self) -> list[Variable]:
+        """
+        returns:
+            list[Variable]: list of variable objects
+        """
         return self.__variable_list

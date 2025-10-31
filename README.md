@@ -45,13 +45,12 @@ A `bootstrap.py` script is provided to automatically create the virtual environm
 
    * For **development** (Flask’s built-in server):
      ```bash
-     python flaskr/app.py
+     python -m flaskr.app
      ```
 
    * For **production** (Gunicorn with WebSocket support):
 
      ```bash
-     cd flaskr
      gunicorn -k eventlet -w 1 -b 0.0.0.0:5000 app:app
      ```
 
@@ -111,7 +110,7 @@ If you prefer to install dependencies manually, follow these steps:
    * Development server:
 
      ```bash
-     python flaskr/app.py
+     python -m flaskr.app
      ```
    * Production server:
 
@@ -125,3 +124,9 @@ If you prefer to install dependencies manually, follow these steps:
    ```
    http://localhost:5000
    ```
+## Debug
+If you want to debug, change this to the app.py file in the `if __name__ == "__main__":` section:
+```python
+socket_io.run(app, host="0.0.0.0", port=5000, debug=True)
+```
+Thus, when saving Python files, the server is restarted, and when modifying HTML/CSS/JS files, it is updated directly.

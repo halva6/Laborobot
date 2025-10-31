@@ -16,7 +16,6 @@ closeBtn.addEventListener('click', () => {
     infoModal.classList.add('hidden');
 });
 
-// Optional: Klick außerhalb des Modals schließt es
 infoModal.addEventListener('click', (e) => {
     if (e.target === infoModal) {
         infoModal.classList.add('hidden');

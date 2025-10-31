@@ -1,9 +1,12 @@
-# /home/admin/Laborroboter/positions_manager.py
-import os
+"""Module that offers permanent storage of positions"""
 import json
 from pathlib import Path
 
 class PositionManager:
+    """
+    It saves and manages the positions so that, for example, they are not reset after a restart, 
+    because the robot does not automatically reset its motors.
+    """
     def __init__(self, filepath: str):
         self.__filepath = Path(filepath)
         self.__x: int = None
@@ -29,23 +32,44 @@ class PositionManager:
         with open(self.__filepath, "w", encoding="utf-8") as f:
             json.dump(data, f, indent=4)
 
-    # Getters and Setters for x, y, z
-    def set_x(self, value: float):
+    def set_x(self, value: int):
+        """
+        args:
+            value (int): value of x
+        """
         self.__x = value
 
-    def get_x(self) -> float:
+    def get_x(self) -> int:
+        """
+        returns:
+            int: x coordinate
+        """
         return self.__x
 
-    def set_y(self, value: float):
+    def set_y(self, value: int):
+        """
+        args:
+            value (int): value of x
+        """
         self.__y = value
 
-    def get_y(self) -> float:
+    def get_y(self) -> int:
+        """
+        returns:
+            int: y coordinate
+        """
         return self.__y
 
-    def set_z(self, value: float):
+    def set_z(self, value: int):
+        """
+        args:
+            value (int): value of z
+        """
         self.__z = value
 
-    def get_z(self) -> float:
+    def get_z(self) -> int:
+        """
+        returns:
+            int: z coordinate
+        """
         return self.__z
-
-

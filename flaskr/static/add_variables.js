@@ -1,6 +1,6 @@
 let variable_names = ["X", "Y", "Z", "x", "y", "z"];
 let pos_names = ["p1", "p2", "p3"];
-const forbidden_chars = ["{", "}", "[", "/", "%", "&", "|", " ", "  ", "^", "~", "<<", ">>"]
+const forbidden_chars = ["{", "}", "[", "/", "%", "&", "|", " ", "  ", "^", "~", "<<", ">>", "==", "<=", ">=", "<",">","=", ",", ";", "."]
 
 function checkForbiddenChars(name) {
     for (let i = 0; i < forbidden_chars.length; i++) {
@@ -49,7 +49,7 @@ function addVariable() {
             logMessage("failed to create a variable - variable exists already", "error");
         }
     } else {
-        logMessage("failed to create a variable - too long or not allowed chars ({, }, [, /, %, &, |, spaces, tabulators)", "error");
+        logMessage("failed to create a variable - too long or not allowed chars (" + forbidden_chars + ")", "error");
     }
 }
 

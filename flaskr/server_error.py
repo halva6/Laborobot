@@ -1,9 +1,9 @@
+"""A module that contains all errors that can occur when using the program, manages them, and makes them visible to the client"""
+import traceback
 from flask_socketio import SocketIO
 
-import traceback
-
 class ServerError(Exception):
-    """Basis für alle Fehler, die durch User-Code entstehen."""
+    """this is the basis for all errors that arise from user code."""
     def __init__(self, message:str, block_id:str=None, error_code=None):
         self.message:str = message
         self.block_id:str = block_id
@@ -12,27 +12,45 @@ class ServerError(Exception):
 
 
 class FalseTypeError(ServerError):
-    pass
+    """
+    if the specified type does not match the required type
+    """
+
+class BlockNotImpelentedError(ServerError):
+    """
+    This error occurs if the block has not been implemented. 
+    This error occurs because you should only inherit from blocks.
+    """
 
 class ExpectVariableError(ServerError):
-    pass
+    """
+    if too few variables were specified
+    """
 
 class VariableNoneTyeError(ServerError):
-    pass
+    """
+    if the variable is undefined, or if it is nothing
+    """
 
 class RobotPositionError(ServerError):
-    pass
-
-class DisabledSavingError(ServerError):
-    pass
+    """
+    if the specified value exceed the physical possibilities of the robot's movement
+    """
 
 class DiviceNotFoundError(ServerError):
-    pass
+    """
+    if no device is found
+    """
 
 class NoDeviceConnected(ServerError):
-    pass
+    """
+    when no device is connected
+    """
 
 class ErrorManager:
+    """
+    manages the error and sends it to the client in the appropriate format
+    """
     _instance = None
 
     def __init__(self, socketio:SocketIO) -> None:
