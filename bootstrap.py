@@ -32,14 +32,14 @@ def main():
     if REQ_FILE.exists():
         run(venv_pip + ["install", "-r", str(REQ_FILE)])
     else:
-        print(f"⚠️ No {REQ_FILE} found.")
+        print(f" No {REQ_FILE} found.")
 
     activate_cmd = (
         f"{VENV_DIR}\\Scripts\\activate"
         if os.name == "nt"
         else f"source {VENV_DIR}/bin/activate"
     )
-    print(f"\n✅ Virtual environment ready! Activate it with:\n   {activate_cmd}")
+    print(f"\n Virtual environment ready! Activate it with:\n   {activate_cmd}")
 
 
 if __name__ == "__main__":
