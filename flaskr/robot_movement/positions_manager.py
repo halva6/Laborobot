@@ -32,44 +32,26 @@ class PositionManager:
         with open(self.__filepath, "w", encoding="utf-8") as f:
             json.dump(data, f, indent=4)
 
-    def set_x(self, value: int):
-        """
-        args:
-            value (int): value of x
-        """
-        self.__x = value
-
-    def get_x(self) -> int:
-        """
-        returns:
-            int: x coordinate
-        """
+    @property
+    def x(self) -> int:
         return self.__x
 
-    def set_y(self, value: int):
-        """
-        args:
-            value (int): value of x
-        """
-        self.__y = value
-
-    def get_y(self) -> int:
-        """
-        returns:
-            int: y coordinate
-        """
+    @x.setter
+    def x(self, value: int):
+        self.__x = value
+    
+    @property
+    def y(self) -> int:
         return self.__y
 
-    def set_z(self, value: int):
-        """
-        args:
-            value (int): value of z
-        """
-        self.__z = value
+    @y.setter
+    def y(self, value: int):
+        self.__y = value
 
-    def get_z(self) -> int:
-        """
-        returns:
-            int: z coordinate
-        """
+    @property
+    def z(self) -> int:
         return self.__z
+
+    @z.setter
+    def z(self, value: int):
+        self.__z = value

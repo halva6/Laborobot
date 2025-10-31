@@ -55,13 +55,13 @@ def start():
         try:
             loader: Loader = Loader(json_path)
             context: Context = Context(
-                loader.get_blocks(),
-                loader.get_variables(),
+                loader.blocks,
+                loader.variables,
                 robot,  # reuse the same Robot/TestRobot instance
                 socket_io,
             )
 
-            for block in loader.get_blocks():
+            for block in loader.blocks:
                 block.execute(context)
 
         except ServerError as e:

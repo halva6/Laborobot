@@ -29,15 +29,15 @@ class RepeatBlock(Block):
                     self.__break = True  # if so, this informs the actual loop, in execute() that it should be interrupted immediately
                     break
 
-    def __find_break_child(self, children: list) -> Block:
+    def __find_break_child(self, children: list[Block]) -> Block:
         """
         recursively searches if there is a BreakBlock at all
         """
         for child in children:
-            if not child.get_children() == []:
-                return self.__find_break_child(child.get_children())
+            if not child.children == []:
+                return self.__find_break_child(child.children)
 
-            if "break" in child.get_id():
+            if "break" in child.block_id:
                 return child
         return None
 

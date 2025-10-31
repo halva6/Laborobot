@@ -12,25 +12,16 @@ class Variable():
         self.__name:str = name
         self.__value:str = str(value)
 
-    def get_value(self) -> str:
-        """
-        returns:
-            str: value of the variable
-        """
+    @property
+    def value(self) -> str:
         return self.__value
 
-    def set_value(self, value: str) -> None:
-        """
-        args:
-            value (str): new value of the variable 
-        """
+    @value.setter
+    def value(self, value: str) -> None:
         self.__value = value
 
-    def get_name(self) -> str:
-        """
-        returns:
-            str: name of the variable
-        """
+    @property
+    def name(self) -> str:
         return self.__name
 
     def to_int(self) -> int:

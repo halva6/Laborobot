@@ -15,15 +15,15 @@ class MoveBlock(Block):
             # since it is specified in advance that each block has an exact number of expected variables,
             # one can therefore directly access the respective variable from the list
             x = context.get_variable(self._variables[0]).to_int()
-            context.get_robot().move_x(x)
+            context.robot.move_on_axis("X",x)
 
         if self._block_id.startswith("block-steps-y"):
             y = context.get_variable(self._variables[0]).to_int()
-            context.get_robot().move_y(y)
+            context.robot.move_on_axis("Y",y)
 
         if self._block_id.startswith("block-steps-z"):
             z = context.get_variable(self._variables[0]).to_int()
-            context.get_robot().move_z(z)
+            context.robot.move_on_axis("Z",z)
 
 
 class ResetPositionBlock(Block):
@@ -34,7 +34,7 @@ class ResetPositionBlock(Block):
         super().__init__(block_id, text, variables, children, 0)
 
     def execute(self, context:Context) -> None:
-        context.get_robot().reset_pos()
+        context.robot.reset_pos()
 
 
 class MoveToPositionBlock(Block):
@@ -53,15 +53,15 @@ class MoveToPositionBlock(Block):
 
     def execute(self, context:Context):
         self._execute_children(context)
-        context.get_robot().move_to_position(self.__p_x, self.__p_y, self.__p_z)
+        context.robot.move_to_position(self.__p_x, self.__p_y, self.__p_z)
 
     def _execute_children(self, context:Context):
         child:PositionBlock = self._children[0] #this block only have one children
         child.execute(context)
 
-        self.__p_x = child.get_p_x()
-        self.__p_y = child.get_p_y()
-        self.__p_z = child.get_p_z()
+        self.__p_x = child.p_x
+        self.__p_y = child.p_y
+        self.__p_z = child.p_z
 
 
 class PositionBlock(Block):
@@ -79,23 +79,14 @@ class PositionBlock(Block):
         self.__p_y:int = context.get_variable(self._variables[1]).to_int()
         self.__p_z:int = context.get_variable(self._variables[2]).to_int()
 
-    def get_p_x(self)-> int:
-        """
-        returns:
-            int: x coordinate
-        """
+    @property
+    def p_x(self)-> int:
         return self.__p_x
 
-    def get_p_y(self)-> int:
-        """
-        returns:
-            int: y coordinate
-        """
+    @property
+    def p_y(self)-> int:
         return self.__p_y
 
-    def get_p_z(self)-> int:
-        """
-        returns:
-            int: z coordinate
-        """
+    @property
+    def p_z(self)-> int:
         return self.__p_z

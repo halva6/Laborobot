@@ -56,25 +56,16 @@ class Block:
         for child in self._children:
             child.execute(context)
 
-    def get_variables_names(self) -> list[str]:
-        """
-        returns:
-            list[str]: list of variable names
-        """
+    @property
+    def variables_names(self) -> list[str]:
         return self._variables
 
-    def get_children(self) -> list:
-        """
-        returns:
-            list: list of children
-        """
+    @property
+    def children(self) -> list:
         return self._children
 
-    def get_id(self) -> str:
-        """
-        returns:
-            str: the id
-        """
+    @property
+    def block_id(self) -> str:
         return self._block_id
 
     def __str__(self) -> str:
@@ -98,13 +89,13 @@ class DebugPrintBlock(Block):
                                the socket io
         """
         if not self._variables == []:
-            context.get_socket_io().emit(
+            context.socket_io.emit(
                 "update",
                 {
-                    "data": f"[DEBUG] {context.get_variable(self._variables[0]).get_value()}"
+                    "data": f"[DEBUG] {context.get_variable(self._variables[0]).value}"
                 },
             )
-            print(f"[DEBUG] {context.get_variable(self._variables[0]).get_value()}")
+            print(f"[DEBUG] {context.get_variable(self._variables[0]).value}")
 
 
 class TimerBlock(Block):
@@ -184,7 +175,7 @@ class CalculationBlock(Block):
         elif "<<" in self._text:
             value = arg1 >> arg2
 
-        calc_var.set_value(str(value))
+        calc_var.value = str(value)
 
 
 class MeasurementBlock(Block):

@@ -30,9 +30,9 @@ class Robot():
         self._position_manager = PositionManager(position_file_path)
         self._position_manager.load()
 
-        self._x:int = self._position_manager.get_x()
-        self._y:int = self._position_manager.get_y()
-        self._z:int = self._position_manager.get_z()
+        self._x:int = self._position_manager.x
+        self._y:int = self._position_manager.y
+        self._z:int = self._position_manager.z
 
         self._axis_lst:list = ["X","Y","Z"]
 
@@ -42,77 +42,48 @@ class Robot():
 
         print(f"[DEBUG] init pos -> X: {self._x}, Y: {self._y}, Z: {self._z}")
 
-    def move_x(self, value:int) -> None:
+    def move_on_axis(self, axis: str, value: int) -> None:
         """
-        moves the robot along the x axis by the given value if within limits
-        args:
-            value (int): distance to move along the x axis
+        Moves the robot along the given axis ('X', 'Y' or 'Z') by the given value if within limits.
+        Args:
+            axis (str): Axis to move along ('X', 'Y', or 'Z')
+            value (int): Distance to move along the axis
         """
-        if not value is None:
-            if Robot.MIN_X <= self._x + value <= Robot.MAX_X:
+        if value is None:
+            raise VariableNoneTyeError("Variable is not defined, it's None")
 
-                self._x += value
-                self._position_manager.set_x(self._x)
-                self._position_manager.save()
+        axis = axis.upper()
 
-                if value < 0:
-                    self._move(value * -1, "X", False)
-                else:
-                    self._move(value, "X", True)
+        # Mapping for each axis to its attribute and limits
+        axis_map = {
+            "X": ("_x", "MIN_X", "MAX_X"),
+            "Y": ("_y", "MIN_Y", "MAX_Y"),
+            "Z": ("_z", "MIN_Z", "MAX_Z"),
+        }
 
-                print(f"[DEBUG] Move {value} on X axis, position on x: {self._x}")
-            else:
-                raise RobotPositionError("the value exceeds the limits of the possible movement of the robot")
-        else:
-            raise VariableNoneTyeError("Variable is no defined, its None")
+        if axis not in axis_map:
+            raise ValueError("Axis must be one of 'X', 'Y', or 'Z'")
 
-    def move_y(self, value:int) -> None:
-        """
-        moves the robot along the y axis by the given value if within limits
-        args:
-            value (int): distance to move along the y axis
-        """
-        if not value is None:
-            if Robot.MIN_Y <= self._y + value <= Robot.MAX_Y:
+        attr_name, min_attr, max_attr = axis_map[axis]
 
-                self._y += value
-                self._position_manager.set_y(self._y)
-                self._position_manager.save()
+        # Get current position and limits dynamically
+        current_value = getattr(self, attr_name)
+        min_limit = getattr(Robot, min_attr)
+        max_limit = getattr(Robot, max_attr)
 
-                if value < 0:
-                    self._move(value * -1, "Y", False)
-                else:
-                    self._move(value, "Y", True)
+        if not min_limit <= current_value + value <= max_limit:
+            raise RobotPositionError("The value exceeds the limits of the possible movement of the robot")
 
-                print(f"[DEBUG] Move {value} on Y axis, position on y: {self._y}")
-            else:
-                raise RobotPositionError("the value exceeds the limits of the possible movement of the robot")
-        else:
-            raise VariableNoneTyeError("Variable is no defined, its None")
+        new_value = current_value + value
+        setattr(self, attr_name, new_value)
 
-    def move_z(self, value:int) -> None:
-        """
-        moves the robot along the z axis by the given value if within limits
-        args:
-            value (int): distance to move along the z axis
-        """
-        if not value is None:
-            if Robot.MIN_Z <= self._z + value <= Robot.MAX_Z:
+        setattr(self._position_manager, axis.lower(), new_value)
+        self._position_manager.save()
 
-                self._z += value
-                self._position_manager.set_z(self._z)
-                self._position_manager.save()
+        self._move(abs(value), axis, value >= 0)
 
-                if value < 0:
-                    self._move(value * -1, "Z", False)
-                else:
-                    self._move(value, "Z", True)
+        print(f"[DEBUG] Move {value} on {axis} axis, position on {axis.lower()}: {new_value}")
 
-                print(f"[DEBUG] Move {value} on Z axis, position on z: {self._z}")
-            else:
-                raise RobotPositionError("the value exceeds the limits of the possible movement of the robot")
-        else:
-            raise VariableNoneTyeError("Variable is no defined, its None")
 
     def move_to_position(self, p_x:int, p_y:int, p_z:int):
         """
@@ -122,9 +93,9 @@ class Robot():
             p_y (int): target y coordinate
             p_z (int): target z coordinate
         """
-        self.move_x(p_x-(self._x))
-        self.move_y(p_y-(self._y))
-        self.move_z(p_z-(self._z))
+        self.move_on_axis("X", p_x-(self._x))
+        self.move_on_axis("Y", p_y-(self._y))
+        self.move_on_axis("Z", p_z-(self._z))
 
     def _move(self, value:int, axis:str, direction:bool) -> None:
         """
@@ -152,36 +123,27 @@ class Robot():
         for axis in self._axis_lst:
             self.__controller.drive_all_to_endstops(axis)
 
-        pos_dict:dict = self.__controller.get_positions()
+        pos_dict:dict = self.__controller.positions
         self._x = pos_dict["X"]
         self._y = pos_dict["Y"]
         self._z = pos_dict["Z"]
 
-        self._position_manager.set_x(self._x)
-        self._position_manager.set_y(self._y)
-        self._position_manager.set_z(self._z)
+        self._position_manager.x = self._x
+        self._position_manager.y = self._y
+        self._position_manager.z = self._z
 
         self._position_manager.save()
 
         print("[DEBUG] Reseting positions...")
 
-    def get_x(self) -> int:
-        """
-        returns:
-            int: current x coordinate
-        """
+    @property
+    def x(self) -> int:
         return self._x
 
-    def get_y(self) -> int:
-        """
-        returns:
-            int: current y coordinate
-        """
+    @property
+    def y(self) -> int:
         return self._y
 
-    def get_z(self) -> int:
-        """
-        returns:
-            int: current z coordinate
-        """
+    @property
+    def z(self) -> int:
         return self._z

@@ -21,7 +21,7 @@ class Context():
 
         var_names:list = []
         for var in self.__variables:
-            var_names.append(var.get_name())
+            var_names.append(var.name)
         print(f"[DEBUG] variables: {var_names}")
 
     def __organize_all_variables(self, blocks: list["Block"], variables: list[Variable]) -> list[Variable]:
@@ -34,15 +34,15 @@ class Context():
             list[Variable]: updated list of unique variables
         """
         # Create a dictionary to ensure unique variable names
-        unique_vars = {var.get_name(): var for var in variables}
+        unique_vars = {var.name: var for var in variables}
 
         for block in blocks:
-            if block.get_children():
-                self.__organize_all_variables(block.get_children(), variables)
+            if block.children:
+                self.__organize_all_variables(block.children, variables)
 
-            for var in block.get_variables_names():
+            for var in block.variables_names:
                 if isinstance(var, Variable):
-                    unique_vars[var.get_name()] = var
+                    unique_vars[var.name] = var
 
         # Update the original list in-place
         variables.clear()
@@ -59,26 +59,20 @@ class Context():
             Variable: the variable object corresponding to the given name
         """
         for var in self.__variables:
-            if var.get_name() == name:
+            if var.name == name:
                 match name:
                     case "X":
-                        return Variable("X", self.__robot.get_x())
+                        return Variable("X", self.__robot.x)
                     case "Y":
-                        return Variable("Y", self.__robot.get_y())
+                        return Variable("Y", self.__robot.y)
                     case "Z":
-                        return Variable("Z", self.__robot.get_z())
+                        return Variable("Z", self.__robot.z)
                 return var
 
-    def get_robot(self) -> Robot:
-        """
-        returns:
-            Robot: the robot object
-        """
+    @property
+    def robot(self) -> Robot:
         return self.__robot
-
-    def get_socket_io(self) -> SocketIO:
-        """
-        returns:
-            SocketIO: the socket io object
-        """
+    
+    @property
+    def socket_io(self) -> SocketIO:
         return self.__socket_io

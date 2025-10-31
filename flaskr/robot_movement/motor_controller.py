@@ -34,19 +34,9 @@ class MotorController:
             GPIO.setup(pins["ENA"], GPIO.OUT)
             GPIO.setup(pins["STOP"], GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
-    def get_positions(self) -> dict:
-        """
-        returns:
-            dict: dictionary containing position data
-        """
+    @property
+    def positions(self) -> dict:
         return self.positions.copy()
-
-    def set_positions(self, positions) -> None:
-        """
-        args:
-            positions (dict): dictionary containing position data
-        """
-        self.positions = positions
 
     def step_motor(self, steps:int, axis:str, direction:bool):
         """

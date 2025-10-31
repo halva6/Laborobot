@@ -21,9 +21,9 @@ class TestRobot(Robot):
         self._y = -800
         self._z = -30000
 
-        self._position_manager.set_x(self._x)
-        self._position_manager.set_y(self._y)
-        self._position_manager.set_z(self._z)
+        self._position_manager.x = self._x
+        self._position_manager.y = self._y
+        self._position_manager.z = self._z
 
         self._position_manager.save()
         self.inform_about_move()

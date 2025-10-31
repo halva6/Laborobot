@@ -152,16 +152,10 @@ class Loader:
                 expected_vars=0,
             )
 
-    def get_blocks(self) -> list[Block]:
-        """
-        returns:
-            list: list of block objects
-        """
+    @property
+    def blocks(self) -> list[Block]:
         return self.__blocks
 
-    def get_variables(self) -> list[Variable]:
-        """
-        returns:
-            list[Variable]: list of variable objects
-        """
+    @property
+    def variables(self) -> list[Variable]:
         return self.__variable_list
