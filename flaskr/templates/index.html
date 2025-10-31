@@ -5,7 +5,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Laborobot</title>
-    <link rel="stylesheet" href="static/style.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}">
     <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
 </head>
@@ -19,7 +19,16 @@
             <div class="hint">
                 Drag blocks from the palette on the right into slots or under each other.
             </div>
+            <button id="info-button">Info</button>
+
         </header>
+
+        <div id="info-modal" class="hidden">
+            <div class="info-modal-content">
+                <button id="close-info">&times;</button>
+                <div id="info-content"></div>
+            </div>
+        </div>
 
         <section class="group palette" id="palette">
             <div class="group-title" data-tooltip="move the robot">
@@ -128,7 +137,8 @@
             <div class="group-title">
                 Calculations
             </div>
-            <div class="block-calc" id="block-calculations" draggable="true" data-palette="true" data-tooltip="calculate with the variables">
+            <div class="block-calc" id="block-calculations" draggable="true" data-palette="true"
+                data-tooltip="calculate with the variables">
                 <span class="label">
                     <span class="slot" data-accept="variable"></span> =
                     <span class="slot" data-accept="variable number"></span>
@@ -142,7 +152,8 @@
                         <option value="|">or</option>
                         <option value="^">xor</option>
                         <option value="~">not</option>
-                        <option value="<<"><<</option>
+                        <option value="<<">
+                            <<< /option>
                         <option value=">>">>></option>
                     </select>
                     <span class="slot" data-accept="variable number"></span>
@@ -171,7 +182,7 @@
         <section class="panel workspace" id="workspace">
             <div class="workspace-inner" id="workspaceInner"></div>
             <button id="delete" data-tooltip="delete all code blocks">🗑️ Delete everything</button>
-            <button id="run" onclick="run()"data-tooltip="runs all of the code">▶︎ Run</button>
+            <button id="run" onclick="run()" data-tooltip="runs all of the code">▶︎ Run</button>
             <div id="garbage">🗑️ Garbage (Place block here to delete)</div>
         </section>
 
@@ -207,14 +218,16 @@
     </section>
 
 
-    <script src="static/add_variables.js"></script>
-    <script src="static/console.js"></script>
-    <script src="static/drag_and_drop.js"></script>
-    <script src="static/run.js"></script>
-    <script src="static/socket.js"></script>
-    <script src="static/slot.js"></script>
-    <script src="static/manual_control.js"></script>
-    <script src="static/tooltip.js"></script>
+    <script src="{{ url_for('static', filename='add_variables.js') }}"></script>
+    <script src="{{ url_for('static', filename='console.js') }}"></script>
+    <script src="{{ url_for('static', filename='drag_and_drop.js') }}"></script>
+    <script src="{{ url_for('static', filename='run.js') }}"></script>
+    <script src="{{ url_for('static', filename='socket.js') }}"></script>
+    <script src="{{ url_for('static', filename='slot.js') }}"></script>
+    <script src="{{ url_for('static', filename='manual_control.js') }}"></script>
+    <script src="{{ url_for('static', filename='tooltip.js') }}"></script>
+    <script src="{{ url_for('static', filename='info.js') }}"></script>
+
 
 </body>
 

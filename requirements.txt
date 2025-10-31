@@ -6,3 +6,5 @@ GPIO
 numpy
 godirect
 scipy
+markdown
+bleach
