@@ -13,7 +13,7 @@
 <body>
     <div class="app">
         <header>
-            <h1>
+            <h1 data-tooltip="only God and I know what we've done here">
                 Laborobot – <span style="opacity:.7">configure your robot</span>
             </h1>
             <div class="hint">
@@ -22,7 +22,7 @@
         </header>
 
         <section class="group palette" id="palette">
-            <div class="group-title">
+            <div class="group-title" data-tooltip="move the robot">
                 Movement
             </div>
             <div class="block-move" id="block-steps-x" draggable="true" data-palette="true">
@@ -46,7 +46,7 @@
                 <span class="label"> Reset position</span>
             </div>
 
-            <div class="group-title">
+            <div class="group-title" data-tooltip="collect the measurement data">
                 Measurment
             </div>
             <div class="block-measure" id="block-measurement" draggable="true" data-palette="true">
@@ -54,7 +54,7 @@
             </div>
 
 
-            <div class="group-title">
+            <div class="group-title" data-tooltip="classic control structures">
                 Control
             </div>
             <div class="block-controll" id="block-repeat" draggable="true" data-palette="true">
@@ -70,14 +70,14 @@
             </div>
 
 
-            <div class="group-title">
+            <div class="group-title" data-tooltip="events in the code">
                 Events
             </div>
             <div class="block-event" id="block-break" draggable="true" data-palette="true">
                 <span class="label"> Break</span>
             </div>
 
-            <div class="group-title">
+            <div class="group-title" data-tooltip="non-changeable variables">
                 Constants
             </div>
             <div id="variable-container">
@@ -100,7 +100,7 @@
                     <p>= position on z-axis</p>
                 </div>
 
-                <div class="group-title">
+                <div class="group-title" data-tooltip="changeable variables">
                     Variables
                 </div>
 
@@ -114,21 +114,21 @@
                     <button class = "remove-variable" onclick="removeVariable('inline-container-v1')">Remove</button>
                 </div>-->
             </div>
-            <button id="add-variable" onclick="addVariable()">+</button>
+            <button id="add-variable" onclick="addVariable()" data-tooltip="add variable">+</button>
 
-            <div class="group-title">
+            <div class="group-title" data-tooltip="collection of x,y and z">
                 Positions
             </div>
 
             <div id="position-container">
             </div>
 
-            <button id="add-pos" onclick="addPos()">+</button>
+            <button id="add-pos" onclick="addPos()" data-tooltip="add position">+</button>
 
             <div class="group-title">
                 Calculations
             </div>
-            <div class="block-calc" id="block-calculations" draggable="true" data-palette="true">
+            <div class="block-calc" id="block-calculations" draggable="true" data-palette="true" data-tooltip="calculate with the variables">
                 <span class="label">
                     <span class="slot" data-accept="variable"></span> =
                     <span class="slot" data-accept="variable number"></span>
@@ -149,7 +149,7 @@
                 </span>
             </div>
 
-            <div class="group-title">
+            <div class="group-title" data-tooltip="stops the execution">
                 Time
             </div>
             <div class="block-time" id="block-time-seconds" draggable="true" data-palette="true">
@@ -160,7 +160,7 @@
             </div>
 
 
-            <div class="group-title">
+            <div class="group-title" data-tooltip="outputs information to the console">
                 Debug
             </div>
             <div class="block-debug" id="block-debug-print" draggable="true" data-palette="true">
@@ -170,8 +170,8 @@
 
         <section class="panel workspace" id="workspace">
             <div class="workspace-inner" id="workspaceInner"></div>
-            <button id="delete">🗑️ Delete everything</button>
-            <button id="run" onclick="run()">▶︎ Run</button>
+            <button id="delete" data-tooltip="delete all code blocks">🗑️ Delete everything</button>
+            <button id="run" onclick="run()"data-tooltip="runs all of the code">▶︎ Run</button>
             <div id="garbage">🗑️ Garbage (Place block here to delete)</div>
         </section>
 
@@ -214,6 +214,7 @@
     <script src="static/socket.js"></script>
     <script src="static/slot.js"></script>
     <script src="static/manual_control.js"></script>
+    <script src="static/tooltip.js"></script>
 
 </body>
 

@@ -381,3 +381,25 @@ header h1 {
 .console-line.error {
     color: #ef5350;
 }
+
+.tooltip {
+  position: fixed;
+  background: rgba(20, 20, 20, 0.95);
+  color: white;
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-style: italic;
+  line-height: 1.3;
+  z-index: 999999;
+  pointer-events: none;
+  white-space: nowrap;
+  opacity: 0;
+  transform: translateY(4px);
+  transition: opacity 0.15s ease, transform 0.15s ease;
+}
+
+.tooltip.show {
+  opacity: 1;
+  transform: translateY(0);
+}
