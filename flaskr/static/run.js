@@ -109,7 +109,7 @@ function getWorkspaceContents() {
     if (labelEl) {
       text = labelEl.innerText.trim();
 
-      let specialChild = labelEl.querySelector("#calc-box");
+      let specialChild = labelEl.querySelector(".select-box");
       if (specialChild) {
         text += " " + specialChild.value.trim();
       }

@@ -71,8 +71,15 @@
                 <div class="children"></div>
             </div>
             <div class="block-controll" id="block-condition" draggable="true" data-palette="true">
-                <span class="label"> if <span class="slot" data-accept="variable number"></span> <span class="param"
-                        contenteditable>==</span>
+                <span class="label"> if <span class="slot" data-accept="variable number"></span>
+                    <select class="param select-box">
+                        <option value="==">==</option>
+                        <option value="<="><= </option>
+                        <option value=">=">>=</option>
+                        <option value="<">< </option>
+                        <option value=">">></option>
+                        <option value="!=">!=</option>
+                    </select>
                     <span class="slot" data-accept="variable number"></span>
                 </span>
                 <div class="children"></div>
@@ -142,7 +149,7 @@
                 <span class="label">
                     <span class="slot" data-accept="variable"></span> =
                     <span class="slot" data-accept="variable number"></span>
-                    <select class="param" id="calc-box">
+                    <select class="param select-box">
                         <option value="{">+</option>
                         <option value="}">−</option>
                         <option value="[">×</option>
@@ -152,7 +159,7 @@
                         <option value="|">or</option>
                         <option value="^">xor</option>
                         <option value="~">not</option>
-                        <option value="<<"><< </option>
+                        <option value="<<"> << </option>
                         <option value=">>">>></option>
                     </select>
                     <span class="slot" data-accept="variable number"></span>

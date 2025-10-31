@@ -37,6 +37,8 @@ class IfBlock(Block):
             execute_bool = (context.get_variable(self._variables[0]).to_int() < context.get_variable(self._variables[1]).to_int())
         elif ">" in self._text:
             execute_bool = (context.get_variable(self._variables[0]).to_int() > context.get_variable(self._variables[1]).to_int())
+        elif "!=" in self._text:
+            execute_bool = not (context.get_variable(self._variables[0]).to_int() == context.get_variable(self._variables[1]).to_int())
 
         return execute_bool
 
