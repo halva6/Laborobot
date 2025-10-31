@@ -205,5 +205,6 @@ cython_debug/
 marimo/_static/
 marimo/_lsp/
 __marimo__/
-flaskr/compiler/main.py
-flaskr/compiler/from_server.json
+
+# all JSON files used in the project are only needed locally
+*.json
