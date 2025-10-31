@@ -7,58 +7,121 @@ Control of an old 3D printer, as a lab robot, via the web
 
 Laborobot is a program that aims to repurpose old, broken 3D printers as laboratory robots by controlling them via the web. Using a Scratch-like interface, it is designed to help researchers focus on the essential content of their experiments or research work, rather than on the cumbersome programming of such a robot. This project is being developed as part of a special learning achievement (BeLL).
 
+---
+
 ## Project Installation
 
 ### Prerequisites
-- Python 3.8 or higher
-- pip (Python package manager)
-- Git
 
-### Quick Setup
+* Python 3.8 or higher
+* pip (Python package manager)
+* Git
+
+---
+
+## Option 1: Automatic Setup (Recommended)
+
+A `bootstrap.py` script is provided to automatically create the virtual environment and install all required dependencies.
 
 1. **Clone the repository**
+
    ```bash
    git clone https://github.com/halva6/Laborobot.git
+   cd Laborobot
    ```
 
-2. **Create a virtual environment** (recommended)
+2. **Run the bootstrap script**
+
    ```bash
-   python -m venv venv
+   python bootstrap.py
+   ```
+
+   This script will:
+   * Create a virtual environment (`.venv/`)
+   * Activate it automatically
+   * Install all dependencies listed in `requirements.txt`
+
+3. **Start the application**
+
+   * For **development** (Flask’s built-in server):
+     ```bash
+     python flaskr/app.py
+     ```
+
+   * For **production** (Gunicorn with WebSocket support):
+
+     ```bash
+     cd flaskr
+     gunicorn -k eventlet -w 1 -b 0.0.0.0:5000 app:app
+     ```
+
+4. **Access the web interface**
+   Open your browser and navigate to:
+
+   ```
+   http://localhost:5000
+   ```
+
+   or, if hosted remotely:
+
+   ```
+   http://<your-server-ip>:5000
+   ```
+
+---
+
+## Option 2: Manual Installation
+
+If you prefer to install dependencies manually, follow these steps:
+
+1. **Clone the repository**
+
+   ```bash
+   git clone https://github.com/halva6/Laborobot.git
+   cd Laborobot
+   ```
+
+2. **Create a virtual environment**
+
+   ```bash
+   python -m venv .venv
    ```
 
 3. **Activate the virtual environment**
-   - On Windows:
+
+   * On Windows:
+
      ```bash
-     venv\Scripts\activate
+     .venv\Scripts\activate
      ```
-   - On macOS/Linux:
+   * On macOS/Linux:
+
      ```bash
-     source venv/bin/activate
+     source .venv/bin/activate
      ```
 
 4. **Install dependencies**
+
    ```bash
    pip install -r requirements.txt
    ```
 
 5. **Run the application**
-   ```bash
-   python flaskr/app.py
+
+   * Development server:
+
+     ```bash
+     python flaskr/app.py
+     ```
+   * Production server:
+
+     ```bash
+     gunicorn -k eventlet -w 1 -b 0.0.0.0:5000 flaskr.app:app
+     ```
+
+6. **Access the web interface**
+   Open your browser and go to:
+
    ```
-
-6. **Open your browser**
-   Navigate to `http://localhost:5000` or to `http://127.0.0.1:5000`
-
-### Troubleshooting
-
-- If you get port conflicts, use a different port:
-  ```bash
-  flask run --port 5001
-  ```
-
-- If requirements.txt is missing, install Flask manually:
-  ```bash
-  pip install flask
-  ```
-
-- Make sure your virtual environment is activated before installing dependencies
+   http://localhost:5000
+   ```

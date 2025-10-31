@@ -2,10 +2,10 @@ from robot_movement.robot import Robot
 from flask_socketio import SocketIO, emit
 
 class TestRobot(Robot):
-    def __init__(self, gpio_avialable:bool, socket_io: SocketIO):
+    def __init__(self, gpio_avialable:bool, socket_io: SocketIO, position_file_path:str):
         """This class is only for test ticks, because you don't always have the Raspberry Pi available when developing. 
         The movement will simply output"""
-        super().__init__(gpio_avialable, socket_io)
+        super().__init__(gpio_avialable, socket_io, position_file_path)
 
 
     def _move(self, value:int, axis:str, direction:bool) -> None:

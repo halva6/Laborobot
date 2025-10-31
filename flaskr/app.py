@@ -28,10 +28,12 @@ socket_io: SocketIO = SocketIO(app)
 ErrorManager.init(socket_io)
 
 # Create the Robot/TestRobot only once
-if gpio_available:
-    robot: Robot = Robot(gpio_available, socket_io)
+base_dir = os.path.dirname(os.path.abspath(__file__))
+position_path = os.path.join(base_dir, "robot_movement", "position.json")   
+if gpio_available: 
+    robot: Robot = Robot(gpio_available, socket_io, position_path)
 else:
-    robot: TestRobot = TestRobot(gpio_available, socket_io)
+    robot: TestRobot = TestRobot(gpio_available, socket_io, position_path)
 
 
 @app.route("/", methods=["GET", "POST"])
@@ -39,11 +41,13 @@ def start():
     if request.method == "POST":
         command = request.get_json()
 
-        with open("flaskr/compiler/from_server.json", "w") as file:
+        json_path = os.path.join(base_dir, "compiler", "from_server.json")
+
+        with open(json_path, "w") as file:
             file.write(json.dumps(command))
 
         try:
-            loader: Loader = Loader("flaskr/compiler/from_server.json")
+            loader: Loader = Loader(json_path)
             context: Context = Context(
                 loader.get_blocks(),
                 loader.get_variables(),
@@ -76,7 +80,7 @@ def handle_connect():
 
 
 if __name__ == "__main__":
-    socket_io.run(app, host="0.0.0.0", debug=True)
+    socket_io.run(app, host="0.0.0.0", port=5000)
 
 
 #TODO Punktspeicherung mit Geschwindigkeitsfaktor

@@ -9,13 +9,13 @@ except (ImportError, RuntimeError):
 
 
 class Robot():
-    def __init__(self, gpio_avialable:bool, socket_io: SocketIO):
+    def __init__(self, gpio_avialable:bool, socket_io: SocketIO, position_file_path:str):
         """Interface between reading the JSON file coming from the server and executing the real movements of the motor"""
 
         if gpio_avialable:
             self.__controller = MotorController()
         
-        self._position_manager = PositionManager("flaskr/robot_movement/position.json")
+        self._position_manager = PositionManager(position_file_path)
         self._position_manager.load()
 
         self.MAX_X:int = 0

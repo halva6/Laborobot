@@ -8,3 +8,5 @@ godirect
 scipy
 markdown
 bleach
+gunicorn 
+eventlet
