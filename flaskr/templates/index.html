@@ -5,7 +5,15 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Laborobot</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/block_style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/button_style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/console_style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/info_style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/manual_control_style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/slot_style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/tooltip_style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/workspace_style.css') }}">
     <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}">
     <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
 </head>
@@ -26,9 +34,17 @@
         <div id="info-modal" class="hidden">
             <div class="info-modal-content">
                 <button id="close-info">&times;</button>
-                <div id="info-content"></div>
+
+                <div class="info-tabs">
+                    <button class="tab-btn active" data-page="general">General</button>
+                    <button class="tab-btn" data-page="blocks">Blocks</button>
+                    <button class="tab-btn" data-page="programming">Programming</button>
+                </div>
+
+                <div id="info-content" class="info-body"></div>
             </div>
         </div>
+
 
         <section class="group palette" id="palette">
             <div class="group-title" data-tooltip="move the robot">
@@ -223,17 +239,15 @@
         <div class="console" id="console"></div>
     </section>
 
-
-    <script src="{{ url_for('static', filename='add_variables.js') }}"></script>
-    <script src="{{ url_for('static', filename='console.js') }}"></script>
-    <script src="{{ url_for('static', filename='drag_and_drop.js') }}"></script>
-    <script src="{{ url_for('static', filename='run.js') }}"></script>
-    <script src="{{ url_for('static', filename='socket.js') }}"></script>
-    <script src="{{ url_for('static', filename='slot.js') }}"></script>
-    <script src="{{ url_for('static', filename='manual_control.js') }}"></script>
-    <script src="{{ url_for('static', filename='tooltip.js') }}"></script>
-    <script src="{{ url_for('static', filename='info.js') }}"></script>
-
+    <script src="{{ url_for('static', filename='scripts/add_variables.js') }}"></script>
+    <script src="{{ url_for('static', filename='scripts/console.js') }}"></script>
+    <script src="{{ url_for('static', filename='scripts/drag_and_drop.js') }}"></script>
+    <script src="{{ url_for('static', filename='scripts/run.js') }}"></script>
+    <script src="{{ url_for('static', filename='scripts/socket.js') }}"></script>
+    <script src="{{ url_for('static', filename='scripts/slot.js') }}"></script>
+    <script src="{{ url_for('static', filename='scripts/manual_control.js') }}"></script>
+    <script src="{{ url_for('static', filename='scripts/tooltip.js') }}"></script>
+    <script src="{{ url_for('static', filename='scripts/info.js') }}"></script>
 
 </body>
 

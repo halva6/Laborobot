@@ -1,0 +1,29 @@
+#add-variable,
+#add-pos,
+.remove-variable,
+.remove-pos {
+    font-weight: 800;
+    text-align: center;
+    font-size: larger;
+    background: #868686;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    padding: 4px 6px;
+    box-shadow: v0 8px 24px rgba(0, 0, 0, .35);
+    cursor: pointer;
+}
+
+#add-variable:hover,
+#add-pos:hover,
+.remove-variable:hover,
+.remove-pos:hover {
+    background: #979797;
+}
+
+#add-variable:active,
+#add-pos:active,
+.remove-variable:active,
+.remove-pos:active {
+    background-color: #a8a8a8;
+}

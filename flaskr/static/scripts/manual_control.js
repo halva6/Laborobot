@@ -1,12 +1,16 @@
-document.getElementById("x-forward").onclick = () => send(1, "x");
-document.getElementById("x-backward").onclick = () => send(-1, "x");
-document.getElementById("y-forward").onclick = () => send(1, "y");
-document.getElementById("y-backward").onclick = () => send(-1, "y");
-document.getElementById("z-up").onclick = () => send(1, "z");
-document.getElementById("z-down").onclick = () => send(-1, "z");
+function setMoveButton(id, dir, axis) {
+    document.getElementById(id).onclick = function () {
+        send(dir, axis);
+    };
+}
 
-document.getElementById("reset-manuel").onclick = () => send(0, "r");
-
+setMoveButton("x-forward", 1, "x");
+setMoveButton("x-backward", -1, "x");
+setMoveButton("y-forward", 1, "y");
+setMoveButton("y-backward", -1, "y");
+setMoveButton("z-up", 1, "z");
+setMoveButton("z-down", -1, "z");
+setMoveButton("reset-manuel", 0, "r")
 
 function moveJSON(value, axis) {
     if (axis == "x" || axis == "y" || axis == "z") {

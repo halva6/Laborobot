@@ -1,0 +1,98 @@
+.info-tabs {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 16px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding-bottom: 8px;
+}
+
+.tab-btn {
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    border-radius: 8px 8px 0 0;
+    padding: 8px 16px;
+    color: #e5e7eb;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background 0.15s ease;
+}
+
+.tab-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.tab-btn.active {
+    background: rgba(255, 255, 255, 0.25);
+    color: white;
+}
+
+.info-body {
+    overflow-y: auto;
+    max-height: 70vh;
+}
+
+#info-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+
+#info-modal.hidden {
+    display: none;
+}
+
+.info-modal-content {
+    background: linear-gradient(180deg, #0b1023, #0f172a);
+    color: #e5e7eb;
+    padding: 30px 40px;
+    border-radius: 16px;
+    max-width: 800px;
+    /* vorher 800px → jetzt breiter */
+    width: 90%;
+    /* passt sich an kleinere Bildschirme an */
+    max-height: 80%;
+    overflow-y: auto;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+    font-family: system-ui, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+}
+
+/* Close Button */
+#close-info {
+    position: absolute;
+    top: 15px;
+    left: 20px;
+    background: #ef4444;
+    color: white;
+    border: none;
+    font-size: 18px;
+    border-radius: 8px;
+    padding: 4px 8px;
+    cursor: pointer;
+}
+
+#close-info:hover {
+    background: #fa6363;
+}
+
+#info-button {
+    top: 15px;
+    right: 20px;
+    background: #ef4444;
+    color: white;
+    border: none;
+    font-size: 18px;
+    border-radius: 8px;
+    padding: 4px 8px;
+    cursor: pointer;
+}
+
+#info-button:hover {
+    background: #fa6363;
+}

@@ -1,0 +1,31 @@
+.console {
+    background: #111;
+    border: 1px solid #444;
+    border-radius: 8px;
+    height: 70px;
+    padding: 10px 12px 14px 12px;
+    margin: 8px 100px;
+    overflow-y: auto;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, .5);
+    flex-shrink: 0;
+}
+
+.console-line {
+    margin: 2px 0;
+}
+
+.console-line.info {
+    color: #4fc3f7;
+}
+
+.console-line.debug {
+    color: #bcf74f;
+}
+
+.console-line.warn {
+    color: #ffb74d;
+}
+
+.console-line.error {
+    color: #ef5350;
+}

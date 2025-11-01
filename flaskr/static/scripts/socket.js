@@ -1,6 +1,6 @@
 let socket = io();
 
-socket.on("execution_error", (data) => {
+socket.on("execution_error", function (data) {
     logMessage("Execution Error:", "error");
     logMessage("Message: " + data.error, "error");
     logMessage("Block ID: " + data.block_id, "error");

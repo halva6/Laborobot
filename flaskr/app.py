@@ -3,7 +3,7 @@
 import os
 import json
 import markdown
-from flask import Flask, render_template, request
+from flask import Flask, jsonify, render_template, request
 from flask_socketio import SocketIO
 from markupsafe import Markup
 
@@ -69,19 +69,28 @@ def start():
 
     return render_template("index.html")
 
-@app.route('/info-md')
-def info_md():
-    """
-    reads the info markdown file converts it to html and returns it safely
-    returns:
-        Markup: html content generated from the markdown file
-    """
-    md_path = os.path.join(os.path.dirname(__file__), "info.md")
+@app.route('/info-md/<page>')
+def info_md_page(page):
+    """Lädt verschiedene Markdown-Dateien sicher."""
+    # Whitelisting
+    pages = {
+        "general": "static/software_info/generel.md",
+        "blocks": "static/software_info/blocks.md",
+        "programming": "static/software_info/programming.md"
+    }
+
+    if page not in pages:
+        return jsonify({"error": "invalid page"}), 404
+
+    md_path = os.path.join(os.path.dirname(__file__), pages[page])
+    if not os.path.exists(md_path):
+        return jsonify({"error": "file not found"}), 404
+
     with open(md_path, "r", encoding="utf-8") as f:
         md_content = f.read()
+
     html_content = markdown.markdown(md_content, extensions=["fenced_code", "tables"])
-    safe_html = Markup(html_content)
-    return safe_html
+    return Markup(html_content)
 
 # Called when a new client connects
 @socket_io.on("connect")

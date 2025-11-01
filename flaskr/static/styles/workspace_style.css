@@ -1,0 +1,82 @@
+/* Workspace */
+.workspace {
+    position: relative;
+    overflow: auto;
+    background-color: #283558;
+    background-image: radial-gradient(#929292 1px, transparent 1px);
+    background-size: 20px 20px;
+    margin-right: 20px;
+    margin-bottom: 20px;
+    min-height: 0;
+}
+
+.coords {
+    position: relative;
+    margin-top: 10;
+    margin-bottom: 10;
+    text-align: center;
+    font-size: medium;
+}
+
+.workspace-inner {
+    position: relative;
+    padding: 20px;
+    min-height: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 10px;
+    border: 1px dashed #888;
+    overflow-y: auto;
+}
+
+#garbage {
+    border: 2px dashed red;
+    padding: 20px;
+    text-align: center;
+    color: red;
+    font-weight: bold;
+    border-radius: 8px;
+}
+
+#delete {
+    position: absolute;
+    right: 16px;
+    bottom: 16px;
+    background: #ef4444;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    padding: 8px 12px;
+    box-shadow: v0 8px 24px rgba(0, 0, 0, .35);
+    cursor: pointer
+}
+
+#delete:hover {
+    background-color: #fa6363;
+}
+
+#delete:active {
+    background-color: #fc7878;
+}
+
+#run {
+    position: absolute;
+    left: 16px;
+    bottom: 16px;
+    background: #44ef8b;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    padding: 8px 12px;
+    box-shadow: v0 8px 24px rgba(0, 0, 0, .35);
+    cursor: pointer
+}
+
+#run:hover {
+    background-color: #61faa1;
+}
+
+#run:active {
+    background-color: #7afdb0;
+}

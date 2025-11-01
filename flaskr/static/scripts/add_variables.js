@@ -1,10 +1,10 @@
 let variable_names = ["X", "Y", "Z", "x", "y", "z"];
 let pos_names = ["p1", "p2", "p3"];
-const forbidden_chars = ["{", "}", "[", "/", "%", "&", "|", " ", "  ", "^", "~", "<<", ">>", "==", "<=", ">=", "<",">","=", ",", ";", "."]
+const forbidden_chars = ["{", "}", "[", "/", "%", "&", "|", " ", "  ", "^", "~", "<<", ">>", "==", "<=", ">=", "<", ">", "=", ",", ";", "."]
 
 function checkForbiddenChars(name) {
     for (let i = 0; i < forbidden_chars.length; i++) {
-        if(name.includes(forbidden_chars[i])){
+        if (name.includes(forbidden_chars[i])) {
             return false;
         }
     }
@@ -61,7 +61,12 @@ function removeVariable(id) {
     const baseId = "block-get-" + varName + "-pos";
 
     const matches = document.querySelectorAll("[id^='" + baseId + "']");
-    matches.forEach(m => m.remove());
+    for (let i = 0; i < matches.length; i++) {
+        let m = matches[i];
+        m.remove();
+    }
+
+
 
     const index = variable_names.indexOf(varName);
     if (index > -1) {
@@ -121,7 +126,11 @@ function removePos(id) {
     const baseId = "block-get-" + posName + "-pos";
 
     const matches = document.querySelectorAll("[id^='" + baseId + "']");
-    matches.forEach(m => m.remove());
+    for (let i = 0; i < matches.length; i++) {
+        let m = matches[i];
+        m.remove();
+    }
+
 
     const index = pos_names.indexOf(posName);
     if (index > -1) {
