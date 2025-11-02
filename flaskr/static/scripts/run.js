@@ -10,7 +10,7 @@ function getWorkspaceContents() {
 
   // Variable map from the palette
   const variableMap = {};
-  document.querySelectorAll("#variable-container .inline-container").forEach(function (container) {
+  document.querySelectorAll("#variable-container .inline-container").forEach(container => {
     const varBlock = container.querySelector(".block-variable");
     const label = varBlock.querySelector(".label")?.innerText.trim() || "";
     const value = container.querySelector(".param")?.innerText.trim() || null;
@@ -42,7 +42,7 @@ function getWorkspaceContents() {
     if (block.classList.contains("block-pos")) {
       const label = block.querySelector(".label")?.innerText.trim() || "";
 
-      const inputs = Array.from(block.querySelectorAll("input")).map(function (input) {
+      const inputs = Array.from(block.querySelectorAll("input")).map(input => {
         const name = input.previousSibling?.textContent?.replace(":", "").trim() || "";
         const newName = getNewVariableName();
         return {
@@ -65,8 +65,8 @@ function getWorkspaceContents() {
 
     // Collect variables inside the block (excluding its own children)
     const variables = Array.from(block.querySelectorAll(".block-variable, input"))
-      .filter(function (v) { !(childrenContainer && childrenContainer.contains(v)) })
-      .map(function (v) {
+      .filter(v => !(childrenContainer && childrenContainer.contains(v)))
+      .map(v => {
         if (v.classList.contains("block-variable")) {
           const label = v.querySelector(".label")
             ? v.querySelector(".label").innerText.trim()
@@ -141,25 +141,21 @@ function getWorkspaceContents() {
 
   // Collect top-level blocks, including .block-pos
   const topLevelBlocks = Array.from(workspace.children)
-    .filter(function (block) {
-      return block.classList.contains("block-move") ||
-        block.classList.contains("block-measure") ||
-        block.classList.contains("block-controll") ||
-        block.classList.contains("block-event") ||
-        block.classList.contains("block-variable") ||
-        block.classList.contains("block-calc") ||
-        block.classList.contains("block-time") ||
-        block.classList.contains("block-debug") ||
-        block.classList.contains("block-pos");
-    })
+    .filter(block =>
+      block.classList.contains("block-move") ||
+      block.classList.contains("block-measure") ||
+      block.classList.contains("block-controll") ||
+      block.classList.contains("block-event") ||
+      block.classList.contains("block-variable") ||
+      block.classList.contains("block-calc") ||
+      block.classList.contains("block-time") ||
+      block.classList.contains("block-debug") ||
+      block.classList.contains("block-pos")
+    )
     .map(parseBlock);
-
 
   return topLevelBlocks;
 }
-
-
-
 
 //send it to the server
 function run() {

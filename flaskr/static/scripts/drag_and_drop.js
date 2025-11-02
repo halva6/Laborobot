@@ -3,18 +3,18 @@ const clearBtn = document.getElementById("delete");
 const droppable = document.getElementById("workspaceInner");
 
 // dragstart: ID + info whether from pallet
-document.addEventListener("dragstart", function (e) {
+document.addEventListener("dragstart", (e) => {
     if (e.target.matches(".block-move, .block-measure, .block-controll, .block-event, .block-variable, .block-pos, .block-calc, .block-time, .block-debug")) {
         e.dataTransfer.setData("text/plain", e.target.id);
         e.dataTransfer.setData("from-palette", e.target.dataset.palette === "true");
     }
 });
 
-droppable.addEventListener("dragover", function (e) {
+droppable.addEventListener("dragover", (e) => {
     e.preventDefault();
 });
 
-droppable.addEventListener("drop", function (e) {
+droppable.addEventListener("drop", (e) => {
     e.preventDefault();
 
     const id = e.dataTransfer.getData("text/plain");
@@ -43,7 +43,7 @@ droppable.addEventListener("drop", function (e) {
     const targetSlot = e.target.closest(".slot");
     if (targetSlot) {
         const acceptedTypes = targetSlot.dataset.accept.split(" ");
-        const blockType = [...block.classList].find(function (c) { c.startsWith("block-") });
+        const blockType = [...block.classList].find(c => c.startsWith("block-"));
 
         if (acceptedTypes.includes(blockType.replace("block-", ""))) {
             // If there is already something in it --> take it out
@@ -85,7 +85,7 @@ droppable.addEventListener("drop", function (e) {
 // sorting helper function
 function getDragAfterElement(container, y) {
     const elements = [...container.querySelectorAll(".block-move, .block-measure, .block-controll, .block-event, .block-variable, .block-pos, .block-calc, .block-time, .block-debug:not([data-palette='true'])")];
-    return elements.reduce(function (closest, child) {
+    return elements.reduce((closest, child) => {
         const box = child.getBoundingClientRect();
         const offset = y - box.top - box.height / 2;
         if (offset < 0 && offset > closest.offset) {
@@ -97,14 +97,14 @@ function getDragAfterElement(container, y) {
 }
 
 //trash
-garbage.addEventListener("dragover", function (e) {
+garbage.addEventListener("dragover", (e) => {
     e.preventDefault();
     garbage.style.background = "#e660605e"; // visual effect
 });
-garbage.addEventListener("dragleave", function () {
+garbage.addEventListener("dragleave", () => {
     garbage.style.background = "transparent";
 });
-garbage.addEventListener("drop", function (e) {
+garbage.addEventListener("drop", (e) => {
     e.preventDefault();
     const id = e.dataTransfer.getData("text/plain");
     const fromPalette = e.dataTransfer.getData("from-palette") === "true";
@@ -121,7 +121,7 @@ garbage.addEventListener("drop", function (e) {
 });
 
 // workspace blank button
-clearBtn.addEventListener("click", function () {
+clearBtn.addEventListener("click", () => {
     const confirmDelete = confirm("Do you really want to delete everything?");
     if (confirmDelete) {
         droppable.innerHTML = "";
@@ -130,5 +130,4 @@ clearBtn.addEventListener("click", function () {
         logMessage("Deletion aborted", "warn");
     }
 });
-
 

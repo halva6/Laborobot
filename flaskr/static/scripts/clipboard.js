@@ -1,3 +1,7 @@
+loadPosition(1);
+loadPosition(2);
+loadPosition(3);
+
 let copyButtons = document.querySelectorAll('.copy-btn');
 copyButtons.forEach(function (c) {
     c.addEventListener("click", function (e) {
@@ -23,6 +27,13 @@ function copyButton(position) {
     localStorage.setItem("pos" + position + "-x", extractInteger(X));
     localStorage.setItem("pos" + position + "-y", extractInteger(Y));
     localStorage.setItem("pos" + position + "-z", extractInteger(Z));
+}
+
+function loadPosition(position)
+{
+    document.getElementById("pos" + position + "-x").value = localStorage.getItem("pos" + position + "-x");
+    document.getElementById("pos" + position + "-y").value = localStorage.getItem("pos" + position + "-y");
+    document.getElementById("pos" + position + "-z").value = localStorage.getItem("pos" + position + "-z");
 }
 
 
@@ -68,7 +79,37 @@ function setJSON(x, y, z) {
                     "value": z.toString(),
                 }
             ],
-            "children": []
+            "children": [
+                {
+                    "id": "block-get-defined-pos-176ds294",
+                    "type": "block-pos",
+                    "text": "ds:",
+                    "variables": [
+                        {
+                            "id": "block-get-var01-pos-x",
+                            "axis": "X",
+                            "text": "var1761750550401",
+                            "type": "block-variable",
+                            "value": x.toString()
+                        },
+                        {
+                            "id": "block-get-var01-pos-y",
+                            "axis": "Y",
+                            "text": "var1761750550402",
+                            "type": "block-variable",
+                            "value": y.toString()
+                        },
+                        {
+                            "id": "block-get-var01-pos-z",
+                            "axis": "Z",
+                            "text": "var1761750550403",
+                            "type": "block-variable",
+                            "value": z.toString()
+                        }
+                    ],
+                    "children": []
+                }
+            ]
         }
     ];
 }
