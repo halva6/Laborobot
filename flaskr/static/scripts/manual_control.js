@@ -1,6 +1,6 @@
 function setMoveButton(id, dir, axis) {
     document.getElementById(id).onclick = function () {
-        send(dir, axis);
+        send(() => moveJSON(dir, axis));
     };
 }
 
@@ -35,38 +35,8 @@ function moveJSON(value, axis) {
     }
 }
 
-let saveButtons = document.querySelectorAll('.save-btn');
-for (let i = 0; i < saveButtons.length; i++) {
-    saveButtons[i].addEventListener('click', function () {
-        let posNum = this.dataset.pos;
-        console.log('Save current position to slot ' + posNum);
-        // TODO: Implement logic to read and store current XYZ
-    });
-}
-
-// Handle "Set" buttons for positions
-let setButtons = document.querySelectorAll('.set-btn');
-for (let j = 0; j < setButtons.length; j++) {
-    setButtons[j].addEventListener('click', function () {
-        let posNum = this.dataset.pos;
-        console.log('Set current position to slot ' + posNum);
-        // TODO: Implement logic to move to stored XYZ
-    });
-}
-
-// Handle manual edit of position inputs
-let positionInputs = document.querySelectorAll('.pos-input');
-for (let k = 0; k < positionInputs.length; k++) {
-    positionInputs[k].addEventListener('input', function () {
-        let id = this.id;
-        console.log('Edited ' + id + ': ' + this.value);
-        // TODO: Implement logic to handle manual position edits
-    });
-}
-
-
-function send(value, axis) {
-    const contents = moveJSON(value, axis);
+function send(getJSON) {
+    const contents = getJSON();
 
     fetch('/',
         {

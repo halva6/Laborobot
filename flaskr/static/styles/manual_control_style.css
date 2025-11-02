@@ -103,11 +103,11 @@
     gap: 4px;
 }
 
-.save-btn {
+.copy-btn {
     background: rgb(46, 184, 113);
 }
 
-.save-btn:hover {
+.copy-btn:hover {
     background: rgb(66, 204, 133);
 }
 

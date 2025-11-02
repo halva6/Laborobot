@@ -23,15 +23,3 @@ socket.on('coords', function (msg) {
     spanY.innerHTML = data[1];
     spanZ.innerHTML = data[2];
 });
-
-socket.on('clipboard-coords', function (msg) {
-    let data = msg.data.split(",");
-
-    let spanX = document.getElementById("x-axis-label");
-    let spanY = document.getElementById("y-axis-label");
-    let spanZ = document.getElementById("z-axis-label");
-
-    spanX.innerHTML = data[0];
-    spanY.innerHTML = data[1];
-    spanZ.innerHTML = data[2];
-});
