@@ -4,10 +4,10 @@ function setMoveButton(id, dir, axis) {
     };
 }
 
-setMoveButton("x-forward", 1, "x");
-setMoveButton("x-backward", -1, "x");
-setMoveButton("y-forward", 1, "y");
-setMoveButton("y-backward", -1, "y");
+setMoveButton("x-up", 1, "x");
+setMoveButton("x-down", -1, "x");
+setMoveButton("y-up", 1, "y");
+setMoveButton("y-down", -1, "y");
 setMoveButton("z-up", 1, "z");
 setMoveButton("z-down", -1, "z");
 setMoveButton("reset-manuel", 0, "r")
@@ -18,7 +18,7 @@ function moveJSON(value, axis) {
             {
                 "id": "block-steps-" + axis + "-1761750547079",
                 "type": "block-move",
-                "text": "Go  steps on the " + axis.toUpperCase() + " axis",
+                "text": "Go  steps on the  axis " + axis,
                 "variables": [
                     {
                         "id": "block-get-var01-pos-01",
@@ -37,6 +37,7 @@ function moveJSON(value, axis) {
 
 function send(getJSON) {
     const contents = getJSON();
+    console.log(contents);
 
     fetch('/',
         {

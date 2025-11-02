@@ -53,9 +53,9 @@
             <div class="block-move" id="block-steps" draggable="true" data-palette="true">
                 <span class="label"> Go <span class="slot" data-accept="variable number"></span> steps on the
                     <select class="param select-box">
-                        <option value="x"> x </option>
-                        <option value="y"> y </option>
-                        <option value="z"> z </option>
+                        {%for axis in axles%}
+                        <option value={{axis}}> {{axis}} </option>
+                        {% endfor %}
                     </select>
                     axis</span>
             </div>
@@ -85,12 +85,9 @@
             <div class="block-controll" id="block-condition" draggable="true" data-palette="true">
                 <span class="label"> if <span class="slot" data-accept="variable number"></span>
                     <select class="param select-box">
-                        <option value="==">==</option>
-                        <option value="<="> &lt;= </option>
-                        <option value=">=">>=</option>
-                        <option value="<"> &lt; </option>
-                        <option value=">">></option>
-                        <option value="!=">!=</option>
+                        {% for if_operator in if_operators %}
+                        <option value={{if_operator}}> {{if_operator}} </option>
+                        {% endfor %}
                     </select>
                     <span class="slot" data-accept="variable number"></span>
                 </span>
@@ -109,24 +106,14 @@
                 Constants
             </div>
             <div id="variable-container">
+                {% for axis in axles %}
                 <div class="inline-container">
-                    <div class="block-variable" id="block-get-x-pos" draggable="true" data-palette="true">
-                        <span class="label">X</span>
+                    <div class="block-variable" id="block-get-{{axis}}-pos" draggable="true" data-palette="true">
+                        <span class="label">{{axis.upper()}}</span>
                     </div>
-                    <p>= position on x-axis</p>
+                    <p>= position on {{axis}}-axis</p>
                 </div>
-                <div class="inline-container">
-                    <div class="block-variable" id="block-get-y-pos" draggable="true" data-palette="true">
-                        <span class="label">Y</span>
-                    </div>
-                    <p>= position on y-axis</p>
-                </div>
-                <div class="inline-container">
-                    <div class="block-variable" id="block-get-z-pos" draggable="true" data-palette="true">
-                        <span class="label">Z</span>
-                    </div>
-                    <p>= position on z-axis</p>
-                </div>
+                {% endfor %}
 
                 <div class="group-title" data-tooltip="changeable variables">
                     Variables
@@ -162,17 +149,9 @@
                     <span class="slot" data-accept="variable"></span> =
                     <span class="slot" data-accept="variable number"></span>
                     <select class="param select-box">
-                        <option value="{">+</option>
-                        <option value="}">−</option>
-                        <option value="[">×</option>
-                        <option value="/">÷</option>
-                        <option value="%">mod</option>
-                        <option value="&">and</option>
-                        <option value="|">or</option>
-                        <option value="^">xor</option>
-                        <option value="~">not</option>
-                        <option value="<<">&lt;&lt;</option>
-                        <option value=">>">>></option>
+                        {% for calc_operator in calc_operators%}
+                        <option value={{calc_operator.value}}>{{calc_operator.text}}</option>
+                        {% endfor %}
                     </select>
                     <span class="slot" data-accept="variable number"></span>
                 </span>
@@ -207,65 +186,33 @@
     </div>
 
     <section class="manual-controls">
+        {% for axis in axles%}
         <div class="axis-control">
-            <span class="axis-label" id="x-axis-label">X-axis:</span>
-            <button class="axis-btn" id="x-forward">▲ front</button>
-            <button class="axis-btn" id="x-backward">▼ back</button>
+            <span class="axis-label" id="{{axis}}-axis-label">{{axis.upper()}}-axis:</span>
+            <button class="axis-btn" id="{{axis}}-up">▲ up</button>
+            <button class="axis-btn" id="{{axis}}-down">▼ down</button>
         </div>
-
-        <div class="axis-control">
-            <span class="axis-label" id="y-axis-label">Y-axis:</span>
-            <button class="axis-btn" id="y-forward">▲ front</button>
-            <button class="axis-btn" id="y-backward">▼ back</button>
-        </div>
-
-        <div class="axis-control">
-            <span class="axis-label" id="z-axis-label">Z-axis:</span>
-            <button class="axis-btn" id="z-up">▲ up</button>
-            <button class="axis-btn" id="z-down">▼ down</button>
-        </div>
+        {% endfor %}
 
         <div class="axis-control">
             <button class="axis-btn" id="reset-manuel">reset</button>
         </div>
         <div class="clipboard-control">
             <div class="clipboard-fields">
+                {% for i in range(1, clipboards +1) %}
                 <div class="clipboard-unit">
-                    <span class="clipboard-label">Pos 1</span>
+                    <span class="clipboard-label">Pos {{i}}</span>
                     <div class="clipboard-values">
-                        <input class="clipboard-input" id="pos1-x" placeholder="X" readonly>
-                        <input class="clipboard-input" id="pos1-y" placeholder="Y" readonly>
-                        <input class="clipboard-input" id="pos1-z" placeholder="Z" readonly>
+                        {% for axis in axles%}
+                        <input class="clipboard-input" id="pos{{i}}-{{axis}}" placeholder={{axis.upper()}} readonly>
+                        {% endfor %}
                     </div>
                     <div class="clipboard-buttons">
-                        <button class="axis-btn copy-btn" data-pos="1">Copy</button>
-                        <button class="axis-btn set-btn" data-pos="1">Set</button>
+                        <button class="axis-btn copy-btn" data-pos={{i}}>Copy</button>
+                        <button class="axis-btn set-btn" data-pos={{i}}>Set</button>
                     </div>
                 </div>
-                <div class="clipboard-unit">
-                    <span class="clipboard-label">Pos 2</span>
-                    <div class="clipboard-values">
-                        <input class="clipboard-input" id="pos2-x" placeholder="X" readonly>
-                        <input class="clipboard-input" id="pos2-y" placeholder="Y" readonly>
-                        <input class="clipboard-input" id="pos2-z" placeholder="Z" readonly>
-                    </div>
-                    <div class="clipboard-buttons">
-                        <button class="axis-btn copy-btn" data-pos="2">Copy</button>
-                        <button class="axis-btn set-btn" data-pos="2">Set</button>
-                    </div>
-                </div>
-                <div class="clipboard-unit">
-                    <span class="clipboard-label">Pos 3</span>
-                    <div class="clipboard-values">
-                        <input class="clipboard-input" id="pos3-x" placeholder="X" readonly>
-                        <input class="clipboard-input" id="pos3-y" placeholder="Y" readonly>
-                        <input class="clipboard-input" id="pos3-z" placeholder="Z" readonly>
-                    </div>
-                    <div class="clipboard-buttons">
-                        <button class="axis-btn copy-btn" data-pos="3">Copy</button>
-                        <button class="axis-btn set-btn" data-pos="3">Set</button>
-                    </div>
-                </div>
+                {% endfor %}
             </div>
         </div>
 

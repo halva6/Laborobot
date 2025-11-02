@@ -44,6 +44,22 @@ def start():
     returns:
         str: rendered html template
     """
+    axles:list = ["x","y","z"]
+    calc_operators:list[dict] = [{"value":"{", "text":"+"},
+                               {"value":"}", "text":"-"},
+                               {"value":"[", "text":"*"},
+                               {"value":"/", "text":"/"},
+                               {"value":"%", "text":"mod"},
+                               {"value":"&", "text":"and"},
+                               {"value":"|", "text":"or"},
+                               {"value":"^", "text":"xor"},
+                               {"value":"~", "text":"not"},
+                               {"value":"<<", "text":"<<"},
+                               {"value":">>", "text":">>"},]
+    
+    if_operators:list[dict] = ["==","<=",">=","<",">","!="]
+
+    clipboards:int = 3
     if request.method == "POST":
         command = request.get_json()
 
@@ -67,7 +83,7 @@ def start():
         except ServerError as e:
             ErrorManager.report(e)
 
-    return render_template("index.html")
+    return render_template("index.html", axles = axles, clipboards=clipboards, calc_operators=calc_operators, if_operators=if_operators)
 
 @app.route('/info-md/<page>')
 def info_md_page(page):
