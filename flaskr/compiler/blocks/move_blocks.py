@@ -11,17 +11,17 @@ class MoveBlock(Block):
         super().__init__(block_id, text, variables, children, 1) # the last number defines the exact number of expected variables
 
     def execute(self, context:Context) -> None:
-        if self._block_id.startswith("block-steps-x"):
+        if self._text.endswith("x"):
             # since it is specified in advance that each block has an exact number of expected variables,
             # one can therefore directly access the respective variable from the list
             x = context.get_variable(self._variables[0]).to_int()
             context.robot.move_on_axis("X",x)
 
-        if self._block_id.startswith("block-steps-y"):
+        if self._text.endswith("y"):
             y = context.get_variable(self._variables[0]).to_int()
             context.robot.move_on_axis("Y",y)
 
-        if self._block_id.startswith("block-steps-z"):
+        if self._text.endswith("z"):
             z = context.get_variable(self._variables[0]).to_int()
             context.robot.move_on_axis("Z",z)
 

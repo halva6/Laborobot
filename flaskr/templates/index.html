@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="de">
+<html lang="en">
 
 <head>
     <meta charset="UTF-8" />
@@ -50,20 +50,16 @@
             <div class="group-title" data-tooltip="move the robot">
                 Movement
             </div>
-            <div class="block-move" id="block-steps-x" draggable="true" data-palette="true">
-                <span class="label"> Go <span class="slot" data-accept="variable number"></span> steps on the X
+            <div class="block-move" id="block-steps" draggable="true" data-palette="true">
+                <span class="label"> Go <span class="slot" data-accept="variable number"></span> steps on the
+                    <select class="param select-box">
+                        <option value="x"> x </option>
+                        <option value="y"> y </option>
+                        <option value="z"> z </option>
+                    </select>
                     axis</span>
             </div>
 
-            <div class="block-move" id="block-steps-y" draggable="true" data-palette="true">
-                <span class="label"> Go <span class="slot" data-accept="variable number"></span> steps on the Y
-                    axis</span>
-            </div>
-
-            <div class="block-move" id="block-steps-z" draggable="true" data-palette="true">
-                <span class="label"> Go <span class="slot" data-accept="variable number"></span> steps on the Z
-                    axis</span>
-            </div>
             <div class="block-move" id="block-go-to-pos" draggable="true" data-palette="true">
                 <span class="label"> Goto position: <span class="slot" data-accept="pos"></span></span>
             </div>
