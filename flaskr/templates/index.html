@@ -90,9 +90,9 @@
                 <span class="label"> if <span class="slot" data-accept="variable number"></span>
                     <select class="param select-box">
                         <option value="==">==</option>
-                        <option value="<="><= </option>
+                        <option value="<="> &lt;= </option>
                         <option value=">=">>=</option>
-                        <option value="<">< </option>
+                        <option value="<"> &lt; </option>
                         <option value=">">></option>
                         <option value="!=">!=</option>
                     </select>
@@ -137,14 +137,14 @@
                 </div>
 
                 <!-- this is what a created variable would look like
-                <div class="inline-container" id="inline-container-v1">
-                    <div class="block-variable" id="block-get-v1-pos" draggable="true" data-palette="true">
-                        <span class="label">v1</span>
-                    </div>
-                    <p>=</p>
-                    <span class="param"contenteditable>50</span>
-                    <button class = "remove-variable" onclick="removeVariable('inline-container-v1')">Remove</button>
-                </div>-->
+                            <div class="inline-container" id="inline-container-v1">
+                                <div class="block-variable" id="block-get-v1-pos" draggable="true" data-palette="true">
+                                    <span class="label">v1</span>
+                                </div>
+                                <p>=</p>
+                                <span class="param"contenteditable>50</span>
+                                <button class = "remove-variable" onclick="removeVariable('inline-container-v1')">Remove</button>
+                            </div>-->
             </div>
             <button id="add-variable" onclick="addVariable()" data-tooltip="add variable">+</button>
 
@@ -175,7 +175,7 @@
                         <option value="|">or</option>
                         <option value="^">xor</option>
                         <option value="~">not</option>
-                        <option value="<<"> << </option>
+                        <option value="<<">&lt;&lt;</option>
                         <option value=">>">>></option>
                     </select>
                     <span class="slot" data-accept="variable number"></span>
@@ -232,8 +232,48 @@
         <div class="axis-control">
             <button class="axis-btn" id="reset-manuel">reset</button>
         </div>
-    </section>
+        <div class="clipboard-control">
+            <div class="clipboard-fields">
+                <div class="clipboard-unit">
+                    <span class="clipboard-label">Pos 1</span>
+                    <div class="clipboard-values">
+                        <input class="clipboard-input" id="pos1-x" placeholder="X" readonly>
+                        <input class="clipboard-input" id="pos1-y" placeholder="Y" readonly>
+                        <input class="clipboard-input" id="pos1-z" placeholder="Z" readonly>
+                    </div>
+                    <div class="clipboard-buttons">
+                        <button class="axis-btn save-btn" data-pos="1">Copy</button>
+                        <button class="axis-btn set-btn" data-pos="1">Set</button>
+                    </div>
+                </div>
+                <div class="clipboard-unit">
+                    <span class="clipboard-label">Pos 2</span>
+                    <div class="clipboard-values">
+                        <input class="clipboard-input" id="pos2-x" placeholder="X" readonly>
+                        <input class="clipboard-input" id="pos2-y" placeholder="Y" readonly>
+                        <input class="clipboard-input" id="pos2-z" placeholder="Z" readonly>
+                    </div>
+                    <div class="clipboard-buttons">
+                        <button class="axis-btn save-btn" data-pos="2">Copy</button>
+                        <button class="axis-btn set-btn" data-pos="2">Set</button>
+                    </div>
+                </div>
+                <div class="clipboard-unit">
+                    <span class="clipboard-label">Pos 3</span>
+                    <div class="clipboard-values">
+                        <input class="clipboard-input" id="pos3-x" placeholder="X" readonly>
+                        <input class="clipboard-input" id="pos3-y" placeholder="Y" readonly>
+                        <input class="clipboard-input" id="pos3-z" placeholder="Z" readonly>
+                    </div>
+                    <div class="clipboard-buttons">
+                        <button class="axis-btn save-btn" data-pos="3">Copy</button>
+                        <button class="axis-btn set-btn" data-pos="3">Set</button>
+                    </div>
+                </div>
+            </div>
+        </div>
 
+    </section>
 
     <section>
         <div class="console" id="console"></div>

@@ -1,5 +1,4 @@
-let variable_names = ["X", "Y", "Z", "x", "y", "z"];
-let pos_names = ["p1", "p2", "p3"];
+let given_names = ["X", "Y", "Z", "x", "y", "z","p1", "p2", "p3"];
 const forbidden_chars = ["{", "}", "[", "/", "%", "&", "|", " ", "  ", "^", "~", "<<", ">>", "==", "<=", ">=", "<", ">", "=", ",", ";", "."]
 
 function checkForbiddenChars(name) {
@@ -14,7 +13,7 @@ function checkForbiddenChars(name) {
 function addVariable() {
     let v_name = prompt("Name the variable");
     if (v_name.length <= 20 && checkForbiddenChars(v_name)) {
-        if (is_name_valid(variable_names, v_name)) {
+        if (is_name_valid(given_names, v_name)) {
             if (!v_name == "") {
                 const container = document.getElementById("variable-container");
 
@@ -40,13 +39,13 @@ function addVariable() {
 
                 inlineContainer.appendChild(btn);
                 container.appendChild(inlineContainer);
-                variable_names.push(v_name);
+                given_names.push(v_name);
                 logMessage("Successfully created a variable", "info");
             } else {
                 logMessage("failed to create a variable", "error");
             }
         } else {
-            logMessage("failed to create a variable - variable exists already", "error");
+            logMessage("failed to create a variable - name exists already", "error");
         }
     } else {
         logMessage("failed to create a variable - too long or not allowed chars (" + forbidden_chars + ")", "error");
@@ -68,9 +67,9 @@ function removeVariable(id) {
 
 
 
-    const index = variable_names.indexOf(varName);
+    const index = given_names.indexOf(varName);
     if (index > -1) {
-        variable_names.splice(index, 1);
+        given_names.splice(index, 1);
     }
 }
 
@@ -79,7 +78,7 @@ function removeVariable(id) {
 function addPos() {
     let p_name = prompt("Name the position");
     if (p_name.length <= 20 && checkForbiddenChars(p_name)) {
-        if (is_name_valid(pos_names, p_name)) {
+        if (is_name_valid(given_names, p_name)) {
             if (p_name !== "") {
                 const container = document.getElementById("position-container");
 
@@ -105,13 +104,13 @@ function addPos() {
 
                 inlineContainer.appendChild(btn);
                 container.appendChild(inlineContainer);
-                pos_names.push(p_name);
+                given_names.push(p_name);
                 logMessage("Successfully created a position", "info");
             } else {
                 logMessage("failed to create a position", "error");
             }
         } else {
-            logMessage("failed to create a position - position exists already", "error");
+            logMessage("failed to create a position - name exists already", "error");
         }
     } else {
         logMessage("failed to create a position - too long or not allowed chars", "error");
@@ -132,9 +131,9 @@ function removePos(id) {
     }
 
 
-    const index = pos_names.indexOf(posName);
+    const index = given_names.indexOf(posName);
     if (index > -1) {
-        pos_names.splice(index, 1);
+        given_names.splice(index, 1);
     }
 }
 

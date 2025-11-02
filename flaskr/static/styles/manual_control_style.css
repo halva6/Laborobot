@@ -44,3 +44,77 @@
 .axis-btn:active {
     background: rgb(65, 186, 255);
 }
+
+.clipboard-control {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 16px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, .25);
+}
+
+.clipboard-fields {
+    display: flex;
+    gap: 16px;
+}
+
+.clipboard-unit {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px;
+}
+
+.clipboard-label {
+    font-weight: 600;
+    font-size: 12px;
+    margin-bottom: 6px;
+    opacity: 0.85;
+}
+
+.clipboard-values {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 6px;
+}
+
+.clipboard-input {
+    width: 45px;
+    text-align: center;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    background: rgba(255, 255, 255, 0.08);
+    color: white;
+    font-weight: 600;
+    padding: 4px;
+    pointer-events: none;
+    user-select: none;  
+}
+
+.clipboard-input[readonly] {
+    cursor: default;
+    opacity: 0.8;
+}
+
+.clipboard-buttons {
+    display: flex;
+    gap: 4px;
+}
+
+.save-btn {
+    background: rgb(46, 184, 113);
+}
+
+.save-btn:hover {
+    background: rgb(66, 204, 133);
+}
+
+.set-btn {
+    background: rgb(255, 174, 45);
+}
+
+.set-btn:hover {
+    background: rgb(255, 194, 65);
+}
