@@ -87,7 +87,7 @@ def start():
 
 @app.route('/info-md/<page>')
 def info_md_page(page):
-    """Lädt verschiedene Markdown-Dateien sicher."""
+    """loads various Markdown files safely"""
     # Whitelisting
     pages = {
         "general": "static/software_info/generel.md",
@@ -105,7 +105,7 @@ def info_md_page(page):
     with open(md_path, "r", encoding="utf-8") as f:
         md_content = f.read()
 
-    html_content = markdown.markdown(md_content, extensions=["fenced_code", "tables"])
+    html_content = markdown.markdown(md_content, extensions=["fenced_code", "tables", "sane_lists", "nl2br"])
     return Markup(html_content)
 
 # Called when a new client connects

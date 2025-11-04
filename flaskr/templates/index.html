@@ -54,7 +54,7 @@
                 <span class="label"> Go <span class="slot" data-accept="variable number"></span> steps on the
                     <select class="param select-box">
                         {%for axis in axles%}
-                        <option value={{axis}}> {{axis}} </option>
+                        <option value="{{axis}}"> {{axis}} </option>
                         {% endfor %}
                     </select>
                     axis</span>
@@ -86,7 +86,7 @@
                 <span class="label"> if <span class="slot" data-accept="variable number"></span>
                     <select class="param select-box">
                         {% for if_operator in if_operators %}
-                        <option value={{if_operator}}> {{if_operator}} </option>
+                        <option value="{{if_operator}}"> {{if_operator}} </option>
                         {% endfor %}
                     </select>
                     <span class="slot" data-accept="variable number"></span>
@@ -150,7 +150,7 @@
                     <span class="slot" data-accept="variable number"></span>
                     <select class="param select-box">
                         {% for calc_operator in calc_operators%}
-                        <option value={{calc_operator.value}}>{{calc_operator.text}}</option>
+                        <option value="{{calc_operator.value}}">{{calc_operator.text}}</option>
                         {% endfor %}
                     </select>
                     <span class="slot" data-accept="variable number"></span>
@@ -208,8 +208,8 @@
                         {% endfor %}
                     </div>
                     <div class="clipboard-buttons">
-                        <button class="axis-btn copy-btn" data-pos={{i}}>Copy</button>
-                        <button class="axis-btn set-btn" data-pos={{i}}>Set</button>
+                        <button class="axis-btn copy-btn" data-pos="{{i}}">Copy</button>
+                        <button class="axis-btn set-btn" data-pos="{{i}}">Set</button>
                     </div>
                 </div>
                 {% endfor %}

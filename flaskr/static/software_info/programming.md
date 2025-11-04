@@ -6,7 +6,7 @@ Welcome to the control app!
 - Load and save programs
 - Test mode without GPIO
 
-![Code Block Selection](static/images/CodeBlockSelection.png)
+![Code Block Selection](static/software_info/images/CodeBlockSelection.png)
 
 ## Notes
 This page is automatically rendered from a Markdown file.
