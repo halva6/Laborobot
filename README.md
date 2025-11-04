@@ -51,7 +51,7 @@ A `bootstrap.py` script is provided to automatically create the virtual environm
    * For **production** (Gunicorn with WebSocket support):
 
      ```bash
-     gunicorn -k eventlet -w 1 -b 0.0.0.0:5000 app:app
+     gunicorn -k eventlet -w 1 -b 0.0.0.0:5000 flaskr.app:app
      ```
 
 4. **Access the web interface**
