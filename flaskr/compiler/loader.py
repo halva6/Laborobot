@@ -98,6 +98,7 @@ class Loader:
                 text=raw_block["text"],
                 variables=variable_name_list,
                 children=children,
+                expected_vars=len(variable_name_list),
             )
         elif block_type == "block-time" and "seconds" in raw_block["id"]:
             return TimerBlock(

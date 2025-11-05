@@ -77,9 +77,6 @@ class DebugPrintBlock(Block):
     Block for outputting arbitrary values to the client's console
     """
 
-    def __init__(self, block_id: str, text: str, variables: list[str], children: list) -> None:
-        super().__init__(block_id, text, variables, children, 1)
-
     def execute(self, context: Context) -> None:
         """
         sends data to the frontend, which is to be output in the console there,
@@ -89,13 +86,20 @@ class DebugPrintBlock(Block):
                                the socket io
         """
         if not self._variables == []:
+            send_str: str = "[DEBUG] "
+            for var in self._variables:
+                send_str += context.get_variable(var).value + " | "
+
+            if len(self._variables) == 1:
+                send_str = send_str.replace("|", "")
+        
             context.socket_io.emit(
                 "update",
                 {
-                    "data": f"[DEBUG] {context.get_variable(self._variables[0]).value}"
+                    "data": send_str
                 },
             )
-            print(f"[DEBUG] {context.get_variable(self._variables[0]).value}")
+            print(send_str)
 
 
 class TimerBlock(Block):

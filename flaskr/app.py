@@ -92,7 +92,8 @@ def info_md_page(page):
     pages = {
         "general": "static/software_info/generel.md",
         "blocks": "static/software_info/blocks.md",
-        "programming": "static/software_info/programming.md"
+        "programming": "static/software_info/programming.md",
+        "manual_control": "static/software_info/manual_control.md"
     }
 
     if page not in pages:

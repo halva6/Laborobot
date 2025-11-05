@@ -12,9 +12,7 @@ async function loadMarkdown(page) {
 
 tabButtons.forEach(function (btn) {
     btn.addEventListener('click', function () {
-        tabButtons.forEach(function (b) {
-            b.classList.remove('active');
-        });
+        tabButtons.forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
         loadMarkdown(btn.dataset.page);
     });
@@ -22,7 +20,14 @@ tabButtons.forEach(function (btn) {
 
 infoButton.addEventListener('click', function () {
     infoModal.classList.remove('hidden');
-    loadMarkdown('general');
+
+    tabButtons.forEach(b => b.classList.remove('active'));
+
+    const firstTab = tabButtons[0];
+    if (firstTab) {
+        firstTab.classList.add('active');
+        loadMarkdown(firstTab.dataset.page);
+    }
 });
 
 closeInfo.addEventListener('click', function () {
@@ -34,4 +39,3 @@ infoModal.addEventListener('click', function (e) {
         infoModal.classList.add('hidden');
     }
 });
-
