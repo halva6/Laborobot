@@ -1,11 +1,11 @@
 /*Blocks*/
-.block-move .block-controll .block-event .label .block-time {
+.block-move .block-control .block-event .label .block-time {
     color: #071021
 }
 
 .block-move,
 .block-measure,
-.block-controll,
+.block-control,
 .block-event,
 .block-variable,
 .block-pos,
@@ -34,7 +34,7 @@
     background-color: rgb(248, 99, 0);
 }
 
-.block-controll {
+.block-control {
     background-color: rgb(180, 138, 30);
 }
 

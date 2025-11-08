@@ -208,3 +208,4 @@ __marimo__/
 
 # all JSON files used in the project are only needed locally
 *.json
+output.txt

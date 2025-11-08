@@ -2,7 +2,7 @@
 import json
 from flaskr.compiler.blocks.block import Block, DebugPrintBlock, TimerBlock, CalculationBlock, MeasurementBlock
 from flaskr.compiler.blocks.condition_blocks import IfBlock
-from flaskr.compiler.blocks.loop_blocks import RepeatBlock, BreakBlock
+from flaskr.compiler.blocks.loop_blocks import ForBlock, WhileBlock, BreakBlock
 from flaskr.compiler.blocks.move_blocks import MoveBlock, ResetPositionBlock, MoveToPositionBlock, PositionBlock
 from flaskr.compiler.blocks.variables import Variable
 
@@ -64,14 +64,21 @@ class Loader:
                 variables=variable_name_list,
                 children=children,
             )
-        elif block_type == "block-controll" and "repeat" in raw_block["text"]:
-            return RepeatBlock(
+        elif block_type == "block-control" and "for" in raw_block["id"]:
+            return ForBlock(
                 block_id=raw_block["id"],
                 text=raw_block["text"],
                 variables=variable_name_list,
                 children=children,
             )
-        elif block_type == "block-controll" and "if" in raw_block["text"]:
+        elif block_type == "block-control" and "while" in raw_block["id"]:
+            return WhileBlock(
+                block_id=raw_block["id"],
+                text=raw_block["text"],
+                variables=variable_name_list,
+                children=children,
+            )
+        elif block_type == "block-control" and "if" in raw_block["text"]:
             return IfBlock(
                 block_id=raw_block["id"],
                 text=raw_block["text"],

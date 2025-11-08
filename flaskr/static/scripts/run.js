@@ -144,7 +144,7 @@ function getWorkspaceContents() {
     .filter(block =>
       block.classList.contains("block-move") ||
       block.classList.contains("block-measure") ||
-      block.classList.contains("block-controll") ||
+      block.classList.contains("block-control") ||
       block.classList.contains("block-event") ||
       block.classList.contains("block-variable") ||
       block.classList.contains("block-calc") ||

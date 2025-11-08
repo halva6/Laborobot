@@ -3,45 +3,6 @@
 from flaskr.compiler.blocks.block import Block
 from flaskr.compiler.context import Context
 
-
-class RepeatBlock(Block):
-    """
-    repeats other blocks (like a for-loop)
-    """
-    def __init__(self, block_id: str, text: str, variables: list[str], children: list) -> None:
-        super().__init__(block_id, text, variables, children, 1)
-        self.__break_child = self.__find_break_child(children=children)
-        self.__break: bool = False
-
-    def execute(self, context: Context) -> None:
-        for _ in range(context.get_variable(self._variables[0]).to_int()):
-            self._execute_children(context)
-            if self.__break:
-                break
-
-    def _execute_children(self, context: Context) -> None:
-        for child in self._children:
-            child.execute(context)
-            if (
-                not self.__break_child is None
-            ):  # checks if the BreakBlock has been executed
-                if self.__break_child.is_active():
-                    self.__break = True  # if so, this informs the actual loop, in execute() that it should be interrupted immediately
-                    break
-
-    def __find_break_child(self, children: list[Block]) -> Block:
-        """
-        recursively searches if there is a BreakBlock at all
-        """
-        for child in children:
-            if not child.children == []:
-                return self.__find_break_child(child.children)
-
-            if "break" in child.block_id:
-                return child
-        return None
-
-
 class BreakBlock(Block):
     """
     breaks the loop immediately
@@ -56,9 +17,70 @@ class BreakBlock(Block):
     def execute(self, context: Context) -> None:
         self.__active = True
 
+    @property
     def is_active(self) -> bool:
-        """
-        returns:
-            bool: true if active, false otherwise
-        """
         return self.__active
+
+class LoopBlock(Block):
+    """
+    parent class for the two types of loops, provides the cancellation functionality with break
+    """
+    def __init__(self, block_id: str, text: str, variables: list[str], children: list, expected_vars:int) -> None:
+        super().__init__(block_id, text, variables, children, expected_vars)
+        self.__break_blocks:list[BreakBlock] = self.__find_break_childs(children=children)
+        self._break: bool = False
+
+    def _execute_children(self, context: Context) -> None:
+        for child in self._children:
+            child.execute(context)
+            if self.__break_blocks != []:
+                self._break = self.__is_break_active(self.__break_blocks)
+
+
+    def __is_break_active(self, break_blocks:list[BreakBlock]) -> True:
+        """
+        checks if one of the break blocks has been executed
+        """
+        for break_block in break_blocks:
+            if break_block.is_active:
+                return True
+        return False
+
+    def __find_break_childs(self, children: list[Block]) -> list[BreakBlock]:
+        """
+        recursively searches for all break blocks that can exist as children
+        """
+        break_block_lst = []
+        for child in children:
+            if child.children != []:
+                break_block_lst.extend(self.__find_break_childs(child.children))
+
+            if "break" in child.block_id:
+                break_block_lst.append(child)
+        return break_block_lst
+    
+
+class ForBlock(LoopBlock):
+    """
+    like a for-loop, The children blocks a certain number of times.
+    """
+    def __init__(self, block_id: str, text: str, variables: list[str], children: list):
+        super().__init__(block_id, text, variables, children, 3)
+
+    def execute(self, context: Context):
+        for i in range(context.get_variable(self._variables[1]).to_int(), context.get_variable(self._variables[2]).to_int()):
+            context.get_variable(self._variables[0]).value = str(i)
+            self._execute_children(context)
+            if self._break:
+                break
+
+class WhileBlock(LoopBlock):
+    """
+    repeats the children blocks until the loop is manually broken by a break block
+    """
+    def __init__(self, block_id: str, text: str, variables: list[str], children: list):
+        super().__init__(block_id, text, variables, children, 0)
+    
+    def execute(self, context: Context):
+        while not self._break:
+            self._execute_children(context)

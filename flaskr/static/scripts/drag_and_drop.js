@@ -4,7 +4,7 @@ const droppable = document.getElementById("workspaceInner");
 
 // dragstart: ID + info whether from pallet
 document.addEventListener("dragstart", (e) => {
-    if (e.target.matches(".block-move, .block-measure, .block-controll, .block-event, .block-variable, .block-pos, .block-calc, .block-time, .block-debug")) {
+    if (e.target.matches(".block-move, .block-measure, .block-control, .block-event, .block-variable, .block-pos, .block-calc, .block-time, .block-debug")) {
         e.dataTransfer.setData("text/plain", e.target.id);
         e.dataTransfer.setData("from-palette", e.target.dataset.palette === "true");
     }
@@ -30,7 +30,7 @@ droppable.addEventListener("drop", (e) => {
         block.setAttribute("draggable", "true");
 
         // if this block can tolerate children --> install containers
-        if (block.classList.contains("block-controll")) {
+        if (block.classList.contains("block-control")) {
             const childContainer = document.createElement("div");
             childContainer.classList.add("children");
             block.appendChild(childContainer);
@@ -67,7 +67,7 @@ droppable.addEventListener("drop", (e) => {
 
 
     // --- check if we drop over a block with.children ---
-    const targetBlock = e.target.closest(".block-controll"); // only control blocks are allowed to have children
+    const targetBlock = e.target.closest(".block-control"); // only control blocks are allowed to have children
     if (targetBlock && targetBlock.querySelector(".children")) {
         const childContainer = targetBlock.querySelector(".children");
         childContainer.appendChild(block);
@@ -84,7 +84,7 @@ droppable.addEventListener("drop", (e) => {
 
 // sorting helper function
 function getDragAfterElement(container, y) {
-    const elements = [...container.querySelectorAll(".block-move, .block-measure, .block-controll, .block-event, .block-variable, .block-pos, .block-calc, .block-time, .block-debug:not([data-palette='true'])")];
+    const elements = [...container.querySelectorAll(".block-move, .block-measure, .block-control, .block-event, .block-variable, .block-pos, .block-calc, .block-time, .block-debug:not([data-palette='true'])")];
     return elements.reduce((closest, child) => {
         const box = child.getBoundingClientRect();
         const offset = y - box.top - box.height / 2;

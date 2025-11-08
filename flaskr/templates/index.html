@@ -79,11 +79,18 @@
             <div class="group-title" data-tooltip="classic control structures">
                 Control
             </div>
-            <div class="block-controll" id="block-repeat" draggable="true" data-palette="true">
-                <span class="label"> repeat <span class="slot" data-accept="variable number"></span> times</span>
+            <div class="block-control" id="block-for" draggable="true" data-palette="true">
+                <span class="label"> for <span class="slot" data-accept="variable number"></span> range: <span
+                        class="slot" data-accept="variable number"></span> to<span class="slot"
+                        data-accept="variable number"></span></span>
                 <div class="children"></div>
             </div>
-            <div class="block-controll" id="block-condition" draggable="true" data-palette="true">
+            <div class="block-control" id="block-while" draggable="true" data-palette="true">
+                <span class="label"> while true</span>
+                <div class="children"></div>
+            </div>
+
+            <div class="block-control" id="block-condition" draggable="true" data-palette="true">
                 <span class="label"> if <span class="slot" data-accept="variable number"></span>
                     <select class="param select-box">
                         {% for if_operator in if_operators %}

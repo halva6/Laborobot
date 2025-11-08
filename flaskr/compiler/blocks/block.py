@@ -23,7 +23,7 @@ class Block:
         self._block_id: str = block_id
         self._text: str = text
         self._variables: list[str] = variables
-        self._children: list = children
+        self._children: list[Block] = children
         self.__validate_vars(expected_vars)
 
     def __validate_vars(self, expected_vars: int) -> None:
