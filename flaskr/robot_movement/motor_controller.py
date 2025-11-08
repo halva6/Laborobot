@@ -20,7 +20,7 @@ class MotorController:
         GPIO.setmode(GPIO.BOARD)
         GPIO.setwarnings(False)
 
-        self.positions:dict = {"X": 0, "Y": 0, "Z": 0}
+        self.__positions:dict = {"X": 0, "Y": 0, "Z": 0}
 
         self.motors = {
             "X": {"ENA": 22, "PUL": 16, "DIR": 18, "STOP": 11, "INVERT_DIR": False},
@@ -36,7 +36,11 @@ class MotorController:
 
     @property
     def positions(self) -> dict:
-        return self.positions.copy()
+        return self.__positions.copy()
+    
+    @positions.setter
+    def positions(self, positions:dict):
+        self.__positions = positions
 
     def step_motor(self, steps:int, axis:str, direction:bool):
         """
@@ -59,14 +63,14 @@ class MotorController:
             #Turning back to saved positions might differ in terms of direction depending on the used modele
             if axis == "Y":
                 if direction == (self.DIR_BACK if not pins["INVERT_DIR"] else MotorController.DIR_TO_ENDSTOP):
-                    self.positions[axis] += 1
+                    self.__positions[axis] += 1
                 else:
-                    self.positions[axis] -= 1
+                    self.__positions[axis] -= 1
             else:
                 if direction == (self.DIR_BACK if not pins["INVERT_DIR"] else MotorController.DIR_TO_ENDSTOP):
-                    self.positions[axis] -= 1
+                    self.__positions[axis] -= 1
                 else:
-                    self.positions[axis] += 1
+                    self.__positions[axis] += 1
 
         GPIO.output(pins["ENA"], MotorController.DIR_TO_ENDSTOP)
 
@@ -88,7 +92,7 @@ class MotorController:
             time.sleep(self.STEP_DELAY)
 
         # Set reference point
-        self.positions[axis] = 0
+        self.__positions[axis] = 0
         time.sleep(0.2)
 
         # Drive back a bit
@@ -99,17 +103,17 @@ class MotorController:
             time.sleep(self.STEP_DELAY)
             GPIO.output(pins["PUL"], MotorController.DIR_BACK)
             time.sleep(self.STEP_DELAY)
-            self.positions[axis] -= 1
+            self.__positions[axis] -= 1
 
         GPIO.output(pins["ENA"], MotorController.DIR_TO_ENDSTOP)
 
-    def drive_all_to_endstops(self, axes):
+    def drive_all_to_endstops(self, axes:list[str]):
         """
         drives all specified motor axes to their endstops using parallel threads
         args:
             axes (list): list of axis identifiers to drive (e.g. ['x', 'y', 'z'])
         """
-        threads = []
+        threads:list[threading.Thread] = []
         for axis in axes:
             t = threading.Thread(target=self._drive_single_axis, args=(axis,))
             threads.append(t)
@@ -126,8 +130,8 @@ class MotorController:
             target_pos (dict): dictionary containing target positions for each axis
         """
         #TODO real parallel movement of the motors, but it could also be that this is a hardware problem
-        threads = []
-        current_pos = self.positions.copy()
+        threads:list[threading.Thread] = []
+        current_pos:dict = self.__positions.copy()
 
         print(f"[DEBUG] target_pos: {target_pos}, Type: {type(target_pos)}")
 

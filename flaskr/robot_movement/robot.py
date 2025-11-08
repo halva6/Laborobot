@@ -5,7 +5,7 @@ from flaskr.server_error import VariableNoneTyeError, RobotPositionError
 from flaskr.robot_movement.positions_manager import PositionManager
 
 try:
-    from robot_movement.motor_controller import MotorController
+    from flaskr.robot_movement.motor_controller import MotorController
 except (ImportError, RuntimeError):
     print("[DEBUG] No RPi available")
 
@@ -120,8 +120,7 @@ class Robot():
         """
         resets all axes to their endstops and updates stored positions
         """
-        for axis in self._axis_lst:
-            self.__controller.drive_all_to_endstops(axis)
+        self.__controller.drive_all_to_endstops(self._axis_lst)
 
         pos_dict:dict = self.__controller.positions
         self._x = pos_dict["X"]
