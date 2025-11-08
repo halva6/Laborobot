@@ -36,6 +36,25 @@ else:
     robot: TestRobot = TestRobot(gpio_available, socket_io, position_path)
 
 
+axles:list = ["x","y","z"]
+calc_operators:list[dict] = [{"value":"{", "text":"+"},
+                            {"value":"}", "text":"-"},
+                            {"value":"[", "text":"*"},
+                            {"value":"/", "text":"/"},
+                            {"value":"pow", "text":"^"},
+                            {"value":"sqrt", "text":"√"},
+                            {"value":"mod", "text":"mod"},
+                            {"value":"and", "text":"and"},
+                            {"value":"or", "text":"or"},
+                            {"value":"xor", "text":"xor"},
+                            {"value":"not", "text":"not"},
+                            {"value":"<<", "text":"<<"},
+                            {"value":">>", "text":">>"},]
+
+if_operators:list[dict] = ["==","<=",">=","<",">","!="]
+clipboards:int = 3
+
+
 @app.route("/", methods=["GET", "POST"])
 def start():
     """
@@ -44,22 +63,6 @@ def start():
     returns:
         str: rendered html template
     """
-    axles:list = ["x","y","z"]
-    calc_operators:list[dict] = [{"value":"{", "text":"+"},
-                               {"value":"}", "text":"-"},
-                               {"value":"[", "text":"*"},
-                               {"value":"/", "text":"/"},
-                               {"value":"%", "text":"mod"},
-                               {"value":"&", "text":"and"},
-                               {"value":"|", "text":"or"},
-                               {"value":"^", "text":"xor"},
-                               {"value":"~", "text":"not"},
-                               {"value":"<<", "text":"<<"},
-                               {"value":">>", "text":">>"},]
-    
-    if_operators:list[dict] = ["==","<=",">=","<",">","!="]
-
-    clipboards:int = 3
     if request.method == "POST":
         command = request.get_json()
 

@@ -61,12 +61,33 @@ To modify these parameters, you would need to adjust them in the code directly.
 ---
 
 ## Control
+### `for [] range [] to []`
 
-### `repeat [] times`
-![Repeat Block](static/software_info/images/repeat_block.png)
-Represents a standard **counting loop**.  
-The parameter specifies how many times the contained child blocks should be executed.  
-For more information about programming loops, refer to the corresponding section.
+![For Block](static/software_info/images/for_block.png)
+This code block represents a standard **for loop** (also known as a **counting loop**).  
+It allows you to execute a sequence of child blocks a specific number of times.
+
+- The **first slot** represents the **variable** that stores the loop’s counter value.
+    This variable increases with each loop iteration, but it must be **manually created and assigned** by the user.
+- The **second slot** defines the **starting value** of the loop — the value at which counting begins.
+- The **third slot** defines the **end value** — the value **up to (but not including)** which the loop counts.
+
+For example, in the following loop:
+![For Block Example](static/software_info/images/for_loop_example.png)
+
+The loop starts at `0` and counts **up to 4**, but **does not include 4**.  
+Therefore, the values `0`, `1`, `2`, and `3` will be processed:
+![For Block Example Console](static/software_info/images/for_loop_example_console.png)
+
+
+### `while true`
+
+![While Block](static/software_info/images/while_block.png)
+The implemented **while loop** is a **theoretically infinite loop**.  
+It continuously repeats its child blocks **an indefinite number of times** until it is explicitly stopped.
+
+The loop can only be **terminated** using a **`Break` block** — for example, in combination with an `If` condition.
+This makes it suitable for scenarios where continuous operation is required until a certain condition is met
 
 ### `if [] [==] []`
 ![If Block](static/software_info/images/if_block.png)
@@ -127,7 +148,7 @@ Calculation blocks allow you to assign new values to variables or perform arithm
 - The **second and third parameters** represent the numbers or variables used in the calculation.
 
 Available operations (selectable from the dropdown menu) include the **basic arithmetic operators**.  
-Division is performed as **integer division**.  
+Division and square root extraction, since only integer values ​​are allowed in the program, are returned only as integer values.
 Additionally, **modulo** and **bitwise** operators are available.
 
 For the **bitwise NOT** operation, only the **third parameter** is used.  

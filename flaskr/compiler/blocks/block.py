@@ -159,15 +159,19 @@ class CalculationBlock(Block):
             value = arg1 * arg2
         elif "/" in self._text:
             value = int(arg1 / arg2)
-        elif "%" in self._text:
+        elif "pow" in self._text:
+            value = arg1 ** arg2
+        elif "sqrt" in self._text:
+            value = int(arg2 ** (1/arg1))
+        elif "mod" in self._text:
             value = arg1 % arg2
-        elif "&" in self._text:
+        elif "and" in self._text:
             value = arg1 & arg2
-        elif "|" in self._text:
+        elif "or" in self._text:
             value = arg1 | arg2
-        elif "^" in self._text:
+        elif "xor" in self._text:
             value = arg1 ^ arg2
-        elif "~" in self._text:
+        elif "not" in self._text:
             # Yes, this is a special case,
             # because theoretically you have to specify two variable values here,
             # but you only need one
