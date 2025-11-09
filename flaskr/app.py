@@ -11,7 +11,7 @@ from markupsafe import Markup
 from flaskr.robot_movement.test_robot import TestRobot
 from flaskr.compiler.loader import Loader
 from flaskr.compiler.context import Context
-from flaskr.server_error import ErrorManager, ServerError
+from flaskr.server_error import ErrorManager, ServerError, ExecutionStartedError
 
 # Try to import real Robot (works only on Raspberry Pi with GPIO)
 try:
@@ -96,17 +96,23 @@ def start():
     """
     global is_running
     with lock:
-        if request.method == "POST" and not is_running:
-            is_running = True
-            command = request.get_json()
+        if request.method == "POST":
+            try:
+                if not is_running:
+                    is_running = True
+                    command = request.get_json()
 
-            json_path:str = os.path.join(base_dir, "compiler", "from_server.json")
+                    json_path:str = os.path.join(base_dir, "compiler", "from_server.json")
 
-            with open(json_path, "w", encoding="utf-8") as file:
-                file.write(json.dumps(command))
-            
-            thread = threading.Thread(target=execute, args=(json_path, socket_io,), daemon=True)
-            thread.start()
+                    with open(json_path, "w", encoding="utf-8") as file:
+                        file.write(json.dumps(command))
+                    
+                    thread = threading.Thread(target=execute, args=(json_path, socket_io,), daemon=True)
+                    thread.start()
+                else:
+                    raise ExecutionStartedError("The program already started")
+            except ServerError as e:
+                ErrorManager.report(e)
 
     return render_template("index.html", axles = axles, clipboards=clipboards, calc_operators=calc_operators, if_operators=if_operators)
 

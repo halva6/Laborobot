@@ -47,6 +47,11 @@ class NoDeviceConnected(ServerError):
     when no device is connected
     """
 
+class ExecutionStartedError(ServerError):
+    """
+    when the program is already running, but an attempt is made to run the program again even though it has not yet finished
+    """
+
 class ErrorManager:
     """
     manages the error and sends it to the client in the appropriate format
