@@ -1,0 +1,11 @@
+.drop-indicator {
+    position: absolute;
+    height: 2px;
+    background: rgba(70, 140, 255, 0.8);
+    border-radius: 1px;
+    pointer-events: none;
+    display: none;
+    z-index: 9999;
+    transition: all 0.05s ease-out;
+    box-shadow: 0 0 2px rgba(70, 140, 255, 0.5);
+}
