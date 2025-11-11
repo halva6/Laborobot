@@ -86,7 +86,7 @@ class DebugPrintBlock(Block):
                                the socket io
         """
         if not self._variables == []:
-            send_str: str = "[CONSOLE] "
+            send_str: str = "[DEBUG] "
             for var in self._variables:
                 send_str += context.get_variable(var).value + " | "
 
