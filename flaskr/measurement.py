@@ -2,7 +2,7 @@
 
 import os
 import logging
-from godirect import GoDirect
+from godirect import GoDirect, GoDirectDevice
 from scipy.io import savemat
 import numpy as np
 
@@ -20,74 +20,94 @@ class GoDirectDataCollector:
             period (int): Period between each measurement in milliseconds
             save_to_desktop (bool): Boolean flag to determine if the data should be saved on the Desktop
         """
-        self.device_threshold:int = device_threshold
-        self.num_measurements:int = num_measurements
-        self.period:int = period
-        self.save_to_desktop:bool = save_to_desktop
+        self.__file_path:str = os.path.join(os.path.expanduser("~"), "Desktop")
+        self.__delete_file()
 
-        self.godirect:GoDirect = GoDirect(use_ble=True, use_usb=True)
-        self.device = None
-        self.sensors:list = []
-        self.sensor_names:list = []
-        self.indices:list = []
-        self.values:list = []
+        self.__device_threshold:int = device_threshold
+        self.__num_measurements:int = num_measurements
+        self.__period:int = period
+        self.__save_to_desktop:bool = save_to_desktop
+
+        self.__godirect:GoDirect = GoDirect(use_ble=True, use_usb=True)
+        self.__device:GoDirectDevice = None
+        self.__sensors:list = []
+        self.__sensor_names:list = []
+        self.__indices:list = []
+        self.__values:list = []
 
         # Initialize logging (optional)
         logging.basicConfig()
+    
+    def __delete_file(self):
+        """
+        deletes the file, from an external perspective, writing the file represents the process of replacing the file
+        """
+        file: str = self.__file_path+"GoDirect_Data.mat"
+        if os.path.exists(file):
+            os.remove(file)
 
     def connect_to_device(self) -> None:
-        """Search and connect to a GoDirect device."""
+        """
+        search and connect to a GoDirect device
+        """
         print("[MEASURMENT] Searching...", flush=True, end="")
-        self.device = self.godirect.get_device(threshold=self.device_threshold)
+        self.__device = self.__godirect.get_device(threshold=self.__device_threshold)
 
-        if self.device is not None and self.device.open(auto_start=False):
+        if self.__device is not None and self.__device.open(auto_start=False):
             print("\n[MEASURMENT] Connecting...")
-            print("[MEASURMENT] Connected to " + self.device.name)
+            print("[MEASURMENT] Connected to " + self.__device.name)
             return True
         else:
             raise DiviceNotFoundError("No GoDirect device found or connection failed")
 
     def start_reading(self) -> None:
-        """Start the data collection from the device."""
-        if self.device:
-            self.device.start(period=self.period)
+        """
+        start the data collection from the device
+        """
+        if self.__device:
+            self.__device.start(period=self.__period)
             print("[MEASURMENT] Start reading...\n")
 
             # Get list of enabled sensors and their names
-            self.sensors = self.device.get_enabled_sensors()
-            self.sensor_names = [s.sensor_description for s in self.sensors]
+            self.__sensors = self.__device.get_enabled_sensors()
+            self.__sensor_names = [s.sensor_description for s in self.__sensors]
         else:
             raise NoDeviceConnected("No device connected to start reading")
 
     def collect_data(self) -> None:
-        """Collect measurements from the connected device."""
-        for i in range(1, self.num_measurements + 1):
-            if self.device.read():  # If data is available
-                for sensor in self.sensors:
+        """
+        collect measurements from the connected device
+        """
+        for i in range(1, self.__num_measurements + 1):
+            if self.__device.read():  # If data is available
+                for sensor in self.__sensors:
                     val = sensor.values
                     if val:  # Only store data if a valid value exists
                         print(f"{i}: {sensor.sensor_description} -> {val}")
-                        self.indices.append(i)
-                        self.values.append(val[0])  # Store first value if it's a single value
+                        self.__indices.append(i)
+                        self.__values.append(val[0])  # Store first value if it's a single value
                     sensor.clear()  # Clear the sensor data buffer
 
     def stop_device(self) -> None:
-        """Stop the data collection and disconnect the device."""
-        if self.device:
-            self.device.stop()
-            self.device.close()
+        """
+        stop the data collection and disconnect the device
+        """
+        if self.__device:
+            self.__device.stop()
+            self.__device.close()
 
     def save_data(self) -> None:
-        """Save collected data to a .mat file in MATLAB format."""
-        if self.save_to_desktop:
-            desktop_path = os.path.join(os.path.expanduser("~"), "Desktop")
-            mat_file = os.path.join(desktop_path, "GoDirect_Messdaten.mat")
+        """
+        save collected data to a .mat file in MATLAB format
+        """
+        if self.__save_to_desktop:
+            mat_file = os.path.join(self.__file_path, "GoDirect_Data.mat")
 
             # Prepare data to be saved
             data_dict = {
-                'index': np.array(self.indices),
-                'values': np.array(self.values),
-                'sensor_names': np.array(self.sensor_names, dtype=object)  # Store sensor names as object (strings)
+                'index': np.array(self.__indices),
+                'values': np.array(self.__values),
+                'sensor_names': np.array(self.__sensor_names, dtype=object)  # Store sensor names as object (strings)
             }
 
             # Save to .mat file (MATLAB format)
@@ -97,11 +117,15 @@ class GoDirectDataCollector:
             print("[DEBUG] nothing saved, can save only on the desktop")
 
     def quit(self) -> None:
-        """Quit and clean up the GoDirect connection."""
-        self.godirect.quit()
+        """
+        quit and clean up the GoDirect connection
+        """
+        self.__godirect.quit()
 
     def run(self) -> None:
-        """Run the complete data collection process."""
+        """
+        run the complete data collection process
+        """
         if self.connect_to_device():
             self.start_reading()
             self.collect_data()
