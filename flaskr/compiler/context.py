@@ -4,6 +4,7 @@ from socket import SocketIO
 from typing import TYPE_CHECKING
 from flaskr.compiler.blocks.variables import Variable
 from flaskr.robot_movement.robot import Robot
+from flaskr.measurement import GoDirectDataCollector
 
 if TYPE_CHECKING:
     from flaskr.compiler.blocks.block import Block
@@ -11,10 +12,11 @@ class Context():
     """
     provides all the necessary information
     """
-    def __init__(self, blocks:list, variables:list[Variable], robot: Robot, socket_io: SocketIO):
+    def __init__(self, blocks:list, variables:list[Variable], robot: Robot, go_direct_data_collector: GoDirectDataCollector, socket_io: SocketIO):
         self.__variables:list[Variable] = variables
         self.__variables = self.__organize_all_variables(blocks, self.__variables)
 
+        self.__go_direct_data_collector: GoDirectDataCollector = go_direct_data_collector
         self.__robot: Robot = robot
 
         self.__socket_io = socket_io
@@ -76,3 +78,7 @@ class Context():
     @property
     def socket_io(self) -> SocketIO:
         return self.__socket_io
+    
+    @property
+    def go_direct_data_collector(self) -> GoDirectDataCollector:
+        return self.__go_direct_data_collector

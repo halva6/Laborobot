@@ -122,13 +122,25 @@ class GoDirectDataCollector:
         """
         self.__godirect.quit()
 
-    def run(self) -> None:
-        """
-        run the complete data collection process
+    def start(self) -> None:
+        """starts the data collector
         """
         if self.connect_to_device():
             self.start_reading()
-            self.collect_data()
+
+    def stop(self) -> None:
+        """
+        shutdown the data collector
+        """
+        if self.connect_to_device():
             self.stop_device()
             self.save_data()
             self.quit()
+
+
+    def run(self) -> None:
+        """
+        collect the data
+        """
+        if self.connect_to_device():
+            self.collect_data()

@@ -11,7 +11,9 @@ from markupsafe import Markup
 from flaskr.robot_movement.test_robot import TestRobot
 from flaskr.compiler.loader import Loader
 from flaskr.compiler.context import Context
-from flaskr.server_error import ErrorManager, ServerError, ExecutionStartedError
+from flaskr.compiler.blocks.block import Block
+from flaskr.measurement import GoDirectDataCollector
+from flaskr.server_error import ErrorManager, ServerError, ExecutionStartedError, NoDeviceConnected
 
 # Try to import real Robot (works only on Raspberry Pi with GPIO)
 try:
@@ -67,10 +69,28 @@ def execute(json_path:str, socket_io_p:SocketIO) -> None:
     """
     try:
         loader: Loader = Loader(json_path)
+
+        is_measurement_block:bool = False
+        for block in loader.blocks:
+            if check_measurement_block(block):
+                is_measurement_block = True
+                break
+        
+        go_direct_data_collector: GoDirectDataCollector = None
+        print(f"[DEBUG] measurement block is {is_measurement_block}")
+        if is_measurement_block:
+            try:
+                go_direct_data_collector = GoDirectDataCollector()
+                go_direct_data_collector.start()
+            except RuntimeError as e:
+                raise NoDeviceConnected("There is no GoDirect device - either you connect a GoDirect device or you remove the measurement block.") from e
+
+
         context: Context = Context(
             loader.blocks,
             loader.variables,
             robot,  # reuse the same Robot/TestRobot instance
+            go_direct_data_collector,
             socket_io_p)
         print("[DEBUG] thread started")
 
@@ -85,6 +105,27 @@ def execute(json_path:str, socket_io_p:SocketIO) -> None:
             global is_running
             is_running = False
             print("[DEBUG] thread finished")
+
+def check_measurement_block(block: Block) -> bool:
+    """checks if there is a measurement block in the programm, loops recursive through the list of blocks
+
+    Args:
+        block (Block): the block which is to be checked
+
+    Returns:
+        bool: if there is a measurement block or not
+    """
+    if "measurement" in block.block_id:
+        return True
+    
+    if block.has_children():
+        for child in block.children:
+            if check_measurement_block(child):
+                return True
+    
+    return False
+
+
 
 @app.route("/", methods=["GET", "POST"])
 def start():

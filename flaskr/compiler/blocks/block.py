@@ -1,12 +1,9 @@
 """Module which includes the parent block and all other blocks"""
 
 import time
-import threading
-import asyncio
 from flaskr.compiler.context import Context
 from flaskr.compiler.blocks.variables import Variable
 from flaskr.server_error import ExpectVariableError, BlockNotImpelentedError
-from flaskr.measurement import GoDirectDataCollector
 
 class Block:
     """
@@ -55,6 +52,16 @@ class Block:
         """
         for child in self._children:
             child.execute(context)
+
+    def has_children(self) -> bool:
+        """a kind of getter, who checks if there are children
+
+        Returns:
+            bool:true or false, has children or not
+        """
+        if self._children == [] or not self._children:
+            return False
+        return True
 
     @property
     def variables_names(self) -> list[str]:
@@ -193,31 +200,12 @@ class MeasurementBlock(Block):
     """
     def __init__(self, block_id: str, text: str, variables: list[str], children: list) -> None:
         super().__init__(block_id, text, variables, children, 0)
-        self.__is_measurement_running: bool = False
 
     def execute(self, context:Context) -> None:
         """
-        starts a new thread to run the measurement if it's not already running
-        args:
-            context (Context): not used
+        executes the measurement
+        args:n
+            context (Context): this is to get the GoDirectDataCollector
         """
-        if not self.__is_measurement_running:
-            measurement_thread = threading.Thread(target=self.__run_measurement)
-            measurement_thread.start()
+        context.go_direct_data_collector.run()
 
-    def __run_measurement(self) -> None:
-        """
-        runs the measurement in a new asyncio event loop and collects data
-
-        sets the measurement as running, starts the data collection, 
-        and closes the event loop when finished
-        """
-        self.__is_measurement_running = True
-
-        loop = asyncio.new_event_loop()
-        asyncio.set_event_loop(loop)  # Set the event loop for this thread
-
-        collector = GoDirectDataCollector()
-        collector.run()
-        self.__is_measurement_running = False
-        loop.close()  # Close the loop when done
