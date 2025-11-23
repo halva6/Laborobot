@@ -75,7 +75,7 @@ def execute(json_path:str, socket_io_p:SocketIO) -> None:
             if check_measurement_block(block):
                 is_measurement_block = True
                 break
-        
+
         go_direct_data_collector: GoDirectDataCollector = None
         print(f"[DEBUG] measurement block is {is_measurement_block}")
         if is_measurement_block:
@@ -98,6 +98,9 @@ def execute(json_path:str, socket_io_p:SocketIO) -> None:
         for block in loader.blocks:
             block.execute(context)
 
+        if is_measurement_block:
+            go_direct_data_collector.stop()
+
     except ServerError as e:
         ErrorManager.report(e)
     finally:
@@ -117,12 +120,12 @@ def check_measurement_block(block: Block) -> bool:
     """
     if "measurement" in block.block_id:
         return True
-    
+
     if block.has_children():
         for child in block.children:
             if check_measurement_block(child):
                 return True
-    
+
     return False
 
 
@@ -147,7 +150,7 @@ def start():
 
                     with open(json_path, "w", encoding="utf-8") as file:
                         file.write(json.dumps(command))
-                    
+
                     thread = threading.Thread(target=execute, args=(json_path, socket_io,), daemon=True)
                     thread.start()
                 else:

@@ -7,7 +7,13 @@ class TestRobot(Robot):
     The movement will simply output
     """
 
-    def _move(self, value:int, axis:str, direction:bool) -> None:
+    def _move(self, value:int, axis:str, direction:int) -> None:
+        if axis == "Y": #switch direction, because hardware
+            if direction:
+                direction = False
+            else:
+                direction = True
+
         if direction:
             print(f"[DEBUG Move {value} on the {axis}-axis")
         else:

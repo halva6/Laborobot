@@ -105,7 +105,12 @@ class Robot():
             axis (str): axis identifier (e.g. 'x', 'y', 'z')
             direction (bool): movement direction
         """
-        direction = self.__controller.DIR_TO_ENDSTOP if direction else self.__controller.DIR_BACK
+        if axis == "Y": #switch direction, because hardware
+            if direction:
+                direction = False
+            else:
+                direction = True
+        direction:int = self.__controller.DIR_TO_ENDSTOP if direction else self.__controller.DIR_BACK
         self.__controller.step_motor(steps=value, axis=axis, direction=direction)
         self.inform_about_move()
 
@@ -132,6 +137,7 @@ class Robot():
         self._position_manager.z = self._z
 
         self._position_manager.save()
+        self.inform_about_move()
 
         print("[DEBUG] Reseting positions...")
 

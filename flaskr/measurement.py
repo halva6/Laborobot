@@ -12,7 +12,7 @@ class GoDirectDataCollector:
     """
     it collects the measurement data and stores it in a Matlab-compatible format
     """
-    def __init__(self, device_threshold:int=-100, num_measurements:int=50, period:int=100, save_to_desktop:bool=True) -> None:
+    def __init__(self, device_threshold:int=-100, num_measurements:int=1, period:int=100, save_to_desktop:bool=True) -> None:
         """
         args:
             device_threshold (int): Signal threshold for detecting GoDirect devices
@@ -35,9 +35,16 @@ class GoDirectDataCollector:
         self.__indices:list = []
         self.__values:list = []
 
+        self.__pos_x:list = []
+        self.__pos_y:list = []
+        self.__pos_z:list = []
+
+
+        self.__is_connected:bool = self.connect_to_device()
+
         # Initialize logging (optional)
         logging.basicConfig()
-    
+
     def __delete_file(self):
         """
         deletes the file, from an external perspective, writing the file represents the process of replacing the file
@@ -74,19 +81,27 @@ class GoDirectDataCollector:
         else:
             raise NoDeviceConnected("No device connected to start reading")
 
-    def collect_data(self) -> None:
+
+    def collect_data(self, positions:tuple) -> None:
         """
         collect measurements from the connected device
         """
         for i in range(1, self.__num_measurements + 1):
             if self.__device.read():  # If data is available
+
+                x,y,z = positions
+
                 for sensor in self.__sensors:
                     val = sensor.values
-                    if val:  # Only store data if a valid value exists
-                        print(f"{i}: {sensor.sensor_description} -> {val}")
+                    if val:
+                        print(f"[MEASUREMENT]{i}: {sensor.sensor_description} -> {val}  @ Pos=({x}, {y}, {z})")
                         self.__indices.append(i)
-                        self.__values.append(val[0])  # Store first value if it's a single value
-                    sensor.clear()  # Clear the sensor data buffer
+                        self.__values.append(val[0])
+                        self.__pos_x.append(x)
+                        self.__pos_y.append(y)
+                        self.__pos_z.append(z)
+                    sensor.clear()
+
 
     def stop_device(self) -> None:
         """
@@ -103,18 +118,21 @@ class GoDirectDataCollector:
         if self.__save_to_desktop:
             mat_file = os.path.join(self.__file_path, "GoDirect_Data.mat")
 
-            # Prepare data to be saved
             data_dict = {
                 'index': np.array(self.__indices),
                 'values': np.array(self.__values),
-                'sensor_names': np.array(self.__sensor_names, dtype=object)  # Store sensor names as object (strings)
+                'sensor_names': np.array(self.__sensor_names, dtype=object),
+
+                'X': np.array(self.__pos_x),
+                'Y': np.array(self.__pos_y),
+                'Z': np.array(self.__pos_z)
             }
 
-            # Save to .mat file (MATLAB format)
             savemat(mat_file, data_dict, do_compression=True)
             print(f"\n[MEASURMENT] Data successfully saved to:\n{mat_file}")
         else:
             print("[DEBUG] nothing saved, can save only on the desktop")
+
 
     def quit(self) -> None:
         """
@@ -125,22 +143,22 @@ class GoDirectDataCollector:
     def start(self) -> None:
         """starts the data collector
         """
-        if self.connect_to_device():
+        if self.__is_connected:
             self.start_reading()
 
     def stop(self) -> None:
         """
         shutdown the data collector
         """
-        if self.connect_to_device():
+        if self.__is_connected:
             self.stop_device()
             self.save_data()
             self.quit()
 
 
-    def run(self) -> None:
+    def run(self, positions:tuple) -> None:
         """
         collect the data
         """
-        if self.connect_to_device():
-            self.collect_data()
+        if self.__is_connected:
+            self.collect_data(positions)

@@ -99,7 +99,7 @@ class DebugPrintBlock(Block):
 
             if len(self._variables) == 1:
                 send_str = send_str.replace("|", "")
-        
+
             context.socket_io.emit(
                 "update",
                 {
@@ -207,5 +207,5 @@ class MeasurementBlock(Block):
         args:n
             context (Context): this is to get the GoDirectDataCollector
         """
-        context.go_direct_data_collector.run()
-
+        position:tuple = (context.robot.x, context.robot.y, context.robot.z)
+        context.go_direct_data_collector.run(position)

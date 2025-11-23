@@ -4,12 +4,12 @@ function setMoveButton(id, dir, axis) {
     };
 }
 
-setMoveButton("x-up", 1, "x");
-setMoveButton("x-down", -1, "x");
-setMoveButton("y-up", 1, "y");
-setMoveButton("y-down", -1, "y");
-setMoveButton("z-up", 1, "z");
-setMoveButton("z-down", -1, "z");
+setMoveButton("x-up", 100, "x");
+setMoveButton("x-down", -100, "x");
+setMoveButton("y-up", 100, "y");
+setMoveButton("y-down", -100, "y");
+setMoveButton("z-up", 100, "z");
+setMoveButton("z-down", -100, "z");
 setMoveButton("reset-manuel", 0, "r")
 
 function moveJSON(value, axis) {

@@ -7,7 +7,7 @@ function logMessage(text, type = "info") {
     const line = document.createElement("div");
     line.classList.add("console-line", type);
     line.textContent = text;
-    consoleBox.insertBefore(line, clearConsoleButton);
+    consoleBox.appendChild(line);
     consoleBox.scrollTop = consoleBox.scrollHeight; // auto-scroll
 }
 

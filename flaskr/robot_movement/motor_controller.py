@@ -37,18 +37,18 @@ class MotorController:
     @property
     def positions(self) -> dict:
         return self.__positions.copy()
-    
+
     @positions.setter
     def positions(self, positions:dict):
         self.__positions = positions
 
-    def step_motor(self, steps:int, axis:str, direction:bool):
+    def step_motor(self, steps:int, axis:str, direction:int):
         """
         moves the motor a given number of steps along the specified axis and updates its position
         args:
             steps (int): number of steps to move the motor
             axis (str): axis identifier (e.g. 'x', 'y', 'z')
-            direction (bool): direction of movement
+            direction (int): direction of movement, 1 is to endstop, o in the other direction
         """
         pins = self.motors[axis]
         GPIO.output(pins["ENA"], MotorController.DIR_BACK)
@@ -113,15 +113,16 @@ class MotorController:
         args:
             axes (list): list of axis identifiers to drive (e.g. ['x', 'y', 'z'])
         """
-        threads:list[threading.Thread] = []
+        #threads:list[threading.Thread] = []
         for axis in axes:
-            t = threading.Thread(target=self._drive_single_axis, args=(axis,))
-            threads.append(t)
-            t.start()
+            self._drive_single_axis(axis)
+            #t = threading.Thread(target=self._drive_single_axis, args=(axis,))
+            #threads.append(t)
+            #t.start()
 
         # wait until all threads are finished.
-        for t in threads:
-            t.join()
+        #for t in threads:
+        #    t.join()
 
     def move_all_axes_simultaneously(self, target_pos:dict):
         """
