@@ -53,7 +53,7 @@ class GoDirectDataCollector:
         if os.path.exists(file):
             os.remove(file)
 
-    def connect_to_device(self) -> None:
+    def connect_to_device(self) -> bool:
         """
         search and connect to a GoDirect device
         """
@@ -64,8 +64,9 @@ class GoDirectDataCollector:
             print("\n[MEASURMENT] Connecting...")
             print("[MEASURMENT] Connected to " + self.__device.name)
             return True
-        else:
-            raise DiviceNotFoundError("No GoDirect device found or connection failed")
+
+        raise DiviceNotFoundError("No GoDirect device found or connection failed")
+        
 
     def start_reading(self) -> None:
         """

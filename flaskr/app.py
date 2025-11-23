@@ -8,194 +8,187 @@ from flask import Flask, jsonify, render_template, request
 from flask_socketio import SocketIO
 from markupsafe import Markup
 
-from flaskr.robot_movement.test_robot import TestRobot
+from flaskr.compiler.blocks.block import Block
 from flaskr.compiler.loader import Loader
 from flaskr.compiler.context import Context
-from flaskr.compiler.blocks.block import Block
 from flaskr.measurement import GoDirectDataCollector
 from flaskr.server_error import ErrorManager, ServerError, ExecutionStartedError, NoDeviceConnected
+from flaskr.robot_movement.test_robot import TestRobot
 
 # Try to import real Robot (works only on Raspberry Pi with GPIO)
 try:
-    import RPi.GPIO as GPIO
+    from RPi import GPIO
     from flaskr.robot_movement.robot import Robot
-
-    gpio_available: bool = True
+    GPIO_AVAILABLE: bool = True
 except Exception:
-    gpio_available: bool = False
-
-app: Flask = Flask(__name__)
-app.config["SECRET_KEY"] = "sec,msdfgnß04835,mnvkmliouzh32409ß854309##.ret!"
-socket_io: SocketIO = SocketIO(app, async_mode="threading")
-
-ErrorManager.init(socket_io)
-
-# Create the Robot/TestRobot only once
-base_dir = os.path.dirname(os.path.abspath(__file__))
-position_path = os.path.join(base_dir, "robot_movement", "position.json")
-if gpio_available:
-    robot: Robot = Robot(gpio_available, socket_io, position_path)
-else:
-    robot: TestRobot = TestRobot(gpio_available, socket_io, position_path)
+    GPIO_AVAILABLE: bool = False
 
 
-axles:list = ["x","y","z"]
-calc_operators:list[dict] = [{"value":"{", "text":"+"},
-                            {"value":"}", "text":"-"},
-                            {"value":"[", "text":"*"},
-                            {"value":"/", "text":"/"},
-                            {"value":"pow", "text":"^"},
-                            {"value":"sqrt", "text":"√"},
-                            {"value":"mod", "text":"mod"},
-                            {"value":"and", "text":"and"},
-                            {"value":"or", "text":"or"},
-                            {"value":"xor", "text":"xor"},
-                            {"value":"not", "text":"not"},
-                            {"value":"<<", "text":"<<"},
-                            {"value":">>", "text":">>"},]
-
-if_operators:list[dict] = ["==","<=",">=","<",">","!="]
-clipboards:int = 3
-
-is_running:bool = False
-lock:threading.Lock = threading.Lock()
-
-def execute(json_path:str, socket_io_p:SocketIO) -> None:
+class App:
     """
-    executes the instructions
-    this is the first function executed by the thread system
-    args:
-        json_path (str): path of the json-file, this file contains the client's instructions on what the robot should do
+    Flask application, SocketIO, and robot execution logic.
     """
-    try:
-        loader: Loader = Loader(json_path)
 
-        is_measurement_block:bool = False
-        for block in loader.blocks:
-            if check_measurement_block(block):
-                is_measurement_block = True
-                break
+    def __init__(self) -> None:
+        """Initializes the Flask app, SocketIO, robot, and application constants."""
+        self.__app: Flask = Flask(__name__)
+        self.__app.config["SECRET_KEY"] = "sec,msdfgnß04835,mnvkmliouzh32409ß854309##.ret!"
+        self.__socket_io: SocketIO = SocketIO(self.__app, async_mode="threading")
 
-        go_direct_data_collector: GoDirectDataCollector = None
-        print(f"[DEBUG] measurement block is {is_measurement_block}")
-        if is_measurement_block:
-            try:
-                go_direct_data_collector = GoDirectDataCollector()
-                go_direct_data_collector.start()
-            except RuntimeError as e:
-                raise NoDeviceConnected("There is no GoDirect device - either you connect a GoDirect device or you remove the measurement block.") from e
+        ErrorManager.init(self.__socket_io)
 
+        self.__base_dir: str = os.path.dirname(os.path.abspath(__file__))
+        self.__position_path: str = os.path.join(self.__base_dir, "robot_movement", "position.json")
 
-        context: Context = Context(
-            loader.blocks,
-            loader.variables,
-            robot,  # reuse the same Robot/TestRobot instance
-            go_direct_data_collector,
-            socket_io_p)
-        print("[DEBUG] thread started")
+        # Robot initialization
+        if GPIO_AVAILABLE:
+            self.__robot: Robot = Robot(GPIO_AVAILABLE, self.__socket_io, self.__position_path)
+        else:
+            self.__robot: TestRobot = TestRobot(GPIO_AVAILABLE, self.__socket_io, self.__position_path)
 
+        # Constants
+        self.__axles: list[str] = ["x", "y", "z"]
+        self.__calc_operators: list[dict] = [
+            {"value":"{", "text":"+"}, {"value":"}", "text":"-"}, {"value":"[", "text":"*"},
+            {"value":"/", "text":"/"}, {"value":"pow", "text":"^"}, {"value":"sqrt", "text":"√"},
+            {"value":"mod", "text":"mod"}, {"value":"and", "text":"and"}, {"value":"or", "text":"or"},
+            {"value":"xor", "text":"xor"}, {"value":"not", "text":"not"}, {"value":"<<", "text":"<<"},
+            {"value":">>", "text":">>"}
+        ]
+        self.__if_operators: list[str] = ["==","<=",">=","<",">","!="]
+        self.__clipboards: int = 3
 
-        for block in loader.blocks:
-            block.execute(context)
+        self.__is_running: bool = False
+        self.__lock: threading.Lock = threading.Lock()
 
-        if is_measurement_block:
-            go_direct_data_collector.stop()
+        # Register routes and socket events
+        self.__register_routes()
+        self.__register_socket_events()
 
-    except ServerError as e:
-        ErrorManager.report(e)
-    finally:
-        with lock:
-            global is_running
-            is_running = False
-            print("[DEBUG] thread finished")
+    def __register_routes(self) -> None:
+        """Registers all Flask routes."""
 
-def check_measurement_block(block: Block) -> bool:
-    """checks if there is a measurement block in the programm, loops recursive through the list of blocks
+        @self.__app.route("/", methods=["GET", "POST"])
+        def start() -> str:
+            """Handles GET and POST requests to start block execution."""
+            with self.__lock:
+                if request.method == "POST":
+                    try:
+                        if not self.__is_running:
+                            self.__is_running = True
+                            command = request.get_json()
 
-    Args:
-        block (Block): the block which is to be checked
+                            json_path: str = os.path.join(self.__base_dir, "compiler", "from_server.json")
+                            with open(json_path, "w", encoding="utf-8") as file:
+                                file.write(json.dumps(command))
 
-    Returns:
-        bool: if there is a measurement block or not
-    """
-    if "measurement" in block.block_id:
-        return True
+                            thread = threading.Thread(target=self.__execute, args=(json_path,), daemon=True)
+                            thread.start()
+                        else:
+                            raise ExecutionStartedError("The program already started")
+                    except ServerError as e:
+                        ErrorManager.report(e)
 
-    if block.has_children():
-        for child in block.children:
-            if check_measurement_block(child):
-                return True
+            return render_template(
+                "index.html",
+                axles=self.__axles,
+                clipboards=self.__clipboards,
+                calc_operators=self.__calc_operators,
+                if_operators=self.__if_operators
+            )
 
-    return False
+        @self.__app.route("/info-md/<page>")
+        def info_md_page(page: str):
+            """Loads various Markdown files safely."""
+            pages: dict = {
+                "general": "static/software_info/generel.md",
+                "blocks": "static/software_info/blocks.md",
+                "programming": "static/software_info/programming.md",
+                "manual_control": "static/software_info/manual_control.md"
+            }
 
+            if page not in pages:
+                return jsonify({"error": "invalid page"}), 404
 
+            md_path: str = os.path.join(self.__base_dir, pages[page])
+            if not os.path.exists(md_path):
+                return jsonify({"error": "file not found"}), 404
 
-@app.route("/", methods=["GET", "POST"])
-def start():
-    """
-    handles get and post requests to start block execution
-    for post requests it saves the received json command, loads blocks and executes them
-    returns:
-        str: rendered html template
-    """
-    global is_running
-    with lock:
-        if request.method == "POST":
-            try:
-                if not is_running:
-                    is_running = True
-                    command = request.get_json()
+            with open(md_path, "r", encoding="utf-8") as f:
+                md_content = f.read()
 
-                    json_path:str = os.path.join(base_dir, "compiler", "from_server.json")
+            html_content: str = markdown.markdown(md_content, extensions=["fenced_code", "tables", "sane_lists", "nl2br"])
+            return Markup(html_content)
 
-                    with open(json_path, "w", encoding="utf-8") as file:
-                        file.write(json.dumps(command))
+    def __register_socket_events(self) -> None:
+        """Registers SocketIO events."""
 
-                    thread = threading.Thread(target=execute, args=(json_path, socket_io,), daemon=True)
-                    thread.start()
-                else:
-                    raise ExecutionStartedError("The program already started")
-            except ServerError as e:
-                ErrorManager.report(e)
+        @self.__socket_io.on("connect")
+        def handle_connect():
+            """Handles new client connections and sends the current robot coordinates."""
+            print("[DEBUG] New client connected")
+            self.__robot.inform_about_move()
 
-    return render_template("index.html", axles = axles, clipboards=clipboards, calc_operators=calc_operators, if_operators=if_operators)
+    def __execute(self, json_path: str) -> None:
+        """
+        Executes the instructions from a JSON file.
+        This is the first function executed by the thread system.
 
-@app.route('/info-md/<page>')
-def info_md_page(page:str):
-    """loads various Markdown files safely"""
-    # Whitelisting
-    pages:dict = {
-        "general": "static/software_info/generel.md",
-        "blocks": "static/software_info/blocks.md",
-        "programming": "static/software_info/programming.md",
-        "manual_control": "static/software_info/manual_control.md"
-    }
+        Args:
+            json_path (str): path of the JSON file containing the client's instructions
+        """
+        try:
+            loader: Loader = Loader(json_path)
 
-    if page not in pages:
-        return jsonify({"error": "invalid page"}), 404
+            is_measurement_block: bool = any(self.__check_measurement_block(block) for block in loader.blocks)
+            go_direct_data_collector: GoDirectDataCollector = None
 
-    md_path:str = os.path.join(os.path.dirname(__file__), pages[page])
-    if not os.path.exists(md_path):
-        return jsonify({"error": "file not found"}), 404
+            if is_measurement_block:
+                try:
+                    go_direct_data_collector = GoDirectDataCollector()
+                    go_direct_data_collector.start()
+                except RuntimeError as e:
+                    raise NoDeviceConnected(
+                        "There is no GoDirect device - either connect one or remove the measurement block."
+                    ) from e
 
-    with open(md_path, "r", encoding="utf-8") as f:
-        md_content = f.read()
+            context: Context = Context(loader.blocks, loader.variables, self.__robot, go_direct_data_collector, self.__socket_io)
+            print("[DEBUG] thread started")
 
-    html_content:str = markdown.markdown(md_content, extensions=["fenced_code", "tables", "sane_lists", "nl2br"])
-    return Markup(html_content)
+            for block in loader.blocks:
+                block.execute(context)
 
-# Called when a new client connects
-@socket_io.on("connect")
-def handle_connect():
-    """
-    handles new client connections and sends the current robot coordinates
-    """
-    print("[DEBUG] New client connected")
-    robot.inform_about_move()
+            if is_measurement_block:
+                go_direct_data_collector.stop()
+
+        except ServerError as e:
+            ErrorManager.report(e)
+        finally:
+            with self.__lock:
+                self.__is_running = False
+                print("[DEBUG] thread finished")
+
+    def __check_measurement_block(self, block: Block) -> bool:
+        """
+        Recursively checks if a block or its children is a measurement block.
+
+        Args:
+            block (Block): block to check
+
+        Returns:
+            bool: True if measurement block exists, False otherwise
+        """
+        if "measurement" in block.block_id:
+            return True
+        if block.has_children():
+            return any(self.__check_measurement_block(child) for child in block.children)
+        return False
+
+    def run(self, host:str = "0.0.0.0", port:int = 5000, debug:bool = True) -> None:
+        """Runs the Flask-SocketIO server."""
+        self.__socket_io.run(self.__app, host=host, port=port, debug=debug)
+
 
 if __name__ == "__main__":
-    socket_io.run(app, host="0.0.0.0", port=5000, debug=True)
-
-
-#TODO Exportieren und importieren von JSON im frontend um Programme zu speichern
-#TODO Anleitung in die README.md schreiben
+    robot_app = App()
+    robot_app.run()
